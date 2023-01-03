@@ -4,6 +4,8 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "start": "concurrently \"npm:backend\" \"npm:dev\"",
+    "backend": "nodemon --watch backend backend/index",
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview"

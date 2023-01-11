@@ -45,6 +45,10 @@ export async function dbQuery(app) {
     return resultId;
   }
 
+  app.get("/api/", (req, res) => {
+    res.send("Hello from backend");
+  });
+
   app.get("/api/users", async (req, res) => {
     console.log("Running Users");
     let sql = "SELECT * FROM users";

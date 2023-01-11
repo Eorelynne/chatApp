@@ -37,11 +37,40 @@ app.use((error, req, res, next) => {
 
 dbQuery(app);
 
+let connections = [];
+app.get("/api/sse", (req, res) => {
+  connections.push(res);
+
+  req.on("close", () => {
+    connections = connections.filter(openRes => openRes != res);
+
+    broadcast("disconnect", {
+      message: "client disconnected"
+    });
+  });
+
+  res.set({
+    "Content-Type": "text/event-stream",
+    "Cache-Control": "no-cache"
+  });
+
+  broadcast("connect", {
+    message: "clients connected: " + connections.length
+  });
+
+  function broadcast(event, data) {
+    for (let res of connections) {
+      res.write("event:" + event + "\ndata:" + JSON.stringify(data) + "\n\n");
+    }
+  }
+});
 /*
 
 //login(connection, app);*/
 
 //restApi(app);
+
+//app.use(express.static(__dirname + '/static')); kolla upp sökvägen.
 
 app.listen(port, () => {
   console.log("Server listening on port " + port);

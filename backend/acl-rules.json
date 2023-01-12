@@ -1,0 +1,10 @@
+{
+  "anonymus": {
+    "login": {
+      "post": true,
+      "get": true
+    }
+  },
+  "user": {},
+  "admin": {}
+}

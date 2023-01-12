@@ -1,32 +1,28 @@
-import { dbQuery } from "./databaseQueryer.js";
+import { passwordEncryptor } from "./passwordUtils.js";
+import { acl } from "./acl.js";
 
-export async function restApi(app) {
-  const sqlQuery = dbQuery.sqlQuery;
-  console.log(typeof sqlQuery);
+let db;
+
+export async function restApi(dbConnection, app) {
+  db = dbConnection;
+
   app.get("/api/", (req, res) => {
-    res.json({ name: "Holly" });
+    res.send("Hello from backend");
   });
+
   app.get("/api/users", async (req, res) => {
-    console.log("Running Users");
-    let sql = "SELECT * FROM users";
-    const data = await sqlQuery(req, res, sql);
+    const sql = "SELECT * FROM users";
+    const data = await sqlQuery("users", req, res, sql);
   });
 
-  app.get("/api/users/:id", (req, res) => {
-    connection.execute(
-      "SELECT * FROM users WHERE `id` = ?",
-      [req.params.id],
-      function (err, results, fields) {
-        console.log(results); // results contains rows returned by server
-        console.log(fields); // fields contains extra meta data about results, if available
-        res.json(results);
-        // If you execute same statement again, it will be picked from a LRU cache
-        // which will save query preparation time and give better performance
-      }
-    );
+  app.get("/api/users/:id", async (req, res) => {
+    const sql = "SELECT * FROM users WHERE `id` = ?";
+    const parameters = [req.params.id];
+    await sqlQuery("users", req, res, sql, parameters);
   });
 
-  app.post("/api/users", (req, res) => {
+  app.post("/api/users", async (req, res) => {
+    let password = passwordEncryptor(req.body.password);
     const sql =
       "INSERT INTO users (first_name, last_name, user_name, email, password, role) VALUES (?,?,?,?,?,?)";
     const parameters = [
@@ -34,45 +30,41 @@ export async function restApi(app) {
       req.body.last_name,
       req.body.user_name,
       req.body.email,
-      req.body.password,
+      password,
       "USER"
     ];
-    const data = sqlQuery(req, res, sql, parameters);
+    const data = await sqlQuery("users", req, res, sql, parameters);
+    console.log("data: ", data);
   });
-
-  /* async function runQuery(
-    tableName,
-    req,
-    res,
-    parameters,
-    sql,
-    isJustOne = false
-  ) {
-    /* if (!acl(tableName, req)) {
-      res.status(405);
-      res.json({ _error: "Not allowed!" });
-    }*/
-  /*
-    let result;
-    try {
-      result = await connection.execute(
-        sql,
-        parameters,
-        function (err, results, fields) {
-          console.log(results);
-          console.log(results.json());
-          console.log(fields);
-          console.log(err);
-        }
-      );
-    } catch (error) {
-      result = { _error: error + "" };
-    }
-    if (isJustOne) {
-      result = result[0];
-    }
-    result = result || null;
-    res.status(result ? (result._error ? 500 : 200) : 404);
-    setTimeout(() => res.json(result), 1);
-  }*/
 }
+
+async function sqlQuery(name, req, res, sql, parameters) {
+  db.connect(function (error) {
+    if (error) {
+      console.log("Not connected" + error.stack);
+      return;
+    }
+    console.log("connected as id " + db.threadId);
+  });
+  if (!acl(name, req)) {
+    res.status(405).json({ error: "Not allowed" });
+    return;
+  }
+  let result = await db.execute(
+    sql,
+    parameters,
+    function (error, results, fields) {
+      if (error) {
+        res.status(500).json({ _error: error });
+        return;
+      }
+      if (name === "login" && !!password) {
+        res.json({ result: results });
+      }
+    }
+  );
+  console.log("result: ", result);
+  return result;
+}
+
+export { sqlQuery };

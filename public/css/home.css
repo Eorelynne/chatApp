@@ -1,0 +1,12 @@
+.home {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  left: 0px;
+  background-image: url("/public/images/mobilbild6.jpg");
+  background-repeat: no-repeat !important;
+  background-attachment: fixed;
+  background-size: cover;
+  background-position: center;
+}

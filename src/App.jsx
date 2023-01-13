@@ -1,17 +1,21 @@
-import { useEffect, useState } from "react";
+import { Routes, Route, BrowserRouter } from "react-router-dom";
+import "bootstrap/dist/css/bootstrap.min.css";
+import Home from "./views/Home";
+import Register from "./views/Register";
+import Login from "./views/Login";
 
 function App() {
-  const [res, setRes] = useState("");
-
-  useEffect(() => {
-    (async () => {
-      let data = await (await fetch("/api/")).json();
-      console.log(data);
-      setRes(data);
-    })();
-  }, []);
-
-  return <div className='App'>Hello {res.name} </div>;
+  return (
+    <div className='App'>
+      <BrowserRouter>
+        <Routes>
+          <Route path='/' element={<Home />} />
+          <Route path='/login' element={<Login />} />
+          <Route path='/register' element={<Register />} />
+        </Routes>
+      </BrowserRouter>
+    </div>
+  );
 }
 
 export default App;

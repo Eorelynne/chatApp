@@ -38,15 +38,15 @@ export async function restApi(dbConnection, app) {
   });
 }
 
-async function sqlQuery(name, req, res, sql, parameters) {
+async function sqlQuery(path, req, res, sql, parameters) {
   db.connect(function (error) {
     if (error) {
-      console.log("Not connected" + error.stack);
+      res.status(500).json({ error: "Not connected" + error.stack });
       return;
     }
     console.log("connected as id " + db.threadId);
   });
-  if (!acl(name, req)) {
+  if (!acl(path, req)) {
     res.status(405).json({ error: "Not allowed" });
     return;
   }
@@ -58,12 +58,13 @@ async function sqlQuery(name, req, res, sql, parameters) {
         res.status(500).json({ _error: error });
         return;
       }
-      if (name === "login" && !!password) {
-        res.json({ result: results });
+      if (path === "login" && !!req.body.password) {
+        console.log(result._rows[0][0].password);
+        result = delete result._rows[0][0].password;
       }
+      res.json({ result: results });
     }
   );
-  console.log("result: ", result);
   return result;
 }
 

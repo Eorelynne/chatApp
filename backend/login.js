@@ -47,8 +47,7 @@ export function login(db, app) {
     password = ? `;
     let parameters = [req.body.email, password];
     let result = await sqlQuery("login", req, res, sql, parameters);
-    delete result.password;
-    console.log(result);
+    //delete result.password;
     if (!result._error) {
       req.session.user = result;
       //Servern kommer ihåg att man är inloggad. Vid varje request skickas cookien med

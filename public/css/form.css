@@ -1,0 +1,11 @@
+.form {
+  background-color: #bbdaff;
+  padding: 10px;
+}
+
+.btn {
+  background-color: #255b9b;
+  color: white;
+  border-radius: 5px;
+  padding: 5px;
+}

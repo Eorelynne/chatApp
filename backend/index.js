@@ -53,3 +53,12 @@ login(db, app);
 app.listen(port, () => {
   console.log("Server listening on port " + port);
 });
+
+app.get("/api/", (req, res) => {
+  res.json({ name: "Holly" });
+});
+
+app.post("/api/users", (req, res) => {
+  console.log(req.body);
+  res.json({ name: req.body.firstName });
+});

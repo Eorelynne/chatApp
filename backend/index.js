@@ -22,3 +22,8 @@ app.listen(port, () => {
 app.get("/api/", (req, res) => {
   res.json({ name: "Holly" });
 });
+
+app.post("/api/users", (req, res) => {
+  console.log(req.body);
+  res.json({ name: req.body.firstName });
+});

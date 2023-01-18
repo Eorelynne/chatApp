@@ -2,7 +2,7 @@ import React from "react";
 import { useState } from "react";
 import { Form, Button, Container, Modal } from "react-bootstrap";
 import { checkPassword, checkEmail } from "../assets/helpers/inputCheck.js";
-import styles from "../../public/css/form.css";
+import "../../public/css/form.css";
 
 function loginForm(props) {
   const { loginData, setLoginData, showModal, setShowModal } = props;

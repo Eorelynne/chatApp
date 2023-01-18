@@ -5,8 +5,6 @@ import Header from "../components/Header";
 import "../../public/css/home.css";
 
 function Home() {
-  const [res, setRes] = useState("");
-
   useEffect(() => {
     (async () => {
       let data = await (await fetch("/api/")).json();
@@ -18,9 +16,6 @@ function Home() {
   return (
     <div className='home'>
       <Header />
-      <div>
-        <p>{res.name}</p>
-      </div>
     </div>
   );
 }

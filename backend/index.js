@@ -3,7 +3,6 @@ import { createRequire } from "module";
 import { fileURLToPath } from "url";
 import { login } from "./login.js";
 import { restApi } from "./restApi.js";
-import { seeder } from "../backend/database/createDb.js";
 
 // Note: import.meta.url is different for every file
 const { url } = import.meta;

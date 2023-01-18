@@ -3,6 +3,7 @@ import { createRequire } from "module";
 import { fileURLToPath } from "url";
 import { login } from "./login.js";
 import { restApi } from "./restApi.js";
+import { seeder } from "../backend/database/createDb.js";
 
 // Note: import.meta.url is different for every file
 const { url } = import.meta;
@@ -27,7 +28,23 @@ export const dbParams = {
   database: process.env.MYSQL_DB
 };
 
-const db = await mysql.createConnection(dbParams);
+async function connect() {
+  const pool = mysql.createPool({
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASS,
+    database: process.env.MYSQL_DB,
+    waitForConnections: true,
+    connectionLimit: 10,
+    queueLimit: 0
+  });
+
+  const promisePool = pool.promise();
+
+  return promisePool;
+}
+const db = await connect();
 
 app.use(express.json({ limit: "10KB" }));
 
@@ -36,29 +53,20 @@ app.use((error, req, res, next) => {
   if (error) {
     res.status(400);
     res.json({
-      error: "Bad request",
-      details: error // needed?
+      error: "Bad request. Error in JSON"
+      //details: error // needed?
     });
   } else {
     next();
   }
 });
 
-restApi(db, app);
-
 login(db, app);
+
+restApi(db, app);
 
 //app.use(express.static(__dirname + '/dist')); kolla upp sökvägen.
 
 app.listen(port, () => {
   console.log("Server listening on port " + port);
-});
-
-app.get("/api/", (req, res) => {
-  res.json({ name: "Holly" });
-});
-
-app.post("/api/users", (req, res) => {
-  console.log(req.body);
-  res.json({ name: req.body.firstName });
 });

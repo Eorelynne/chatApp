@@ -5,6 +5,16 @@
       "get": true
     }
   },
-  "user": {},
-  "admin": {}
+  "user": {
+    "login": {
+      "delete": true,
+      "get": true
+    }
+  },
+  "admin": {
+    "login": {
+      "delete": true,
+      "get": true
+    }
+  }
 }

@@ -1,71 +1,114 @@
 import { passwordEncryptor } from "./passwordUtils.js";
+import { checkPassword } from "../src/assets/helpers/inputCheck.js";
 import { acl } from "./acl.js";
 
-let db;
+let promisePool;
 
-export async function restApi(dbConnection, app) {
-  db = dbConnection;
+export async function restApi(connection, app) {
+  promisePool = connection;
 
-  app.get("/api/", (req, res) => {
-    res.send("Hello from backend");
-  });
-
+  //USERS
   app.get("/api/users", async (req, res) => {
     const sql = "SELECT * FROM users";
-    const data = await sqlQuery("users", req, res, sql);
+    const data = await sqlQuery("users", req, res, sql, false);
   });
 
   app.get("/api/users/:id", async (req, res) => {
     const sql = "SELECT * FROM users WHERE `id` = ?";
     const parameters = [req.params.id];
-    await sqlQuery("users", req, res, sql, parameters);
+    await sqlQuery("users", req, res, sql, true, parameters);
   });
 
   app.post("/api/users", async (req, res) => {
+    let passwordIsValid = checkPassword(req.body.password);
+    if (!passwordIsValid) {
+      res.json({ error: "Wrong passwordformat" });
+    }
     let password = passwordEncryptor(req.body.password);
     const sql =
-      "INSERT INTO users (first_name, last_name, user_name, email, password, role) VALUES (?,?,?,?,?,?)";
+      "INSERT INTO users (firstName, lastName, userName, email, password, role) VALUES (?,?,?,?,?,?)";
     const parameters = [
-      req.body.first_name,
-      req.body.last_name,
-      req.body.user_name,
+      req.body.firstName,
+      req.body.lastName,
+      req.body.userName,
       req.body.email,
       password,
       "USER"
     ];
-    const data = await sqlQuery("users", req, res, sql, parameters);
-    console.log("data: ", data);
+    const result = await sqlQuery("users", req, res, sql, true, parameters);
+  });
+
+  app.delete("/api/users/:id", async (req, res) => {
+    const sql = "DELETE FROM users WHERE id = ?";
+    const parameters = [req.params.id];
+    let result = await sqlQuery("users", req, res, sql, true, parameters);
+  });
+
+  app.get("/api/users-by-username/:username", async (req, res) => {
+    const sql = "SELECT * FROM users WHERE username = ?";
+    const parameters = [req.params.username];
+    let user = await sqlQuery(
+      "users-by-username",
+      req,
+      res,
+      sql,
+      true,
+      parameters
+    );
+  });
+
+  //Messages
+  app.get("/api/messages", async (req, res) => {
+    const sql = "SELECT * FROM messages";
+    let result = await sqlQuery("messages", req, res, sql);
+  });
+
+  app.get("/api/messages/:id", async (req, res) => {
+    const sql = "SELECT * FROM messages WHERE id=?";
+    const parameters = [req.params.id];
+    let result = await sqlQuery("messages", req, res, sql, parameters);
+  });
+
+  app.post("/api/messages", async (req, res) => {
+    const [content, users_conversations_id] = req.body;
+    const time = Date.now();
+    const sql =
+      "INSERT INTO messages (content, time, users_conversations_id) VALUES (?,?,?)";
+    const parameters = [content, time, users_conversations_id];
+    let result = await sqlQuery("messages", req, res, sql, parameters);
   });
 }
 
-async function sqlQuery(path, req, res, sql, parameters) {
-  db.connect(function (error) {
-    if (error) {
-      res.status(500).json({ error: "Not connected" + error.stack });
-      return;
-    }
-    console.log("connected as id " + db.threadId);
-  });
+async function sqlQuery(path, req, res, sql, justOne, parameters) {
   if (!acl(path, req)) {
     res.status(405).json({ error: "Not allowed" });
     return;
   }
-  let result = await db.execute(
-    sql,
-    parameters,
-    function (error, results, fields) {
-      if (error) {
-        res.status(500).json({ _error: error });
-        return;
+  try {
+    const r = await promisePool.execute(sql, parameters);
+    let [result] = r;
+
+    if (result instanceof Array) {
+      if (result.length === 0) {
+        res.status(404).json({ error: "Not found" });
       }
-      if (path === "login" && !!req.body.password) {
-        console.log(result._rows[0][0].password);
-        result = delete result._rows[0][0].password;
+      if (justOne) {
+        result = result[0];
       }
-      res.json({ result: results });
     }
-  );
-  return result;
+
+    if (result && path === "login") {
+      delete result.password;
+      req.session.user = result;
+    }
+
+    res.json(result);
+    return result;
+  } catch (error) {
+    res.status(500);
+    res.json({ error: error + "" });
+    return { error: error + "" };
+  }
 }
 
 export { sqlQuery };

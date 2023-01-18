@@ -2,7 +2,7 @@ import React from "react";
 import { useEffect, useState } from "react";
 import Header from "../components/Header";
 
-import styles from "../../public/css/home.css";
+import "../../public/css/home.css";
 
 function Home() {
   const [res, setRes] = useState("");

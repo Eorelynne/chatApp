@@ -1,0 +1,20 @@
+{
+  "anonymus": {
+    "login": {
+      "post": true,
+      "get": true
+    }
+  },
+  "user": {
+    "login": {
+      "delete": true,
+      "get": true
+    }
+  },
+  "admin": {
+    "login": {
+      "delete": true,
+      "get": true
+    }
+  }
+}

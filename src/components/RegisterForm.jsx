@@ -1,8 +1,9 @@
 import React from "react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Form, Button, Container, Modal } from "react-bootstrap";
 import { checkPassword, checkEmail } from "../assets/helpers/inputCheck.js";
-import styles from "../../public/css/form.css";
+import "../../public/css/form.css";
 
 function RegisterForm() {
   const [firstName, setFirstName] = useState("");
@@ -12,33 +13,60 @@ function RegisterForm() {
   const [firstPassword, setFirstPassword] = useState("");
   const [secondPassword, setSecondPassword] = useState("");
   const [showModal, setShowModal] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
+  const [message, setMessage] = useState("");
   const handleClose = () => setShowModal(false);
+  const navigate = useNavigate();
+
+  function resetForm() {
+    setFirstName("");
+    setLastName("");
+    setUserName("");
+    setEmail("");
+    setFirstPassword("");
+    setSecondPassword("");
+  }
+
+  function goToLogin() {
+    navigate("/login");
+  }
 
   async function submitForm(event) {
     event.preventDefault();
 
-    if (
-      firstName.length === 0 ||
-      lastName.length === 0 ||
-      userName.length === 0 ||
-      email.length === 0 ||
-      firstPassword.length === 0 ||
-      secondPassword.length === 0
-    ) {
-      setErrorMessage("All fields must be filled");
-      setShowModal(true);
+    let formInfoIsValid = false;
+    while (!formInfoIsValid) {
+      if (
+        firstName.length === 0 ||
+        lastName.length === 0 ||
+        userName.length === 0 ||
+        email.length === 0 ||
+        firstPassword.length === 0 ||
+        secondPassword.length === 0
+      ) {
+        formInfoIsValid = false;
+        setMessage("All fields must be filled");
+        setShowModal(true);
+      } else {
+        formInfoIsValid = true;
+      }
+      if (firstPassword !== secondPassword) {
+        formInfoIsValid = false;
+        setMessage("The entered passwords must match");
+        setShowModal(true);
+      } else {
+        formInfoIsValid = true;
+      }
+      let isPasswordApproved = checkPassword(firstPassword);
+      let isEmailApproved = checkEmail(email);
+      if (!isEmailApproved || !isPasswordApproved) {
+        formInfoIsValid = false;
+        setMessage("Wrong email or password");
+        setShowModal(true);
+      } else {
+        formInfoIsValid = true;
+      }
     }
-    if (firstPassword !== secondPassword) {
-      setErrorMessage("The entered passwords must match");
-      setShowModal(true);
-    }
-    let isPasswordApproved = checkPassword(firstPassword);
-    let isEmailApproved = checkEmail(email);
-    if (!isEmailApproved || !isPasswordApproved) {
-      setErrorMessage("Wrong email or password");
-      setShowModal(true);
-    }
+
     let userToSave = {
       firstName: firstName,
       lastName: lastName,
@@ -54,6 +82,10 @@ function RegisterForm() {
       })
     ).json();
     console.log(result);
+    resetForm();
+    setMessage("You are now registered");
+    setShowModal(true);
+    setTimeout(goToLogin, 5000);
   }
 
   return (
@@ -144,7 +176,7 @@ function RegisterForm() {
         <Modal show={showModal} onHide={handleClose}>
           <Modal.Header closeButton></Modal.Header>
           <Modal.Body>
-            <p className='custom-label'>{errorMessage}</p>
+            <p className='custom-label'>{message}</p>
           </Modal.Body>
           <Modal.Footer>
             <Button className='custom-button' onClick={handleClose}>

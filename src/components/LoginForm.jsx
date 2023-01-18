@@ -28,11 +28,19 @@ function loginForm(props) {
       setErrorMessage("Wrong email or password");
       setShowModal(true);
     }
-    console.log(email);
-    console.log(isEmailApproved);
-    console.log(password);
-    console.log(isPasswordApproved);
-    const user = await (await fetch(`/api/users?email={email}`)).json();
+    let loginInfo = {
+      email: email,
+      password: password
+    };
+    const data = await fetch(`/api/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(loginInfo)
+    });
+    console.log(data);
+    let user = await data.json();
     console.log(user);
     resetForm();
   }

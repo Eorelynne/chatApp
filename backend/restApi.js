@@ -57,6 +57,102 @@ export async function restApi(connection, app) {
     );
   });
 
+  //Conversations
+  //Start conversation
+  app.post("/api/conversations-create/", async (req, res) => {
+    let sql = "INSERT INTO conversations (name, creatorId) VALUES(?,?)";
+    let parameters = [req.body.name, req.session.user.id];
+    let result = await sqlQuery(
+      "conversations-create",
+      req,
+      res,
+      sql,
+      true,
+      parameters
+    );
+    /* console.log(result);
+    let conversationId = result.insertId;
+    console.log(req.session.user.id, conversationId);
+    sql =
+      "INSERT INTO users_conversations (userId, conversationId, conversationRole, isBanned, banReason) VALUES (?,?,?,?,?)";
+    parameters = [req.session.user.id, conversationId, "creator", false, ""];
+    result = await sqlQuery(
+      "conversations-create",
+      req,
+      res,
+      sql,
+      true,
+      parameters
+    );
+    console.log("RESULT!!!");
+    console.log(result);*/
+  });
+
+  //Join conversation (in req.body creatorId)
+  app.post("/api/conversations-join/:id", async (req, res) => {
+    let userId = req.session.user.id;
+    let conversationId = req.params.id;
+    if (!req.body.creatorId) {
+      res.status(400).json({ error: "Bad request" });
+      return;
+    }
+    let conversationCreator = req.body.creatorId;
+    let conversationRole = "member";
+    if (userId === conversationCreator) {
+      conversationRole = "creator";
+    }
+    const sql =
+      "INSERT INTO users_conversations (userId, conversationId, conversationRole, isBanned, banReason) VALUES (?,?,?,?,?)";
+    const parameters = [userId, conversationId, conversationRole, false, ""];
+    await sqlQuery("join-conversation", req, res, sql, true, parameters);
+  });
+
+  //Decline conversation
+  app.put("/api/conversations-decline/:id", async (req, res) => {});
+  //Get all conversations
+  app.get("/api/conversations", async (req, res) => {
+    const sql = "SELECT * FROM conversations";
+    await sqlQuery("conversations", req, res, sql, false);
+  });
+  //Invite to conversation (userId and creatorId in body)
+  app.post("/api/conversations-invite/:id", async (req, res) => {
+    if (req.session.user.id !== creatorId) {
+      res.status(403).json({ error: "not allowed" });
+      return;
+    }
+    const sql =
+      "INSERT INTO invitation (conversationId, userId, isInvitePending) VALUES(?,?,?)";
+    const parameters = [req.params.id, req.body.userId, true];
+    await sqlQuery("conversations-invite", req, res, sql, true, parameters);
+  });
+  //Get one conversation by id
+  app.get("/api/conversations/:id", async (req, res) => {
+    const sql = "SELECT * FROM conversations WHERE id = ?";
+    const parameters = [req.params.id];
+    let result = await sqlQuery(
+      "conversations",
+      req,
+      res,
+      sql,
+      true,
+      parameters
+    );
+  });
+
+  //Delete conversation by id
+  app.delete("/api/conversations/:id", async (req, res) => {
+    const sql = "DELETE FROM conversations WHERE id = ?";
+    const parameters = [req.params.id];
+    let result = await sqlQuery(
+      "conversations",
+      req,
+      res,
+      sql,
+      true,
+      parameters
+    );
+  });
+
   //Messages
   app.get("/api/messages", async (req, res) => {
     const sql = "SELECT * FROM messages";

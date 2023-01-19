@@ -1,15 +1,16 @@
 import React from "react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Form, Button, Container, Modal } from "react-bootstrap";
-import { checkPassword, checkEmail } from "../assets/helpers/inputCheck.js";
 import "../../public/css/form.css";
 
 function loginForm(props) {
-  const { loginData, setLoginData, showModal, setShowModal } = props;
+  const { showModal, setShowModal, user, setUser } = props;
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const handleClose = () => setShowModal(false);
+  const navigate = useNavigate();
 
   function resetForm() {
     setEmail("");
@@ -18,31 +19,47 @@ function loginForm(props) {
 
   async function submitForm(event) {
     event.preventDefault();
+    login();
+  }
+
+  async function login() {
     if (email.length === 0 || password.length === 0) {
       setErrorMessage("Enter both email and password");
       setShowModal(true);
     }
-    let isPasswordApproved = checkPassword(password);
-    let isEmailApproved = checkEmail(email);
-    if (!isEmailApproved || !isPasswordApproved) {
-      setErrorMessage("Wrong email or password");
-      setShowModal(true);
-    }
-    let loginInfo = {
+
+    let loginData = {
       email: email,
       password: password
     };
-    const data = await fetch(`/api/login`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(loginInfo)
-    });
+    const data = await (
+      await fetch(`/api/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(loginData)
+      })
+    ).json();
     console.log(data);
-    let user = await data.json();
+    let sessionUser = await (await fetch("/api/login")).json();
+    console.log(sessionUser);
+    setUser(sessionUser);
+
+    console.log("USER!!!");
     console.log(user);
+
     resetForm();
+
+    if (Object.keys(user).length !== 0) {
+      console.log("user!!!!");
+      console.log(user);
+      navigate("/my-page");
+    } else {
+      console.log("Not logged in");
+      setErrorMessage("Email or password is wrong");
+      setShowModal(true);
+    }
   }
 
   return (

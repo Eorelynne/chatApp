@@ -1,0 +1,44 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,700;1,400;1,700&display=swap");
+
+.body {
+  font-family: "Poppins", sans-serif;
+}
+
+@media screen and (max-width: 600px) {
+  .body {
+    font-size: 12px;
+  }
+  .custom-label {
+    font-size: 18px !important;
+  }
+  .custom-text {
+    font-size: 16px !important;
+  }
+  .back-button {
+    /* Arrow button on the left top conrner */
+    width: 26px !important;
+  }
+  .custom-button {
+    font-size: 16px !important;
+  }
+}
+
+.custom-label {
+  font-weight: bold;
+  font-size: 25px;
+}
+
+.custom-text {
+  font-size: 20px;
+}
+
+.custom-button {
+  font-size: 18px;
+  border-color: #62256a !important;
+  background-color: #62256a !important;
+}
+
+.back-button {
+  cursor: pointer;
+  width: 40px;
+}

@@ -1,0 +1,25 @@
+.listContainer {
+  border: 2px solid black;
+  border-radius: 5px;
+}
+
+.accept-btn {
+  background-color: rgb(57, 239, 227) !important;
+  border-radius: 5px;
+  padding: 5px;
+}
+.accept-btn:hover {
+  background-color: rgba(243, 15, 15, 0.978) !important;
+  border-radius: 5px;
+  padding: 5px;
+}
+
+.decline-btn {
+  background-color: rgb(207, 15, 15) !important;
+  border-radius: 5px;
+  padding: 5px;
+}
+
+.decline-btn:hover {
+  background-color: rgba(207, 15, 15, 0.4) !important;
+}

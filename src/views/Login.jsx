@@ -4,8 +4,8 @@ import { Container, Row, Col, Modal } from "react-bootstrap";
 import Header from "../components/Header";
 import LoginForm from "../components/LoginForm";
 
-function Login() {
-  const [loginData, setLoginData] = useState({});
+function Login(props) {
+  const { user, setUser } = props;
   const [showModal, setShowModal] = useState(false);
 
   return (
@@ -15,7 +15,12 @@ function Login() {
         <Col xs={1} md={2}></Col>
         <Col xs={10} md={8} className='form'>
           <LoginForm
-            {...{ ...loginData, setLoginData, showModal, setShowModal }}
+            {...{
+              showModal,
+              setShowModal,
+              user,
+              setUser
+            }}
           />
         </Col>
       </Row>

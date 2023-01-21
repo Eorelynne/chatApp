@@ -8,13 +8,6 @@ import "../../public/css/myPage.css";
 function MyConversationPits(props) {
   const { conversationList, setConversationList } = props;
 
-  /* useEffect(() => {
-    (async () => {
-      let data = await (await fetch(`/api/conversation-messages/:id`)).json();
-      setConversationList([conversationList, ...data]);
-    })();
-  });*/
-
   return (
     <>
       <Container className='scrollContainer'>

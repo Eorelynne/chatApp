@@ -194,7 +194,12 @@ export async function restApi(connection, app) {
   });
 
   //
-  app.get("/api/conversation-messages/:id", (res, req) => {});
+  app.get("/api/conversation-messages/:id", async (res, req) => {
+    const sql =
+      "SELECT * FROM users_conversations_messages WHERE conversationId = ?";
+    const parameters = [req.params.id];
+    await sqlQuery("conversation-messages", req, res, sql, false, parameters);
+  });
 
   app.post("/api/messages", async (req, res) => {
     const [content, users_conversations_id] = req.body;

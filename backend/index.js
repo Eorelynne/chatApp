@@ -82,6 +82,15 @@ app.get("/api/sse", (req, res) => {
   broadcast("connect", { message: req.session.user.userName + "connected" });
 });
 
+function broadcast(event, data) {
+  // loop through all open connections and send
+  // some data without closing the connection (res.write)
+  for (let res of connections) {
+    // syntax for a SSE message: 'event: message \ndata: "the-message" \n\n'
+    res.write("event:" + event + "\ndata:" + JSON.stringify(data) + "\n\n");
+  }
+}
+
 restApi(db, app);
 
 //app.use(express.static(__dirname + '/dist')); kolla upp sökvägen.

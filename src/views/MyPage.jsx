@@ -5,7 +5,7 @@ import useStates from "../assets/helpers/useStates.js";
 import { Container, Row, Col, Modal } from "react-bootstrap";
 import Header from "../components/Header";
 import InvitedToList from "./../components/InvitedToList";
-import MyConversationPits from "./../components/MyConversationPits";
+import MyConversationPits from "../components/MyConversationPitList";
 import UserList from "./../components/UserList";
 import CreateConversation from "../components/CreateConversation";
 

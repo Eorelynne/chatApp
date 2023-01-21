@@ -9,6 +9,7 @@ import Register from "./views/Register";
 import Login from "./views/Login";
 import MyPage from "./views/MyPage";
 import NotFound from "./views/NotFound";
+import ConversationPit from "./views/ConversationPit";
 
 function App() {
   let l = useStates("loggedIn", {
@@ -28,6 +29,7 @@ function App() {
           <Route path='/login' element={<Login />} />
           <Route path='/register' element={<Register />} />
           <Route path='/my-page' element={<MyPage />} />
+          <Route path='/conversation-pit' element={<ConversationPit />} />
           <Route path='/*' element={<NotFound />} />
         </Routes>
       </BrowserRouter>

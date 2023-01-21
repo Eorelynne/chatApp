@@ -1,16 +1,18 @@
 import React from "react";
 import { useState } from "react";
+import useStates from "../assets/helpers/useStates.js";
 import { useNavigate } from "react-router-dom";
 import { Form, Button, Container, Modal } from "react-bootstrap";
 import "../../public/css/form.css";
 
 function loginForm(props) {
-  const { showModal, setShowModal, user, setUser } = props;
+  const { showModal, setShowModal } = props;
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const handleClose = () => setShowModal(false);
   const navigate = useNavigate();
+  let l = useStates("loggedIn");
 
   function resetForm() {
     setEmail("");
@@ -42,18 +44,21 @@ function loginForm(props) {
       })
     ).json();
     console.log(data);
-    let sessionUser = await (await fetch("/api/login")).json();
-    console.log(sessionUser);
-    setUser(sessionUser);
-
-    console.log("USER!!!");
+    let user = await (await fetch("/api/login")).json();
     console.log(user);
+    l.id = user.id;
+    l.email = user.email;
+    l.firstName = user.firstName;
+    l.lastName = user.lastName;
+    l.userName = user.userName;
+    l.role = user.role;
+
+    console.log("l.USER!!!");
+    console.log(l);
 
     resetForm();
 
-    if (Object.keys(user).length !== 0) {
-      console.log("user!!!!");
-      console.log(user);
+    if (Object.keys(l).length !== 0) {
       navigate("/my-page");
     } else {
       console.log("Not logged in");

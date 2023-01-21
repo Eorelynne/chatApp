@@ -62,6 +62,26 @@ app.use((error, req, res, next) => {
 
 login(db, app);
 
+let connections = [];
+app.get("/api/sse", (req, res) => {
+  connections.push(res);
+
+  req.on("close", () => {
+    connections = connections.filter(openRes => openRes != res);
+
+    broadcast("disconnect", {
+      message: req.session.user.userName + " disconnected"
+    });
+  });
+
+  res.set({
+    "Content-Type": "text/event-stream",
+    "Cache-Control": "no-cache"
+  });
+
+  broadcast("connect", { message: req.session.user.userName + "connected" });
+});
+
 restApi(db, app);
 
 //app.use(express.static(__dirname + '/dist')); kolla upp sökvägen.

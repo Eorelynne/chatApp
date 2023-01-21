@@ -10,7 +10,7 @@ export async function restApi(connection, app) {
   //USERS
   app.get("/api/users", async (req, res) => {
     const sql = "SELECT * FROM users";
-    const data = await sqlQuery("users", req, res, sql, false);
+    await sqlQuery("users", req, res, sql, false);
   });
 
   app.get("/api/users/:id", async (req, res) => {
@@ -88,6 +88,14 @@ export async function restApi(connection, app) {
     console.log(result);*/
   });
 
+  //Get all pending invites
+  app.get("/api/invitations", async (req, res) => {
+    const sql =
+      "SELECT * FROM invitations WHERE userId = ? AND isInvitePending = ?";
+    const parameters = [req.session.user.id, true];
+    await sqlQuery("invitations", req, res, sql, false, parameters);
+  });
+
   //Join conversation (in req.body creatorId)
   app.post("/api/conversations-join/:id", async (req, res) => {
     let userId = req.session.user.id;
@@ -107,24 +115,44 @@ export async function restApi(connection, app) {
     await sqlQuery("join-conversation", req, res, sql, true, parameters);
   });
 
-  //Decline conversation
-  app.put("/api/conversations-decline/:id", async (req, res) => {});
   //Get all conversations
   app.get("/api/conversations", async (req, res) => {
     const sql = "SELECT * FROM conversations";
     await sqlQuery("conversations", req, res, sql, false);
   });
-  //Invite to conversation (userId and creatorId in body)
-  app.post("/api/conversations-invite/:id", async (req, res) => {
-    if (req.session.user.id !== creatorId) {
+  //Invite to conversation (userId, conversationId and creatorId in body)
+  app.post("/api/conversations-invite", async (req, res) => {
+    if (req.session.user.id !== req.body.creatorId) {
       res.status(403).json({ error: "not allowed" });
       return;
     }
     const sql =
-      "INSERT INTO invitation (conversationId, userId, isInvitePending) VALUES(?,?,?)";
-    const parameters = [req.params.id, req.body.userId, true];
+      "INSERT INTO invitations (conversationId, userId, isInvitePending) VALUES(?,?,?)";
+    const parameters = [req.body.conversationId, req.body.userId, true];
     await sqlQuery("conversations-invite", req, res, sql, true, parameters);
   });
+
+  //Invitation by user
+  app.get("/api/invitations-user", async (req, res) => {
+    const sql =
+      "SELECT * FROM invitations_conversations_with_creator WHERE userId=? AND isInvitePending = ?";
+    const parameters = [req.session.user.id, true];
+    await sqlQuery("test", req, res, sql, false, parameters);
+  });
+  //Update invitation
+  app.put("/api/conversations-invite/:id", async (req, res) => {
+    const sql = " UPDATE invitations SET isInvitePending = ? WHERE id = ?";
+    const parameters = [false, req.params.id];
+    await sqlQuery("conversations-invite", req, res, sql, false, parameters);
+  });
+  //Get conversations by user
+  app.get("/api/conversations-by-user/:id", async (req, res) => {
+    const sql =
+      "SELECT * FROM conversations_with_users_conversations WHERE userId = ?";
+    const parameters = [req.params.id];
+    await sqlQuery("conversations-by-user", req, res, sql, false, parameters);
+  });
+
   //Get one conversation by id
   app.get("/api/conversations/:id", async (req, res) => {
     const sql = "SELECT * FROM conversations WHERE id = ?";
@@ -165,6 +193,9 @@ export async function restApi(connection, app) {
     let result = await sqlQuery("messages", req, res, sql, parameters);
   });
 
+  //
+  app.get("/api/conversation-messages/:id", (res, req) => {});
+
   app.post("/api/messages", async (req, res) => {
     const [content, users_conversations_id] = req.body;
     const time = Date.now();
@@ -186,7 +217,9 @@ async function sqlQuery(path, req, res, sql, justOne, parameters) {
 
     if (result instanceof Array) {
       if (result.length === 0) {
-        res.status(404).json({ error: "Not found" });
+        console.log("In if instanceof");
+        res.json({ message: "No entries found" });
+        return;
       }
       if (justOne) {
         result = result[0];
@@ -197,10 +230,10 @@ async function sqlQuery(path, req, res, sql, justOne, parameters) {
       delete result.password;
       req.session.user = result;
     }
-
     res.json(result);
     return result;
   } catch (error) {
+    console.log("Error in tryCatch");
     res.status(500);
     res.json({ error: error + "" });
     return { error: error + "" };

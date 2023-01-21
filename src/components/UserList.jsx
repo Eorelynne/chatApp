@@ -6,32 +6,23 @@ import User from "../components/User";
 import "../../public/css/myPage.css";
 
 function UserList(props) {
-  /*let userList = [
-    { userName: "pelle1" },
-    { userName: "stina2" },
-    { userName: "rumpnisse" },
-    { userName: "raffe" }
-  ];*/
   const { userList } = props;
 
-  console.log("Length", userList.length);
-  if (userList.length > 0) {
-    for (let i = 0; i < userList.length; i++) {
-      console.log(userList[i].userName);
-    }
-  }
-
   return (
-    <Container>
+    <>
       <Row>
         <Col>
           <h5>Users</h5>
         </Col>
       </Row>
-      {userList.map((user, index) => (
-        <User key={index} {...{ user }} />
-      ))}
-    </Container>
+      <Container className='userList scrollContainer pt-1'>
+        <ul>
+          {userList.map((userItem, index) => (
+            <User key={index} {...{ userItem }} />
+          ))}
+        </ul>
+      </Container>
+    </>
   );
 }
 

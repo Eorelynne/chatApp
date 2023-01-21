@@ -1,13 +1,19 @@
 import React from "react";
 import { Form, Button } from "react-bootstrap";
+import useStates from "../assets/helpers/useStates.js";
 
 function CreateConversation(props) {
   let { conversationName, setConversationName } = props;
+  let l = useStates("loggedIn");
+
+  function resetForm() {
+    setConversationName("");
+  }
 
   async function submitForm(event) {
     event.preventDefault();
     let result = await (
-      await fetch("/api/conversations-create/", {
+      await fetch(`/api/conversations-create/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -16,26 +22,26 @@ function CreateConversation(props) {
       })
     ).json();
     console.log(result);
-
+    console.log("userId:", l.id);
     let conversationId = result.insertId;
     await (
-      await fetch("/api/conversations-join", {
+      await fetch(`/api/conversations-join/${conversationId}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
         },
-        body: {
-          creatorId: 1
-        }
+        body: JSON.stringify({ creatorId: l.id })
       })
     ).json();
+
+    resetForm();
   }
 
   return (
     <>
-      <p>Start a conversation</p>
-      <Form onSubmit={submitForm} className='pt-3 pb-5'>
-        <Form.Group className='mb-3' controlId='formBasicConversationName'>
+      <Form onSubmit={submitForm} className='pt-1 pb-2'>
+        <h4>Start a conversation</h4>
+        <Form.Group className='mb-1' controlId='formBasicConversationName'>
           <Form.Label>Name your conversation</Form.Label>
           <Form.Control
             type='text'
@@ -47,7 +53,7 @@ function CreateConversation(props) {
           />
         </Form.Group>
         <Form.Group>
-          <Button className='btn mt-3 mb-5' type='submit'>
+          <Button className='btn mt-1' type='submit'>
             Create
           </Button>
         </Form.Group>

@@ -1,6 +1,8 @@
 .listContainer {
   border: 2px solid black;
   border-radius: 5px;
+  padding-left: 0px;
+  padding-right: 0px;
 }
 
 .accept-btn {
@@ -22,4 +24,31 @@
 
 .decline-btn:hover {
   background-color: rgba(207, 15, 15, 0.4) !important;
+}
+
+.userList {
+  align-content: flex-start;
+}
+
+.conversationUserListRow {
+  justify-content: space-between;
+  height: 35vh;
+}
+
+.scrollContainer {
+  overflow-y: scroll;
+  height: 20vh;
+  padding-left: 0vw;
+}
+
+.userNameDropdown-btn {
+  background-color: white;
+  color: black;
+  border: none;
+}
+
+.userNameDropdown-toggle {
+  background-color: white;
+  color: black;
+  border: none;
 }

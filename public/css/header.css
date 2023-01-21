@@ -4,12 +4,23 @@
 }
 
 .logo-img {
-  width: 200px;
-  height: 70px;
+  width: 5vw;
+  height: 5vw;
 }
 
+.hamburger-img {
+  width: 4vw;
+  height: 8vh;
+}
 .dropdown-custom {
   justify-content: end;
+}
+
+.nameContainer {
+  font-family: "Kaushan";
+  font-style: italic;
+  text-align: center;
+  color: #e47521;
 }
 
 @media screen and (max-width: 0px) {
@@ -18,7 +29,10 @@
     justify-content: end !important;
   }
   .logo-img {
-    width: 140px;
-    height: 45px;
+    width: 40vw;
+    height: 40vh;
   }
 }
+
+/* logo initial values width: 140px;
+    height: 45px;*/

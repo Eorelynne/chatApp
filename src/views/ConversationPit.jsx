@@ -1,9 +1,10 @@
 import React from "react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useLocation } from "react";
 import { Row, Col, Form, InputGroup, Button } from "react-bootstrap";
 import MessageList from "../components/MessageList";
 
-function ConversationPit(state) {
+function ConversationPit() {
+  const { state } = useLocation();
   const { conversation } = state;
   const [messageList, setMessageList] = useState([]);
 

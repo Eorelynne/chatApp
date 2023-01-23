@@ -1,6 +1,6 @@
 import React from "react";
 import { Col, Dropdown, ButtonGroup, Button } from "react-bootstrap";
-import useStates from "../assets/helpers/useStates.js";
+import useStates from "../utilities/useStates.js";
 
 import "../../public/css/myPage.css";
 
@@ -13,13 +13,13 @@ function User(props) {
     loggedInConversationList,
     setLoggedInConversationList
   } = props;
-  //let l = useStates("loggedIn");
+  let l = useStates("loggedIn");
 
   async function inviteUser(conversation) {
     console.log(conversation);
     console.log(userItem);
-    console.log(loggedIn);
-    if (conversation.id && userItem.id && loggedIn) {
+    console.log(l);
+    if (conversation.id && userItem.id && l) {
       let result = await (
         await fetch("/api/conversations-invite", {
           method: "POST",
@@ -29,7 +29,7 @@ function User(props) {
           body: JSON.stringify({
             conversationId: conversation.id,
             userId: userItem.id,
-            creatorId: loggedIn.id
+            creatorId: l.id
           })
         })
       ).json();

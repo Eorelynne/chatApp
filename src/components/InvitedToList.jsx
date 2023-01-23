@@ -17,20 +17,23 @@ function InvitedToList(props) {
       <Row>
         <h3>Invitations</h3>
       </Row>
-      <Row>
-        <Col xs={3}>Conversation Pit</Col>
-        <Col xs={3}>Invited by</Col>
-      </Row>
-      {invitationList.length !== 0 &&
-        invitationList.map((invitation, index) => (
-          <InvitedConversation
-            key={index}
-            invitation={invitation}
-            invitationAnswer={invitationAnswer}
-            setInvitationAnswer={setInvitationAnswer}
-            {...{ loggedIn, setLoggedIn }}
-          />
-        ))}
+      {invitationList.length !== 0 && (
+        <Container>
+          <Row>
+            <Col xs={3}>Conversation Pit</Col>
+            <Col xs={3}>Invited by</Col>
+          </Row>
+          {invitationList.map((invitation, index) => (
+            <InvitedConversation
+              key={index}
+              invitation={invitation}
+              invitationAnswer={invitationAnswer}
+              setInvitationAnswer={setInvitationAnswer}
+              {...{ loggedIn, setLoggedIn }}
+            />
+          ))}
+        </Container>
+      )}
       {invitationList.length === 0 && (
         <Col>
           <p>No pending invitations</p>

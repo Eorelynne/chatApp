@@ -2,23 +2,23 @@ import React from "react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
-import useStates from "../assets/helpers/useStates";
+import useStates from "../utilities/useStates";
 
 import "../../public/css/home.css";
 
 function Home(props) {
   const { loggedIn, setLoggedIn } = props;
-  // let l = useStates("loggedIn");
+  let l = useStates("loggedIn");
   const navigate = useNavigate();
 
   useEffect(() => {
     (async () => {
       let data = await (await fetch("/api/login")).json();
-      if (data.message !== "No entries found") {
-        setLoggedIn({ loggedIn, ...data });
-        /*  console.log(l);
-        console.log(data);
-        l = { ...data }; */
+      if (data.message !== "No entries found" && !data.error) {
+        // setLoggedIn({ data });
+        // console.log(loggedIn);
+        l = { ...data };
+        console.log(l);
       }
     })();
   }, []);
@@ -34,7 +34,7 @@ function Home(props) {
   }, [l]); */
   return (
     <div className='home'>
-      <Header {...{ loggedIn, setLoggedIn }} />
+      <Header loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
     </div>
   );
 }

@@ -1,11 +1,11 @@
 import React from "react";
 import { Form, Button, Col } from "react-bootstrap";
-import useStates from "../assets/helpers/useStates.js";
+import useStates from "../utilities/useStates.js";
 import "../../public/css/myPage.css";
 
 function CreateConversation(props) {
   let { conversationName, setConversationName, loggedIn, setLoggedIn } = props;
-  //let l = useStates("loggedIn");
+  let l = useStates("loggedIn");
 
   function resetForm() {
     setConversationName("");
@@ -23,7 +23,7 @@ function CreateConversation(props) {
       })
     ).json();
     console.log(result);
-    console.log("userId:", loggedIn.id);
+    console.log("userId:", l.id);
     let conversationId = result.insertId;
     await (
       await fetch(`/api/conversations-join/${conversationId}`, {
@@ -31,7 +31,7 @@ function CreateConversation(props) {
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify({ creatorId: loggedIn.id })
+        body: JSON.stringify({ creatorId: l.id })
       })
     ).json();
 

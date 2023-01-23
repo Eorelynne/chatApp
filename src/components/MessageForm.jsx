@@ -1,7 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import { Row, Col, Form, InputGroup, Button } from "react-bootstrap";
-import useStates from "../../src/assets/helpers/useStates";
+import useStates from "../utilities/useStates";
 import "../../public/css/conversationPage.css";
 
 function MessageForm(props) {

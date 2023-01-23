@@ -1,6 +1,6 @@
 import React from "react";
 import { useState } from "react";
-import useStates from "../assets/helpers/useStates.js";
+import useStates from "../utilities/useStates.js";
 import { useNavigate } from "react-router-dom";
 import { Form, Button, Container, Modal } from "react-bootstrap";
 import "../../public/css/form.css";
@@ -12,7 +12,7 @@ function loginForm(props) {
   const [errorMessage, setErrorMessage] = useState("");
   const handleClose = () => setShowModal(false);
   const navigate = useNavigate();
-  // let l = useStates("loggedIn");
+  let l = useStates("loggedIn");
 
   function resetForm() {
     setEmail("");
@@ -50,9 +50,10 @@ function loginForm(props) {
       result.id !== undefined &&
       result.error !== "Not logged in"
     ) {
-      setLoggedIn({ result });
+      // setLoggedIn({ result });
+      l = result;
       console.log("LoggedIn!!!");
-      console.log(loggedIn);
+      console.log(l);
       resetForm();
       navigate("/my-page");
     } else {

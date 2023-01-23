@@ -32,6 +32,10 @@
     width: 40vw;
     height: 40vh;
   }
+  .hamburger-img {
+    width: 8vw;
+    height: 6vh;
+  }
 }
 
 /* logo initial values width: 140px;

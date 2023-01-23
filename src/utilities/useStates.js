@@ -1,3 +1,6 @@
+// Simplify states, contexts and binding to forms
+// ironboy 2022
+
 import { useState, useDebugValue } from "react";
 
 const savedStates = {};
@@ -41,7 +44,7 @@ export default function useStates(initObj, contextName) {
   return makeProxy(state);
 }
 
-export function bind(obj, name, value = obj[name], altValue) {
+function bind(obj, name, value = obj[name], altValue) {
   return {
     name,
     value,

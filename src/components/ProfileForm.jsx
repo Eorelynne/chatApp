@@ -1,66 +1,65 @@
 import React from "react";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Form, Button, Container, Modal } from "react-bootstrap";
+import { useState, useEffect } from "react";
+import { Form, Button, Modal, Container } from "react-bootstrap";
 import { checkPassword, checkEmail } from "../utilities/inputCheck.js";
 import useStates from "../utilities/useStates.js";
-import "../../public/css/form.css";
 
-function RegisterForm() {
-  /* const [firstName, setFirstName] = useState("");
+function ProfileForm(props) {
+  let l = useStates("loggedIn");
+  /* const { loggedIn, setLoggedIn } = props;
+  const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
-  const [firstPassword, setFirstPassword] = useState(""); */
-  let l = useStates("loggedIn");
+  const [password, setpassword] = useState(""); */
   const [secondPassword, setSecondPassword] = useState("");
-  const [showModal, setShowModal] = useState(false);
-  const [message, setMessage] = useState("");
-  const handleClose = () => setShowModal(false);
-  const navigate = useNavigate();
 
-  function resetForm() {
-    /* setFirstName("");
-    setLastName("");
-    setUserName("");
-    setEmail("");
-    setFirstPassword("");
-    setSecondPassword(""); */
-    l.firstName = "";
-    l.lastName = "";
-    l.userName = "";
-    l.email = "";
-    l.password = "";
-    setSecondPassword("");
-  }
-
-  function goToLogin() {
-    navigate("/login");
-  }
+  useEffect(() => {
+    (async () => {
+      if (l.id === 0) {
+        let data = await (await fetch(`/api/login`)).json();
+        if (data.message !== "No entries found") {
+          console.log("running useEffect");
+          l = { data };
+          //setLoggedIn(data);
+          //console.log(loggedIn);
+          console.log(l.firstName);
+        } else if (data.error === "No entries found") {
+          navigate("/");
+        }
+      }
+    })();
+  }, []);
 
   async function submitForm(event) {
     event.preventDefault();
+    validatInputData();
+    console.log("CHANGING MY INFO!!");
+    let result = await (
+      await fetch(`/api/edit-my-user-info/${l.id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "Application/json"
+        },
+        body: JSON.stringify({
+          firstName: l.firstName,
+          lastName: l.lastName,
+          userName: l.userName,
+          email: l.email,
+          password: l.password
+        })
+      })
+    ).json;
+    console.log(result);
+  }
 
+  function validatInputData() {
     let formInfoIsValid = false;
     while (!formInfoIsValid) {
-      if (
-        l.firstName.length === 0 ||
-        l.lastName.length === 0 ||
-        l.userName.length === 0 ||
-        l.email.length === 0 ||
-        l.firstPassword.length === 0 ||
-        secondPassword.length === 0
-      ) {
+      if (password !== secondPassword) {
         formInfoIsValid = false;
-        setMessage("All fields must be filled");
-        setShowModal(true);
-      } else {
-        formInfoIsValid = true;
-      }
-      if (l.password !== secondPassword) {
-        formInfoIsValid = false;
-        setMessage("The entered passwords must match");
-        setShowModal(true);
+        /*  setMessage("The entered passwords must match");
+      setShowModal(true); */
       } else {
         formInfoIsValid = true;
       }
@@ -68,36 +67,16 @@ function RegisterForm() {
       let isEmailApproved = checkEmail(l.email);
       if (!isEmailApproved || !isPasswordApproved) {
         formInfoIsValid = false;
-        setMessage("Wrong email or password");
-        setShowModal(true);
+        /* setMessage("Wrong email or password");
+      setShowModal(true); */
       } else {
         formInfoIsValid = true;
       }
     }
-
-    let userToSave = {
-      firstName: l.firstName,
-      lastName: l.lastName,
-      userName: l.userName,
-      email: l.email,
-      password: l.firstPassword
-    };
-    let result = await (
-      await fetch("/api/users", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(userToSave)
-      })
-    ).json();
-    console.log(result);
-    resetForm();
-    setMessage("You are now registered");
-    setShowModal(true);
-    setTimeout(goToLogin, 3000);
   }
 
   return (
-    <div>
+    <>
       <Form onSubmit={submitForm} className='pt-3 pb-5'>
         <Form.Group className='mb-3' controlId='formBasicFirstName'>
           <Form.Label>First Name</Form.Label>
@@ -105,7 +84,7 @@ function RegisterForm() {
             type='text'
             value={l.firstName}
             {...l.bind("firstName")}
-            placeholder=''
+            placeholder={l.firstName}
           />
         </Form.Group>
 
@@ -115,7 +94,7 @@ function RegisterForm() {
             type='text'
             value={l.lastName}
             {...l.bind("lastName")}
-            placeholder=''
+            placeholder={l.lastName}
           />
         </Form.Group>
 
@@ -125,7 +104,7 @@ function RegisterForm() {
             type='text'
             value={l.userName}
             {...l.bind("userName")}
-            placeholder=''
+            placeholder={l.userName}
           />
           <Form.Text className='text-muted'>
             This is the name your friends will see.
@@ -138,7 +117,7 @@ function RegisterForm() {
             type='email'
             value={l.email}
             {...l.bind("email")}
-            placeholder='Enter email'
+            placeholder={l.email}
           />
         </Form.Group>
 
@@ -148,7 +127,7 @@ function RegisterForm() {
             type='password'
             value={l.password}
             {...l.bind("password")}
-            placeholder='Password'
+            placeholder=''
           />
           <Form.Text className='text-muted'>
             At least 8 characters, one upper case letter and one non-letter
@@ -171,7 +150,7 @@ function RegisterForm() {
             Register
           </Button>
         </Container>
-        <Modal show={showModal} onHide={handleClose}>
+        {/*   <Modal show={showModal} onHide={handleClose}>
           <Modal.Header closeButton></Modal.Header>
           <Modal.Body>
             <p className='custom-label'>{message}</p>
@@ -181,10 +160,10 @@ function RegisterForm() {
               Close
             </Button>
           </Modal.Footer>
-        </Modal>
+        </Modal> */}
       </Form>
-    </div>
+    </>
   );
 }
 
-export default RegisterForm;
+export default ProfileForm;

@@ -1,7 +1,7 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import { Routes, Route, BrowserRouter } from "react-router-dom";
-import useStates from "../src/assets/helpers/useStates.js";
+import useStates from "../src/utilities/useStates.js";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../public/css/appStyles.css";
 import Home from "./views/Home";
@@ -10,9 +10,10 @@ import Login from "./views/Login";
 import MyPage from "./views/MyPage";
 import NotFound from "./views/NotFound";
 import ConversationPit from "./views/ConversationPit";
+import Profile from "./views/Profile";
 
 function App() {
-  const [loggedIn, setLoggedIn] = useState({
+  let l = useStates("loggedIn", {
     id: 0,
     firstName: "",
     lastName: "",
@@ -20,7 +21,7 @@ function App() {
     email: "",
     role: ""
   });
-
+  const [loggedIn, setLoggedIn] = useState({});
   return (
     <div className='App'>
       <BrowserRouter>
@@ -41,6 +42,10 @@ function App() {
           <Route
             path='/conversation-pit'
             element={<ConversationPit {...{ loggedIn, setLoggedIn }} />}
+          />
+          <Route
+            path='/my-profile-page'
+            element={<Profile loggedIn={loggedIn} setLoggedIn={setLoggedIn} />}
           />
           <Route
             path='/*'

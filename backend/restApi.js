@@ -1,5 +1,5 @@
 import { passwordEncryptor } from "./passwordUtils.js";
-import { checkPassword } from "../src/assets/helpers/inputCheck.js";
+import { checkPassword } from "../src/utilities/inputCheck.js";
 import { acl } from "./acl.js";
 import { broadcast } from "./index.js";
 

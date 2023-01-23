@@ -1,25 +1,47 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { Nav, Navbar, NavDropdown, Container, Row, Col } from "react-bootstrap";
-import useStates from "../assets/helpers/useStates.js";
+import {
+  Nav,
+  Navbar,
+  NavDropdown,
+  NavItem,
+  Container,
+  Row,
+  Col
+} from "react-bootstrap";
+import useStates from "../utilities/useStates.js";
 import { Link, useNavigate } from "react-router-dom";
 import "../../public/css/header.css";
 
 function Header(props) {
-  const { loggedIn, setLoggedIn } = props;
+  // const { loggedIn, setLoggedIn } = props;
   const navigate = useNavigate();
-  //let l = useStates("loggedIn");
+  let l = useStates("loggedIn");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    let x = !loggedIn.id || loggedIn.id === 0 ? false : true;
+    (async () => {
+      let data = await (await fetch("/api/login")).json();
+      if (data.message !== "No entries found" && !data.error) {
+        // setLoggedIn({ data });
+        // console.log(loggedIn);
+        l = { ...data };
+        console.log(l.id);
+      }
+    })();
+  }, []);
+
+  useEffect(() => {
+    let x = !l.id || l.id === 0 ? false : true;
+    console.log("X", x);
+    console.log("L.id", l.id);
     setIsLoggedIn(x);
-  }, [loggedIn.id]);
+  }, [l.id]);
 
   async function logout() {
     let result = await (await fetch("/api/login", { method: "DELETE" })).json();
     console.log(result);
-    setLoggedIn({});
+    l = {};
     navigate("/");
   }
 
@@ -34,7 +56,13 @@ function Header(props) {
       >
         <Container fluid className='row'>
           <Col xs={2} style={{ color: "#e47521" }} className='pt-4'>
-            {loggedIn.id !== 0 && <h3>{loggedIn.userName}</h3>}
+            {isLoggedIn && (
+              <NavItem>
+                <Nav.Link as={Link} to='/my-profile-page'>
+                  {l.userName}
+                </Nav.Link>
+              </NavItem>
+            )}
           </Col>
           <Col xs={8} className='logo-container'>
             <Container className='row'>
@@ -58,28 +86,30 @@ function Header(props) {
             <Nav className='me-auto'>
               <img
                 alt='hamburger'
-                src='../../public/hamburger.png'
+                src='../../public/hamburger2.png'
                 className='hamburger-img'
               />
               <NavDropdown id='basic-nav-dropdown' drop='start'>
-                <NavDropdown.Item>
-                  <Nav.Link as={Link} to='/login'>
-                    Login
-                  </Nav.Link>
-                </NavDropdown.Item>
-                <NavDropdown.Item>
-                  <Nav.Link as={Link} to='/register'>
-                    Register
-                  </Nav.Link>
-                </NavDropdown.Item>
-                <NavDropdown.Item>
-                  <Nav.Link as={Link} to='/my-page'>
-                    My page
-                  </Nav.Link>
-                </NavDropdown.Item>
-                <NavDropdown.Item>
-                  <Nav.Link onClick={logout}>Logout</Nav.Link>
-                </NavDropdown.Item>
+                {!isLoggedIn && (
+                  <NavDropdown.Item href='/login'>Login</NavDropdown.Item>
+                )}
+                {!isLoggedIn && (
+                  <NavDropdown.Item href='/register'>Register</NavDropdown.Item>
+                )}
+                {isLoggedIn && (
+                  <NavDropdown.Item href='/my-page'>My Page</NavDropdown.Item>
+                )}
+                {/* {isLoggedIn && ( */}
+                <NavDropdown.Item onClick={logout}>Logout</NavDropdown.Item>
+                {/* )} */}
+                {isLoggedIn && (
+                  <NavDropdown.Item href='/my-profile-page'>
+                    My profile
+                  </NavDropdown.Item>
+                )}
+                {isLoggedIn && l.role === "admin" && (
+                  <NavDropdown.Item href='/admin-page'>Admin</NavDropdown.Item>
+                )}
               </NavDropdown>
             </Nav>
           </Col>

@@ -1,7 +1,7 @@
 import React from "react";
 import { useEffect, useState } from "react";
 import { Container, Row, Col } from "react-bootstrap";
-import useStates from "../../src/assets/helpers/useStates";
+import useStates from "../utilities/useStates";
 import User from "../components/User";
 
 import "../../public/css/myPage.css";
@@ -9,12 +9,13 @@ import "../../public/css/myPage.css";
 function UserList(props) {
   const { userList, loggedIn, setLoggedIn } = props;
   const [loggedInConversationList, setLoggedInConversationList] = useState([]);
-  //let l = useStates("loggedIn");
+  let l = useStates("loggedIn");
+  const [filter, setFilter] = useState("");
   //console.log("loggedIn");
   // console.log(l);
 
   useEffect(() => {
-    if (loggedIn.id !== 0 && loggedIn.id !== undefined) {
+    if (l.id !== 0 && l.id !== undefined) {
       (async () => {
         let data = await (
           await fetch(`/api/conversation-by-creator/${loggedIn.id}`)
@@ -40,22 +41,39 @@ function UserList(props) {
   return (
     <>
       <Row>
+        <input
+          id='filter'
+          name='filter'
+          type='text'
+          value={filter}
+          onChange={event => setFilter(event.target.value)}
+        />
+      </Row>
+      <Row>
         <Col className='mt-2 headlineContainer'>
           <h5>Users</h5>
         </Col>
       </Row>
       <Container className='userList scrollContainer pt-1'>
         <ul>
-          {userList.sort(sortOnUserName).map((userItem, index) => (
-            <User
-              key={index}
-              {...{ userItem }}
-              loggedInConversationList={loggedInConversationList}
-              setLoggedInConversationList={setLoggedInConversationList}
-              loggedIn={loggedIn}
-              setLoggedIn={setLoggedIn}
-            />
-          ))}
+          {userList
+            .sort(sortOnUserName)
+            .filter(
+              userItem =>
+                userItem.userName
+                  .toLowerCase()
+                  .startsWith(filter.toLowerCase()) || filter === ""
+            )
+            .map((userItem, index) => (
+              <User
+                key={index}
+                {...{ userItem }}
+                loggedInConversationList={loggedInConversationList}
+                setLoggedInConversationList={setLoggedInConversationList}
+                loggedIn={loggedIn}
+                setLoggedIn={setLoggedIn}
+              />
+            ))}
         </ul>
       </Container>
     </>

@@ -7,9 +7,10 @@ import MessageForm from "../components/MessageForm";
 import Header from "../components/Header";
 import Message from "../components/Message";
 import "../../public/css/conversationPage.css";
+import useStates from "../utilities/useStates.js";
 
 function ConversationPit(props) {
-  const { loggedIn, setLoggedIn } = props;
+  //const { loggedIn, setLoggedIn } = props;
   const location = useLocation();
   console.log(location);
   const { state } = location;

@@ -3,7 +3,13 @@ import { Button } from "react-bootstrap";
 import "../../public/css/myPage.css";
 
 function DeclineBtn(props) {
-  const { invitation, invitationAnswer, setInvitationAnswer } = props;
+  const {
+    invitation,
+    invitationAnswer,
+    setInvitationAnswer,
+    loggedIn,
+    setLoggedIn
+  } = props;
 
   async function declineConversation() {
     updateInvitation();

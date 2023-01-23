@@ -1,6 +1,7 @@
 import { passwordEncryptor } from "./passwordUtils.js";
 import { checkPassword } from "../src/assets/helpers/inputCheck.js";
 import { acl } from "./acl.js";
+import { broadcast } from "./index.js";
 
 let promisePool;
 
@@ -14,7 +15,7 @@ export async function restApi(connection, app) {
   });
 
   app.get("/api/users/:id", async (req, res) => {
-    const sql = "SELECT * FROM users WHERE `id` = ?";
+    const sql = "SELECT * FROM users WHERE id = ?";
     const parameters = [req.params.id];
     await sqlQuery("users", req, res, sql, true, parameters);
   });
@@ -33,7 +34,7 @@ export async function restApi(connection, app) {
       req.body.userName,
       req.body.email,
       password,
-      "USER"
+      "user"
     ];
     const result = await sqlQuery("users", req, res, sql, true, parameters);
   });
@@ -122,6 +123,10 @@ export async function restApi(connection, app) {
   });
   //Invite to conversation (userId, conversationId and creatorId in body)
   app.post("/api/conversations-invite", async (req, res) => {
+    if (!req.session.user) {
+      res.status(403).json({ error: "not allowed" });
+    }
+    console.log(req.session.user);
     if (req.session.user.id !== req.body.creatorId) {
       res.status(403).json({ error: "not allowed" });
       return;
@@ -151,6 +156,13 @@ export async function restApi(connection, app) {
       "SELECT * FROM conversations_with_users_conversations WHERE userId = ?";
     const parameters = [req.params.id];
     await sqlQuery("conversations-by-user", req, res, sql, false, parameters);
+  });
+
+  //Get conversation by creator
+  app.get(`/api/conversation-by-creator/:id`, async (req, res) => {
+    const sql = "SELECT * FROM conversations WHERE creatorId =?";
+    const parameters = [req.params.id];
+    await sqlQuery("conversation-by-creator", req, res, sql, false, parameters);
   });
 
   //Get one conversation by id
@@ -184,17 +196,24 @@ export async function restApi(connection, app) {
   //Messages
   app.get("/api/messages", async (req, res) => {
     const sql = "SELECT * FROM messages";
-    let result = await sqlQuery("messages", req, res, sql);
+    let result = await sqlQuery("messages", req, res, sql, false);
   });
 
   app.get("/api/messages/:id", async (req, res) => {
-    const sql = "SELECT * FROM messages WHERE id=?";
+    if (req.params.id === undefined || !req.params.id) {
+      res.status(400).json({ error: "Bad request, messageId is missing" });
+    }
+    const sql = "SELECT * FROM messages WHERE id= ?";
     const parameters = [req.params.id];
-    let result = await sqlQuery("messages", req, res, sql, parameters);
+    let result = await sqlQuery("messages", req, res, sql, true, parameters);
   });
 
   //
   app.get("/api/conversation-messages/:id", async (res, req) => {
+    let conversationId = +req.params.id;
+    if (req.params.id === undefined || !req.params.id) {
+      res.status(400).json({ error: "Bad request, conversationId missing" });
+    }
     const sql =
       "SELECT * FROM users_conversations_messages WHERE conversationId = ?";
     const parameters = [req.params.id];
@@ -202,12 +221,21 @@ export async function restApi(connection, app) {
   });
 
   app.post("/api/messages", async (req, res) => {
-    const [content, users_conversations_id] = req.body;
-    const time = Date.now();
+    let message = {
+      content: req.body.content,
+      time: Date.now(),
+      usersConversationsId: req.body.usersConversationsId,
+      conversationId: req.body.conversationId
+    };
+    broadcast("new-message", message);
     const sql =
-      "INSERT INTO messages (content, time, users_conversations_id) VALUES (?,?,?)";
-    const parameters = [content, time, users_conversations_id];
-    let result = await sqlQuery("messages", req, res, sql, parameters);
+      "INSERT INTO messages (content, time, usersConversationsId) VALUES (?,?,?)";
+    const parameters = [
+      req.body.content,
+      message.time,
+      req.body.usersConversationsId
+    ];
+    let result = await sqlQuery("messages", req, res, sql, true, parameters);
   });
 }
 

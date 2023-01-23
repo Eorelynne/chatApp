@@ -12,7 +12,7 @@ import NotFound from "./views/NotFound";
 import ConversationPit from "./views/ConversationPit";
 
 function App() {
-  let l = useStates("loggedIn", {
+  const [loggedIn, setLoggedIn] = useState({
     id: 0,
     firstName: "",
     lastName: "",
@@ -25,12 +25,27 @@ function App() {
     <div className='App'>
       <BrowserRouter>
         <Routes>
-          <Route path='/' element={<Home />} />
-          <Route path='/login' element={<Login />} />
-          <Route path='/register' element={<Register />} />
-          <Route path='/my-page' element={<MyPage />} />
-          <Route path='/conversation-pit' element={<ConversationPit />} />
-          <Route path='/*' element={<NotFound />} />
+          <Route path='/' element={<Home {...{ loggedIn, setLoggedIn }} />} />
+          <Route
+            path='/login'
+            element={<Login loggedIn={loggedIn} setLoggedIn={setLoggedIn} />}
+          />
+          <Route
+            path='/register'
+            element={<Register {...{ loggedIn, setLoggedIn }} />}
+          />
+          <Route
+            path='/my-page'
+            element={<MyPage loggedIn={loggedIn} setLoggedIn={setLoggedIn} />}
+          />
+          <Route
+            path='/conversation-pit'
+            element={<ConversationPit {...{ loggedIn, setLoggedIn }} />}
+          />
+          <Route
+            path='/*'
+            element={<NotFound {...{ loggedIn, setLoggedIn }} />}
+          />
         </Routes>
       </BrowserRouter>
     </div>

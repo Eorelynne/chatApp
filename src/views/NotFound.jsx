@@ -1,14 +1,15 @@
 import React from "react";
 import { Row, Col } from "react-bootstrap";
 import Header from "../components/Header";
+import "../../public/css/appStyles.css";
 
-function NotFound() {
+function NotFound(props) {
+  const { loggedIn, setLoggedIn } = props;
   return (
     <div>
-      <Header />
-      <Row className='mt-3 justify-content-center'>
-        <Col xs={1}></Col>
-        <Col xs={10}>
+      <Header {...{ loggedIn, setLoggedIn }} />
+      <Row className='mt-5 pageNotFoundText'>
+        <Col>
           <h1>404 Page not found</h1>
         </Col>
       </Row>

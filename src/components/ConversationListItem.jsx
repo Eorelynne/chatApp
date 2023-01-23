@@ -1,17 +1,19 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "react-bootstrap";
+import "../../public/css/conversationPage.css";
+
 function ConversationListItem(props) {
-  const { conversation } = props;
+  const { conversation, loggedIn, setLoggedIn } = props;
   const navigate = useNavigate();
 
-  console.log("conversation name in list", conversation.name);
   return (
     <>
       <li>
         <Button
+          className='conversationItem'
           onClick={() => {
-            navigate("/conversation-pit", { ...{ conversation } });
+            navigate("/conversation-pit", { state: { ...conversation } });
           }}
         >
           {conversation.name}

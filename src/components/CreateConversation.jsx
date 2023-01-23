@@ -1,10 +1,11 @@
 import React from "react";
-import { Form, Button } from "react-bootstrap";
+import { Form, Button, Col } from "react-bootstrap";
 import useStates from "../assets/helpers/useStates.js";
+import "../../public/css/myPage.css";
 
 function CreateConversation(props) {
-  let { conversationName, setConversationName } = props;
-  let l = useStates("loggedIn");
+  let { conversationName, setConversationName, loggedIn, setLoggedIn } = props;
+  //let l = useStates("loggedIn");
 
   function resetForm() {
     setConversationName("");
@@ -22,7 +23,7 @@ function CreateConversation(props) {
       })
     ).json();
     console.log(result);
-    console.log("userId:", l.id);
+    console.log("userId:", loggedIn.id);
     let conversationId = result.insertId;
     await (
       await fetch(`/api/conversations-join/${conversationId}`, {
@@ -30,7 +31,7 @@ function CreateConversation(props) {
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify({ creatorId: l.id })
+        body: JSON.stringify({ creatorId: loggedIn.id })
       })
     ).json();
 
@@ -39,8 +40,10 @@ function CreateConversation(props) {
 
   return (
     <>
-      <Form onSubmit={submitForm} className='pt-1 pb-2'>
+      <Col className='headlineContainer'>
         <h4>Start a conversation</h4>
+      </Col>
+      <Form onSubmit={submitForm} className='pt-1 pb-2'>
         <Form.Group className='mb-1' controlId='formBasicConversationName'>
           <Form.Label>Name your conversation</Form.Label>
           <Form.Control

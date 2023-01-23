@@ -52,8 +52,8 @@ app.use((error, req, res, next) => {
   if (error) {
     res.status(400);
     res.json({
-      error: "Bad request. Error in JSON"
-      //details: error // needed?
+      error: "Bad request. Error in JSON",
+      details: error // needed?
     });
   } else {
     next();
@@ -64,6 +64,7 @@ login(db, app);
 
 let connections = [];
 app.get("/api/sse", (req, res) => {
+  console.log("Running SSE");
   connections.push(res);
 
   req.on("close", () => {
@@ -82,7 +83,7 @@ app.get("/api/sse", (req, res) => {
   broadcast("connect", { message: req.session.user.userName + "connected" });
 });
 
-function broadcast(event, data) {
+export function broadcast(event, data) {
   // loop through all open connections and send
   // some data without closing the connection (res.write)
   for (let res of connections) {
@@ -91,10 +92,20 @@ function broadcast(event, data) {
   }
 }
 
+setInterval(() => {
+  broadcast("keep-alive", "");
+}, 25000);
+
 restApi(db, app);
 
 //app.use(express.static(__dirname + '/dist')); kolla upp sökvägen.
 
 app.listen(port, () => {
   console.log("Server listening on port " + port);
+});
+
+app.all("*", (req, res) => {
+  res.status(404).json({ error: "Endpoint not found" });
+  /*res.set("Content-Type", "text/html");
+  res.sendFile(path.join(__dirname, "../src/views", "NotFound.jsx"));*/
 });

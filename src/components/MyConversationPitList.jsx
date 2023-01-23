@@ -6,14 +6,19 @@ import ConversationListItem from "./ConversationListItem";
 import "../../public/css/myPage.css";
 
 function MyConversationPits(props) {
-  const { conversationList, setConversationList } = props;
+  const { conversationList, setConversationList, loggedIn, setLoggedIn } =
+    props;
 
   return (
     <>
       <Container className='scrollContainer'>
         <ul>
           {conversationList.map((conversation, index) => (
-            <ConversationListItem key={index} conversation={conversation} />
+            <ConversationListItem
+              key={index}
+              conversation={conversation}
+              {...{ loggedIn, setLoggedIn }}
+            />
           ))}
         </ul>
       </Container>

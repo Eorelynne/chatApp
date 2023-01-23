@@ -2,11 +2,18 @@ import React from "react";
 import Message from "../components/Message";
 
 function MessageList(props) {
-  const { messageList, setMessageList } = props;
+  const { messageList, setMessageList, loggedIn, setLoggedIn, state } = props;
 
   return (
     <div>
-      <Message />
+      {messageList.length !== 0 &&
+        messageList.map((message, index) => (
+          <Message
+            key={index}
+            message={message}
+            {...{ loggedIn, setLoggedIn }}
+          />
+        ))}
     </div>
   );
 }

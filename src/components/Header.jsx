@@ -5,19 +5,21 @@ import useStates from "../assets/helpers/useStates.js";
 import { Link, useNavigate } from "react-router-dom";
 import "../../public/css/header.css";
 
-function Header() {
+function Header(props) {
+  const { loggedIn, setLoggedIn } = props;
   const navigate = useNavigate();
-  let l = useStates("loggedIn");
-  const [loggedIn, setLoggedIn] = useState(l);
+  //let l = useStates("loggedIn");
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    let x = l.id === 0 ? null : l;
-    setLoggedIn(x);
-  }, [l]);
+    let x = !loggedIn.id || loggedIn.id === 0 ? false : true;
+    setIsLoggedIn(x);
+  }, [loggedIn.id]);
 
   async function logout() {
     let result = await (await fetch("/api/login", { method: "DELETE" })).json();
     console.log(result);
+    setLoggedIn({});
     navigate("/");
   }
 
@@ -32,7 +34,7 @@ function Header() {
       >
         <Container fluid className='row'>
           <Col xs={2} style={{ color: "#e47521" }} className='pt-4'>
-            {loggedIn !== null && <h3>{l.userName}</h3>}
+            {loggedIn.id !== 0 && <h3>{loggedIn.userName}</h3>}
           </Col>
           <Col xs={8} className='logo-container'>
             <Container className='row'>
@@ -59,7 +61,7 @@ function Header() {
                 src='../../public/hamburger.png'
                 className='hamburger-img'
               />
-              <NavDropdown id='basic-nav-dropdown'>
+              <NavDropdown id='basic-nav-dropdown' drop='start'>
                 <NavDropdown.Item>
                   <Nav.Link as={Link} to='/login'>
                     Login
@@ -68,6 +70,11 @@ function Header() {
                 <NavDropdown.Item>
                   <Nav.Link as={Link} to='/register'>
                     Register
+                  </Nav.Link>
+                </NavDropdown.Item>
+                <NavDropdown.Item>
+                  <Nav.Link as={Link} to='/my-page'>
+                    My page
                   </Nav.Link>
                 </NavDropdown.Item>
                 <NavDropdown.Item>

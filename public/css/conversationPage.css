@@ -1,0 +1,15 @@
+.messageInputRow {
+  position: fixed;
+  bottom: 10px;
+  justify-items: center;
+}
+
+.messageFormContainer {
+  text-align: center;
+}
+
+.conversationItem {
+  background-color: white;
+  color: black;
+  border: none;
+}

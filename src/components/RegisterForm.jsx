@@ -85,7 +85,7 @@ function RegisterForm() {
     resetForm();
     setMessage("You are now registered");
     setShowModal(true);
-    setTimeout(goToLogin, 5000);
+    setTimeout(goToLogin, 3000);
   }
 
   return (

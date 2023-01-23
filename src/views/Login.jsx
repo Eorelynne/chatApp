@@ -6,22 +6,22 @@ import Header from "../components/Header";
 import LoginForm from "../components/LoginForm";
 
 function Login(props) {
-  const { user, setUser } = props;
+  const { loggedIn, setLoggedIn } = props;
   const [showModal, setShowModal] = useState(false);
 
   return (
     <div>
-      <Header />
+      <Header {...{ loggedIn, setLoggedIn }} />
       <Row className='mt-3'>
         <Col xs={1} md={2}></Col>
         <Col xs={10} md={8} className='form'>
           <LoginForm
             {...{
               showModal,
-              setShowModal,
-              user,
-              setUser
+              setShowModal
             }}
+            loggedIn={loggedIn}
+            setLoggedIn={setLoggedIn}
           />
         </Col>
       </Row>

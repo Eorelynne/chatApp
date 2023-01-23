@@ -1,5 +1,5 @@
 import React from "react";
-import { Container, Col } from "react-bootstrap";
+import { Container, Row, Col } from "react-bootstrap";
 import InvitedConversation from "./InvitedConversation";
 import "../../public/css/myPage.css";
 
@@ -8,11 +8,19 @@ function InvitedToList(props) {
     invitationList,
     setInvitationList,
     invitationAnswer,
-    setInvitationAnswer
+    setInvitationAnswer,
+    loggedIn,
+    setLoggedIn
   } = props;
   return (
     <Container>
-      <h3>Invitations</h3>
+      <Row>
+        <h3>Invitations</h3>
+      </Row>
+      <Row>
+        <Col xs={3}>Conversation Pit</Col>
+        <Col xs={3}>Invited by</Col>
+      </Row>
       {invitationList.length !== 0 &&
         invitationList.map((invitation, index) => (
           <InvitedConversation
@@ -20,6 +28,7 @@ function InvitedToList(props) {
             invitation={invitation}
             invitationAnswer={invitationAnswer}
             setInvitationAnswer={setInvitationAnswer}
+            {...{ loggedIn, setLoggedIn }}
           />
         ))}
       {invitationList.length === 0 && (

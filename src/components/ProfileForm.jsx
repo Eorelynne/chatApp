@@ -21,8 +21,6 @@ function ProfileForm(props) {
         if (data.message !== "No entries found") {
           console.log("running useEffect");
           l = { data };
-          //setLoggedIn(data);
-          //console.log(loggedIn);
           console.log(l.firstName);
         } else if (data.error === "No entries found") {
           navigate("/");

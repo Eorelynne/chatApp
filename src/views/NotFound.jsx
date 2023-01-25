@@ -3,11 +3,10 @@ import { Row, Col } from "react-bootstrap";
 import Header from "../components/Header";
 import "../../public/css/appStyles.css";
 
-function NotFound(props) {
-  const { loggedIn, setLoggedIn } = props;
+function NotFound() {
   return (
     <div>
-      <Header {...{ loggedIn, setLoggedIn }} />
+      <Header />
       <Row className='mt-5 pageNotFoundText'>
         <Col>
           <h1>404 Page not found</h1>

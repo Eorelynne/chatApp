@@ -4,7 +4,7 @@ import useStates from "../utilities/useStates.js";
 import "../../public/css/myPage.css";
 
 function CreateConversation(props) {
-  let { conversationName, setConversationName, loggedIn, setLoggedIn } = props;
+  let { conversationName, setConversationName } = props;
   let l = useStates("loggedIn");
 
   function resetForm() {
@@ -14,7 +14,7 @@ function CreateConversation(props) {
   async function submitForm(event) {
     event.preventDefault();
     let result = await (
-      await fetch(`/api/conversations-create/`, {
+      await fetch(`/api/conversations/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"

@@ -13,3 +13,22 @@
   color: black;
   border: none;
 }
+
+.messageListContainer {
+  border: 2px solid black;
+  border-radius: 5px;
+  overflow-y: scroll;
+}
+
+.sent-message {
+  align-content: end;
+}
+
+.recieved-message {
+  align-content: start;
+}
+
+.message {
+  border: 2px solid black;
+  border-radius: 5px;
+}

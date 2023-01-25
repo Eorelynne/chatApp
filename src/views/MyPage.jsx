@@ -11,50 +11,39 @@ import CreateConversation from "../components/CreateConversation";
 
 import "../../public/css/myPage.css";
 
-function MyPage(props) {
-  // const { loggedIn, setLoggedIn } = props;
+function MyPage() {
   const [conversationName, setConversationName] = useState("");
   const [userList, setUserList] = useState([]);
   const [conversationList, setConversationList] = useState([]);
   const [invitationList, setInvitationList] = useState([]);
-  const [invitationAnswer, setInvitationAnswer] = useState(false);
+
   let l = useStates("loggedIn");
+  let m = useStates("newMessage");
   const navigate = useNavigate();
   const location = useLocation();
   const { state } = location;
-  /* console.log("l in myPage");
-  console.log(l); */
-
-  /* useEffect(() => {
-    if (l.id === 0 || l.id === undefined) {
-       setLoggedIn(state); 
-      l = { ...state };
-    }
-  }, []); */
 
   useEffect(() => {
-    (async () => {
-      let data = await (await fetch(`/api/login`)).json();
-      if (data.message !== "No entries found") {
-        //setLoggedIn({ ...data });
-        l = { ...data };
-      } else if (
-        data.message === "No entries found" ||
-        l.id === 0 ||
-        l.id === undefined
-      ) {
-        navigate("/");
-      }
-    })();
-    /*  console.log("LoggedIn in useEffect MYPAGE");
-    console.log(l); */
-    console.log("l in useEffect MYPAGE");
-    console.log(l);
+    if (l.id === 0 || !l.id) {
+      (async () => {
+        let data = await (await fetch(`/api/login`)).json();
+        if (data.message !== "No entries found") {
+          Object.assign(l, data);
+          l.loggedIn = true;
+        } else if (
+          data.message === "No entries found" ||
+          l.id === 0 ||
+          l.id === undefined
+        ) {
+          navigate("/");
+        }
+      })();
+    }
   }, []);
 
   useEffect(() => {
     (async () => {
-      let data = await (await fetch(`/api/users`)).json();
+      let data = await (await fetch(`/api/user-get-users`)).json();
       if (data.message !== "No entries found") {
         let prevList = userList;
         setUserList(data);
@@ -69,54 +58,42 @@ function MyPage(props) {
       let data = await (await fetch(`/api/invitations-user`)).json();
 
       if (data.message !== "No entries found") {
-        setInvitationList(invitationList, ...data);
+        setInvitationList(data);
       } else if (data.message === "No entries found") {
-        setInvitationList(invitationList, []);
+        setInvitationList([]);
       }
     })();
   }, []);
 
   useEffect(() => {
-    console.log("loggedIn.id in mypage", l.id);
-    if (l.id !== 0 && l.id !== undefined)
-      (async () => {
-        let data = await (
-          await fetch(`/api/conversations-by-user/${l.id}`)
-        ).json();
-        console.log("DATAin mypage");
-        console.log(data);
-        if (data.message !== "No entries found") {
-          setConversationList(data);
-        } else if (data.message === "No entries found") {
-          setConversationList([]);
-          console.log("Empty List");
-        }
-      })();
+    console.log("running useEffect in Mypage - conversations");
+    /* if (l.id !== 0 && l.id !== undefined) */
+    (async () => {
+      let data = await (await fetch(`/api/conversations-by-user`)).json();
+      if (data.message !== "No entries found") {
+        setConversationList(data);
+      } else if (data.message === "No entries found") {
+        /* setConversationList([]); */
+        console.log("Empty List");
+      }
+    })();
   }, []);
 
   return (
     <>
-      <Header /* {...{ loggedIn, setLoggedIn }} */ />
+      <Header />
       <Container fluid>
         <Row className='ms-2 mt-3 me-2 mb-3 pt-2'>
           <Col className='listContainer'>
             <InvitedToList
               invitationList={invitationList}
               setInvitationList={setInvitationList}
-              invitationAnswer={invitationAnswer}
-              setInvitationAnswer={setInvitationAnswer}
-              /* {...{ loggedIn, setLoggedIn }} */
             />
           </Col>
         </Row>
-        <Row></Row>
         <Row className='conversationUserListRow mb-3 pt-2 ms-2 me-2'>
           <Col xs={5} className='listContainer ps-1'>
-            <UserList
-              userList={userList}
-              /*  loggedIn={loggedIn}
-              setLoggedIn={setLoggedIn} */
-            />
+            <UserList userList={userList} />
           </Col>
           <Col xs={5} className='listContainer ps-1'>
             <Col className='headlineContainer'>
@@ -129,7 +106,6 @@ function MyPage(props) {
               <MyConversationPits
                 conversationList={conversationList}
                 setConversationList={setConversationList}
-                /* {...{ loggedIn, setLoggedIn }} */
               />
             )}
           </Col>
@@ -139,7 +115,6 @@ function MyPage(props) {
             <CreateConversation
               conversationName={conversationName}
               setConversationName={setConversationName}
-              /* {...{ loggedIn, setLoggedIn }} */
             />
           </Col>
         </Row>

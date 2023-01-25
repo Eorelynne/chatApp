@@ -3,13 +3,7 @@ import { Button } from "react-bootstrap";
 import "../../public/css/myPage.css";
 
 function AcceptBtn(props) {
-  const {
-    invitation,
-    invitationAnswer,
-    setInvitationAnswer,
-    loggedIn,
-    setLoggedIn
-  } = props;
+  const { invitation, invitationAnswer, setInvitationAnswer } = props;
 
   async function joinConversation() {
     let conversationData = { creatorId: invitation.creatorId };

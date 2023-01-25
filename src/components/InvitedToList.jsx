@@ -8,10 +8,9 @@ function InvitedToList(props) {
     invitationList,
     setInvitationList,
     invitationAnswer,
-    setInvitationAnswer,
-    loggedIn,
-    setLoggedIn
+    setInvitationAnswer
   } = props;
+
   return (
     <Container>
       <Row>
@@ -29,7 +28,8 @@ function InvitedToList(props) {
               invitation={invitation}
               invitationAnswer={invitationAnswer}
               setInvitationAnswer={setInvitationAnswer}
-              {...{ loggedIn, setLoggedIn }}
+              invitationList={invitationList}
+              setInvitationList={setInvitationList}
             />
           ))}
         </Container>

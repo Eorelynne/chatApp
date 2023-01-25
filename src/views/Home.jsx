@@ -6,35 +6,25 @@ import useStates from "../utilities/useStates";
 
 import "../../public/css/home.css";
 
-function Home(props) {
-  const { loggedIn, setLoggedIn } = props;
+function Home() {
   let l = useStates("loggedIn");
   const navigate = useNavigate();
 
   useEffect(() => {
-    (async () => {
-      let data = await (await fetch("/api/login")).json();
-      if (data.message !== "No entries found" && !data.error) {
-        // setLoggedIn({ data });
-        // console.log(loggedIn);
-        l = { ...data };
-        console.log(l);
-      }
-    })();
+    if (l.id === 0 || !l.id) {
+      (async () => {
+        let data = await (await fetch("/api/login")).json();
+        if (data.message !== "No entries found" && !data.error) {
+          Object.assign(l, data);
+          console.log(l);
+        }
+      })();
+    }
   }, []);
 
-  /*   useEffect(() => {
-    if (l.id !== 0 && l !== undefined) {
-      console.log("l");
-      console.log(l);
-      setTimeout(() => {
-        navigate("/my-page");
-      }, 3000);
-    }
-  }, [l]); */
   return (
     <div className='home'>
-      <Header loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
+      <Header />
     </div>
   );
 }

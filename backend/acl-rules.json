@@ -3,17 +3,125 @@
     "login": {
       "post": true,
       "get": true
+    },
+    "users": {
+      "post": true
     }
   },
   "user": {
     "login": {
-      "delete": true,
+      "get": true,
+      "delete": true
+    },
+    "conversations": {
+      "post": true
+    },
+    "edit-my-user-info": {
+      "put": true
+    },
+    "users": {
+      "post": true
+    },
+    "user-get-users": {
+      "get": true
+    },
+    "messages": {
+      "post": true
+    },
+    "invitations-user": {
+      "get": true
+    },
+    "conversations-invite": {
+      "post": true,
+      "put": true
+    },
+    "conversations-by-user": {
+      "get": true
+    },
+    "conversation-by-creator": {
+      "get": true
+    },
+    "conversation-with-messages": {
+      "get": true
+    },
+    "conversations-join": {
+      "post": true
+    },
+    "conversation-messages": {
+      "get": true
+    },
+    "users-in-conversation": {
+      "get": true
+    },
+    "sse": {
       "get": true
     }
   },
   "admin": {
     "login": {
-      "delete": true,
+      "get": true,
+      "delete": true
+    },
+    "users": {
+      "get": true,
+      "post": true,
+      "put": true,
+      "delete": true
+    },
+    "conversations": {
+      "get": true,
+      "post": true,
+      "put": true,
+      "delete": true
+    },
+    "invitations": {
+      "get": true,
+      "post": true,
+      "put": true,
+      "delete": true
+    },
+    "messages": {
+      "get": true,
+      "post": true,
+      "put": true,
+      "delete": true
+    },
+    "users_conversations": {},
+    "conversations-create": {
+      "post": true
+    },
+    "users-by-username": {
+      "get": true
+    },
+    "invitations-user": {
+      "get": true
+    },
+    "conversations-by-user": {
+      "get": true
+    },
+    "conversation-by-creator": {
+      "get": true
+    },
+    "conversations-join": {
+      "post": true
+    },
+    "conversations-invite": {
+      "post": true,
+      "put": true
+    },
+    "conversation-messages": {
+      "get": true
+    },
+    "conversation-with-messages": {
+      "get": true
+    },
+    "users-in-conversation": {
+      "get": true
+    },
+    "user-get-users": {
+      "get": true
+    },
+    "sse": {
       "get": true
     }
   }

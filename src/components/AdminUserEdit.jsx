@@ -6,27 +6,41 @@ import { checkPassword, checkEmail } from "../utilities/inputCheck.js";
 import useStates from "../utilities/useStates.js";
 import "../../public/css/form.css";
 
-function RegisterForm() {
+function AdminUserEdit() {
   /* const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [firstPassword, setFirstPassword] = useState(""); */
   let l = useStates("loggedIn");
+  let u = useStates({
+    firstName: "",
+    lastName: "",
+    userName: "",
+    email: "",
+    password: "",
+    role: ""
+  });
   const [secondPassword, setSecondPassword] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [message, setMessage] = useState("");
   const handleClose = () => setShowModal(false);
   const navigate = useNavigate();
 
-  function resetForm() {
+  /*   function resetForm() {
+    /* setFirstName("");
+    setLastName("");
+    setUserName("");
+    setEmail("");
+    setFirstPassword("");
+    setSecondPassword("");
     l.firstName = "";
     l.lastName = "";
     l.userName = "";
     l.email = "";
     l.password = "";
     setSecondPassword("");
-  }
+  } */
 
   function goToLogin() {
     navigate("/login");
@@ -181,4 +195,4 @@ function RegisterForm() {
   );
 }
 
-export default RegisterForm;
+export default AdminUserEdit;

@@ -2,7 +2,7 @@ import { createRequire } from "module";
 // Only necessary if you need  __filename or __dirname
 import { fileURLToPath } from "url";
 import { login } from "./login.js";
-import { restApi } from "./restApi.js";
+import { restApi, sqlQuery } from "./restApi.js";
 
 // Note: import.meta.url is different for every file
 const { url } = import.meta;
@@ -52,8 +52,7 @@ app.use((error, req, res, next) => {
   if (error) {
     res.status(400);
     res.json({
-      error: "Bad request. Error in JSON",
-      details: error // needed?
+      error: "Bad request. Error in JSON"
     });
   } else {
     next();
@@ -61,16 +60,16 @@ app.use((error, req, res, next) => {
 });
 
 login(db, app);
-
+/* :conversationId */
 let connections = [];
-app.get("/api/sse", (req, res) => {
-  console.log("Running SSE");
-  connections.push(res);
+app.get("/api/sse/:conversationId", (req, res) => {
+  connections.push({ req, res });
 
   req.on("close", () => {
-    connections = connections.filter(openRes => openRes != res);
+    connections = connections.filter(x => x.res != res);
 
     broadcast("disconnect", {
+      conversationId: req.params.conversationId,
       message: req.session.user.userName + " disconnected"
     });
   });
@@ -80,21 +79,85 @@ app.get("/api/sse", (req, res) => {
     "Cache-Control": "no-cache"
   });
 
-  broadcast("connect", { message: req.session.user.userName + "connected" });
+  broadcast("connect", {
+    user: {
+      userName: req.session.user.userName,
+      userId: req.session.user.id,
+      conversationId: req.params.conversationId
+    },
+
+    message: req.session.user.userName + " connected "
+  });
 });
 
-export function broadcast(event, data) {
-  // loop through all open connections and send
-  // some data without closing the connection (res.write)
-  for (let res of connections) {
+export async function broadcast(event, data) {
+  console.log("Running broadcast");
+  for (let connection of connections) {
+    console.log("data.conversationId");
+    console.log(data.conversationId);
+    const sql =
+      "SELECT userId FROM users_conversations WHERE conversationId = ?";
+    const parameters = [data.conversationId];
+    let userList;
+    try {
+      let r = await db.execute(sql, parameters);
+      [userList] = r;
+    } catch (error) {
+      console.log(error);
+    }
+    let inList = false;
+    for (let i = 0; i < userList.length; i++) {
+      if (+userList[i].userId === +connection.req.session.user.id) {
+        inList = true;
+        console.log(userList[i].userId);
+        console.log(connection.req.session.user.id);
+        break;
+      }
+    }
+    if (!inList) {
+      continue;
+    }
+    console.log(connection.req.params.conversationId);
+    console.log(data.conversationId);
+    if (+connection.req.params.conversationId !== +data.conversationId) {
+      continue;
+    }
+
     // syntax for a SSE message: 'event: message \ndata: "the-message" \n\n'
-    res.write("event:" + event + "\ndata:" + JSON.stringify(data) + "\n\n");
+    connection.res.write(
+      "event:" + event + "\ndata:" + JSON.stringify(data) + "\n\n"
+    );
   }
 }
-
+/* 
 setInterval(() => {
   broadcast("keep-alive", "");
-}, 25000);
+}, 25000); */
+
+app.post("/api/messages", async (req, res) => {
+  let content = req.body.content;
+  let time = Date.now();
+  let usersConversationsId = req.body.usersConversationsId;
+  let conversationId = req.body.conversationId;
+  let senderUserId = req.session.user.id;
+  let userName = req.session.user.userName;
+  let senderUserRole = req.session.user.role;
+
+  let message = {
+    content,
+    time,
+    usersConversationsId,
+    conversationId,
+    senderUserId,
+    userName,
+    senderUserRole
+  };
+  await broadcast("new-message", message);
+  const sql =
+    "INSERT INTO messages (content, time, usersConversationsId) VALUES (?,?,?)";
+  const parameters = [content, time, usersConversationsId];
+  let result = await sqlQuery("messages", req, res, sql, true, parameters);
+});
 
 restApi(db, app);
 

@@ -60,6 +60,7 @@ export function login(db, app) {
   app.get("/api/login", (req, res) => {
     if (!acl("login", req)) {
       res.status(405).json({ error: "Not allowed" });
+      return;
     }
     console.log(req.session);
     if (req.session.user) {

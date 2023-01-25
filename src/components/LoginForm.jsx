@@ -44,16 +44,13 @@ function loginForm(props) {
       })
     ).json();
     let result = await (await fetch("/api/login")).json();
-    console.log(result);
     if (
       result.id !== 0 &&
       result.id !== undefined &&
       result.error !== "Not logged in"
     ) {
-      // setLoggedIn({ result });
-      l = result;
-      console.log("LoggedIn!!!");
-      console.log(l);
+      Object.assign(l, result);
+      l.loggedIn = true;
       resetForm();
       navigate("/my-page");
     } else {

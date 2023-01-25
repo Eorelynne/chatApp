@@ -21,36 +21,43 @@ function App() {
     email: "",
     role: ""
   });
-  const [loggedIn, setLoggedIn] = useState({});
+
+  let m = useStates("newMessage", {
+    content: "",
+    time: 0,
+    usersConversationsId: 0,
+    conversationId: 0,
+    senderUserId: 0,
+    userName: "",
+    senderUserRole: ""
+  });
+
+  let a = useStates("activeUsers", []);
+  // temporary test from console
+  /*  window.sendMessage = async function (message) {
+    let result = await (
+      await fetch("/api/messages", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          content: message,
+          usersConversationsId: 2
+        })
+      })
+    ).json();
+  }; */
+
   return (
     <div className='App'>
       <BrowserRouter>
         <Routes>
-          <Route path='/' element={<Home {...{ loggedIn, setLoggedIn }} />} />
-          <Route
-            path='/login'
-            element={<Login loggedIn={loggedIn} setLoggedIn={setLoggedIn} />}
-          />
-          <Route
-            path='/register'
-            element={<Register {...{ loggedIn, setLoggedIn }} />}
-          />
-          <Route
-            path='/my-page'
-            element={<MyPage loggedIn={loggedIn} setLoggedIn={setLoggedIn} />}
-          />
-          <Route
-            path='/conversation-pit'
-            element={<ConversationPit {...{ loggedIn, setLoggedIn }} />}
-          />
-          <Route
-            path='/my-profile-page'
-            element={<Profile loggedIn={loggedIn} setLoggedIn={setLoggedIn} />}
-          />
-          <Route
-            path='/*'
-            element={<NotFound {...{ loggedIn, setLoggedIn }} />}
-          />
+          <Route path='/' element={<Home />} />
+          <Route path='/login' element={<Login />} />
+          <Route path='/register' element={<Register />} />
+          <Route path='/my-page' element={<MyPage />} />
+          <Route path='/conversation-pit' element={<ConversationPit />} />
+          <Route path='/my-profile-page' element={<Profile />} />
+          <Route path='/*' element={<NotFound />} />
         </Routes>
       </BrowserRouter>
     </div>

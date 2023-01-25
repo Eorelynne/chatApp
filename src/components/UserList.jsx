@@ -7,21 +7,36 @@ import User from "../components/User";
 import "../../public/css/myPage.css";
 
 function UserList(props) {
-  const { userList, loggedIn, setLoggedIn } = props;
+  const { userList } = props;
   const [loggedInConversationList, setLoggedInConversationList] = useState([]);
   let l = useStates("loggedIn");
   const [filter, setFilter] = useState("");
-  //console.log("loggedIn");
-  // console.log(l);
+
+  useEffect(() => {
+    if (l.id === 0 || !l.id) {
+      (async () => {
+        let data = await (await fetch("/api/login")).json();
+        if (data.message !== "No entries found" && !data.error) {
+          Object.assign(l, data);
+          console.log("In useEffect in userList");
+          console.log(l);
+        }
+      })();
+    }
+  }, []);
 
   useEffect(() => {
     if (l.id !== 0 && l.id !== undefined) {
       (async () => {
         let data = await (
-          await fetch(`/api/conversation-by-creator/${loggedIn.id}`)
+          await fetch(`/api/conversation-by-creator/${l.id}`)
         ).json();
-        setLoggedInConversationList([loggedInConversationList, ...data]);
+        console.log(data);
+        setLoggedInConversationList([...data]);
       })();
+      for (let conversation of loggedInConversationList) {
+        console.log(conversation);
+      }
     } else {
       console.log("No loggedIn.id in userList");
     }
@@ -41,13 +56,15 @@ function UserList(props) {
   return (
     <>
       <Row>
-        <input
-          id='filter'
-          name='filter'
-          type='text'
-          value={filter}
-          onChange={event => setFilter(event.target.value)}
-        />
+        <Col>
+          <input
+            id='filter'
+            name='filter'
+            type='text'
+            value={filter}
+            onChange={event => setFilter(event.target.value)}
+          />
+        </Col>
       </Row>
       <Row>
         <Col className='mt-2 headlineContainer'>
@@ -57,6 +74,10 @@ function UserList(props) {
       <Container className='userList scrollContainer pt-1'>
         <ul>
           {userList
+            .filter(
+              userItem =>
+                userItem.userName.toLowerCase() !== l.userName.toLowerCase()
+            )
             .sort(sortOnUserName)
             .filter(
               userItem =>
@@ -70,8 +91,6 @@ function UserList(props) {
                 {...{ userItem }}
                 loggedInConversationList={loggedInConversationList}
                 setLoggedInConversationList={setLoggedInConversationList}
-                loggedIn={loggedIn}
-                setLoggedIn={setLoggedIn}
               />
             ))}
         </ul>

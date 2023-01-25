@@ -10,17 +10,33 @@ export async function restApi(connection, app) {
 
   //USERS
   app.get("/api/users", async (req, res) => {
-    const sql = "SELECT * FROM users";
+    const sql =
+      "SELECT id, firstName, lastName, userName, email, role FROM users";
     await sqlQuery("users", req, res, sql, false);
   });
 
   app.get("/api/users/:id", async (req, res) => {
-    const sql = "SELECT * FROM users WHERE id = ?";
+    if (!req.params.id) {
+      res.status(400).json({ error: "Bad request, id missing" });
+    }
+    const sql =
+      "SELECT id, firstName, lastName, userName, email, role FROM users WHERE id = ?";
     const parameters = [req.params.id];
     await sqlQuery("users", req, res, sql, true, parameters);
   });
 
   app.post("/api/users", async (req, res) => {
+    if (
+      !req.body.firstName ||
+      !req.body.lastName ||
+      !req.body.userName ||
+      !req.body.email ||
+      !req.body.password
+    ) {
+      res.status(400).json({ error: "Bad request, input missing" });
+      return;
+    }
+    delete req.body?.role;
     let passwordIsValid = checkPassword(req.body.password);
     if (!passwordIsValid) {
       res.json({ error: "Wrong passwordformat" });
@@ -39,13 +55,34 @@ export async function restApi(connection, app) {
     const result = await sqlQuery("users", req, res, sql, true, parameters);
   });
 
+  app.put("/api/users/:id", async (req, res) => {
+    if (!req.params.id) {
+      res.status(400).json({ error: "Bad request, id missing" });
+    }
+    const sql = `UPDATE users
+          SET ${Object.keys(req.body).map(x => x + " = ?")}
+          WHERE id = ?
+        `;
+    const parameters = Object.values(req.body).map(x => x);
+    parameters.push(req.params.id);
+    console.log(sql);
+    console.log(parameters);
+    await sqlQuery("conversations", req, res, sql, true, parameters);
+  });
+
   app.delete("/api/users/:id", async (req, res) => {
+    if (!req.params.id) {
+      res.status(400).json({ error: "Bad request, id missing" });
+    }
     const sql = "DELETE FROM users WHERE id = ?";
     const parameters = [req.params.id];
     let result = await sqlQuery("users", req, res, sql, true, parameters);
   });
 
   app.get("/api/users-by-username/:username", async (req, res) => {
+    if (!req.params.username) {
+      res.status(400).json({ error: "Bad request, userName missing" });
+    }
     const sql = "SELECT * FROM users WHERE username = ?";
     const parameters = [req.params.username];
     let user = await sqlQuery(
@@ -58,39 +95,126 @@ export async function restApi(connection, app) {
     );
   });
 
+  app.get("/api/user-get-users", async (req, res) => {
+    const sql = "SELECT id,  userName, role FROM users";
+    await sqlQuery("user-get-users", req, res, sql, false);
+  });
+
   //Conversations
+  //Get all conversations
+  app.get("/api/conversations", async (req, res) => {
+    const sql = "SELECT * FROM conversations";
+    await sqlQuery("conversations", req, res, sql, false);
+  });
+
+  //Get one conversation by id
+  app.get("/api/conversations/:id", async (req, res) => {
+    if (!req.params.id) {
+      res.status(400).json({ error: "Bad request, conversationId missing" });
+    }
+    const sql = "SELECT * FROM conversations WHERE id=?";
+    const parameters = [req.params.id];
+    await sqlQuery("conversations", req, res, sql, true, parameters);
+  });
+
   //Start conversation
-  app.post("/api/conversations-create/", async (req, res) => {
-    let sql = "INSERT INTO conversations (name, creatorId) VALUES(?,?)";
-    let parameters = [req.body.name, req.session.user.id];
+  app.post("/api/conversations", async (req, res) => {
+    if (!req.body.name) {
+      res.status(400).json({ error: "Bad request, conversation name missing" });
+    }
+    const sql = "INSERT INTO conversations (name, creatorId) VALUES(?,?)";
+    const parameters = [req.body.name, req.session.user.id];
     let result = await sqlQuery(
-      "conversations-create",
+      "conversations",
       req,
       res,
       sql,
       true,
       parameters
     );
-    /* console.log(result);
-    let conversationId = result.insertId;
-    console.log(req.session.user.id, conversationId);
-    sql =
-      "INSERT INTO users_conversations (userId, conversationId, conversationRole, isBanned, banReason) VALUES (?,?,?,?,?)";
-    parameters = [req.session.user.id, conversationId, "creator", false, ""];
-    result = await sqlQuery(
-      "conversations-create",
-      req,
-      res,
-      sql,
-      true,
-      parameters
-    );
-    console.log("RESULT!!!");
-    console.log(result);*/
+  });
+
+  //update a conversation
+  app.put("/api/conversations/:id", async (req, res) => {
+    if (!req.params.id) {
+      res.status(400).json({ error: "Bad request, conversationId missing" });
+    }
+    const sql = `UPDATE conversations
+          SET ${Object.keys(req.body).map(x => x + " = ?")}
+          WHERE id = ?
+        `;
+    const parameters = Object.values(req.body).map(x => x);
+    parameters.push(req.params.id);
+    console.log(sql);
+    consnole.log(parameters);
+    await sqlQuery("conversations", req, res, sql, true, parameters);
+  });
+
+  //Delete conversation by id
+  app.delete("/api/conversations/:id", async (req, res) => {
+    if (!req.params.id) {
+      res.status(400).json({ error: "Bad request, conversationId missing" });
+    }
+    const sql = "DELETE FROM conversations WHERE id = ?";
+    const parameters = [req.params.id];
+    await sqlQuery("conversations", req, res, sql, true, parameters);
+  });
+
+  //Invitations
+  //Get all invitations
+  app.get("/api/invitations", async (req, res) => {
+    const sql = `SELECT * FROM invitations`;
+    await sqlQuery("invitations", req, res, sql, false);
+  });
+
+  //Get one invitation by id
+  app.get("/api/invitations/:id", async (req, res) => {
+    if (!req.params.id) {
+      res.status(400).json({ error: "Bad request, invitation id missing" });
+    }
+    const sql = `SELECT * FROM invitations WHERE id=?`;
+    const parameters = [req.params.id];
+    await sqlQuery("invitations", req, res, sql, true, parameters);
+  });
+
+  //Post invite
+  app.post("/api/invitations", async (req, res) => {
+    if (!req.body.conversationId || !req.body.userId) {
+      res.status(400).json({ error: "Bad request, input missing" });
+    }
+    const sql = `INSERT INTO invitations (conversationId, userId, isInvitePending) VALUES (?,?,?)`;
+    const parameters = [req.body.conversationId, req.body.userId, true];
+    await sqlQuery("invitations", req, res, sql, true, parameters);
+  });
+
+  //Update invitation
+  app.put("api/invitations/:id", async (req, res) => {
+    if (!req.params.id) {
+      res.status(400).json({ error: "Bad request, conversationId missing" });
+    }
+    const sql = `UPDATE invitations
+          SET ${Object.keys(req.body).map(x => x + " = ?")}
+          WHERE id = ?
+        `;
+    const parameters = Object.values(req.body).map(x => x);
+    parameters.push(req.params.id);
+    console.log(sql);
+    consnole.log(parameters);
+    await sqlQuery("invitations", req, res, sql, true, parameters);
+  });
+
+  //Delete invitation
+  app.delete("/api/invitations/:id", async (req, res) => {
+    if (!req.params.id) {
+      res.status(400).json({ error: "Bad request, conversationId missing" });
+    }
+    const sql = `DELETE FROM invitations WHERE id =?`;
+    const parameters = [req.params.id];
+    await sqlQuery("invitations", req, res, sql, true, parameters);
   });
 
   //Get all pending invites
-  app.get("/api/invitations", async (req, res) => {
+  app.get("/api/invitations-pending", async (req, res) => {
     const sql =
       "SELECT * FROM invitations WHERE userId = ? AND isInvitePending = ?";
     const parameters = [req.session.user.id, true];
@@ -99,12 +223,13 @@ export async function restApi(connection, app) {
 
   //Join conversation (in req.body creatorId)
   app.post("/api/conversations-join/:id", async (req, res) => {
-    let userId = req.session.user.id;
-    let conversationId = req.params.id;
-    if (!req.body.creatorId) {
-      res.status(400).json({ error: "Bad request" });
+    if (!req.params.id || !req.body.creatorId) {
+      res.status(400).json({ error: "Bad request, input missing" });
       return;
     }
+    let userId = req.session.user.id;
+    let conversationId = req.params.id;
+
     let conversationCreator = req.body.creatorId;
     let conversationRole = "member";
     if (userId === conversationCreator) {
@@ -113,21 +238,18 @@ export async function restApi(connection, app) {
     const sql =
       "INSERT INTO users_conversations (userId, conversationId, conversationRole, isBanned, banReason) VALUES (?,?,?,?,?)";
     const parameters = [userId, conversationId, conversationRole, false, ""];
-    await sqlQuery("join-conversation", req, res, sql, true, parameters);
+    console.log(sql);
+    console.log(parameters);
+    await sqlQuery("conversations-join", req, res, sql, true, parameters);
   });
 
-  //Get all conversations
-  app.get("/api/conversations", async (req, res) => {
-    const sql = "SELECT * FROM conversations";
-    await sqlQuery("conversations", req, res, sql, false);
-  });
   //Invite to conversation (userId, conversationId and creatorId in body)
   app.post("/api/conversations-invite", async (req, res) => {
     if (!req.session.user) {
       res.status(403).json({ error: "not allowed" });
     }
     console.log(req.session.user);
-    if (req.session.user.id !== req.body.creatorId) {
+    if (+req.session.user.id !== +req.body.creatorId) {
       res.status(403).json({ error: "not allowed" });
       return;
     }
@@ -142,53 +264,71 @@ export async function restApi(connection, app) {
     const sql =
       "SELECT * FROM invitations_conversations_with_creator WHERE userId=? AND isInvitePending = ?";
     const parameters = [req.session.user.id, true];
-    await sqlQuery("test", req, res, sql, false, parameters);
+    await sqlQuery("invitations-user", req, res, sql, false, parameters);
   });
-  //Update invitation
+  //Update invitation to pending false
   app.put("/api/conversations-invite/:id", async (req, res) => {
+    if (!req.params.id) {
+      res.status(400).json({ error: "Bad request, input missing" });
+    }
     const sql = " UPDATE invitations SET isInvitePending = ? WHERE id = ?";
     const parameters = [false, req.params.id];
     await sqlQuery("conversations-invite", req, res, sql, false, parameters);
   });
   //Get conversations by user
-  app.get("/api/conversations-by-user/:id", async (req, res) => {
+  app.get("/api/conversations-by-user/", async (req, res) => {
     const sql =
       "SELECT * FROM conversations_with_users_conversations WHERE userId = ?";
-    const parameters = [req.params.id];
+    const parameters = [req.session.user.id];
     await sqlQuery("conversations-by-user", req, res, sql, false, parameters);
   });
 
   //Get conversation by creator
   app.get(`/api/conversation-by-creator/:id`, async (req, res) => {
+    if (!req.params.id) {
+      res.status(400).json({ error: "Bad request, input missing" });
+    }
     const sql = "SELECT * FROM conversations WHERE creatorId =?";
     const parameters = [req.params.id];
     await sqlQuery("conversation-by-creator", req, res, sql, false, parameters);
   });
 
-  //Get one conversation by id
-  app.get("/api/conversations/:id", async (req, res) => {
-    const sql = "SELECT * FROM conversations WHERE id = ?";
+  //Get users in one conversation
+  app.get("/api/users-in-conversation/:id", async (req, res) => {
+    if (!req.params.id) {
+      res.status(400).json({ error: "Bad request, conversationId missing" });
+    }
+    const sql =
+      "SELECT * FROM users_conversations_with_user_and_conversation WHERE conversationId =?";
     const parameters = [req.params.id];
-    let result = await sqlQuery(
-      "conversations",
-      req,
-      res,
-      sql,
-      true,
-      parameters
-    );
+    await sqlQuery("users-in-conversation", req, res, sql, false, parameters);
   });
 
-  //Delete conversation by id
-  app.delete("/api/conversations/:id", async (req, res) => {
-    const sql = "DELETE FROM conversations WHERE id = ?";
+  //Get latest messagetime of conversation
+  app.get("/api/conversation-latest-message/:id", async (req, res) => {
+    if (!req.params.id) {
+      res.status(400).json({ error: "Bad request, conversationId missing" });
+    }
+    const sql =
+      "SELECT * FROM userConversation_with_latest_message_time WHERE conversationId =?";
+    const params = [req.params.id];
+    await sqlQuery("conversation-latest-message", req, res, sql);
+  });
+
+  //Conversations with messages
+  app.get(`/api/conversation-with-messages/:id`, async (req, res) => {
+    if (!req.params.id) {
+      res.status(400).json({ error: "Bad request, conversationId missing" });
+    }
+    const sql =
+      "SELECT * FROM userConversation_with_messages WHERE conversationId =?";
     const parameters = [req.params.id];
-    let result = await sqlQuery(
-      "conversations",
+    await sqlQuery(
+      "conversation-with-messages",
       req,
       res,
       sql,
-      true,
+      false,
       parameters
     );
   });
@@ -196,46 +336,101 @@ export async function restApi(connection, app) {
   //Messages
   app.get("/api/messages", async (req, res) => {
     const sql = "SELECT * FROM messages";
-    let result = await sqlQuery("messages", req, res, sql, false);
+    await sqlQuery("messages", req, res, sql, false);
   });
 
   app.get("/api/messages/:id", async (req, res) => {
-    if (req.params.id === undefined || !req.params.id) {
-      res.status(400).json({ error: "Bad request, messageId is missing" });
+    if (!req.params.id) {
+      res.status(400).json({ error: "Bad request, message id missing" });
     }
     const sql = "SELECT * FROM messages WHERE id= ?";
     const parameters = [req.params.id];
-    let result = await sqlQuery("messages", req, res, sql, true, parameters);
+    await sqlQuery("messages", req, res, sql, true, parameters);
   });
-
-  //
-  app.get("/api/conversation-messages/:id", async (res, req) => {
-    let conversationId = +req.params.id;
-    if (req.params.id === undefined || !req.params.id) {
-      res.status(400).json({ error: "Bad request, conversationId missing" });
-    }
-    const sql =
-      "SELECT * FROM users_conversations_messages WHERE conversationId = ?";
-    const parameters = [req.params.id];
-    await sqlQuery("conversation-messages", req, res, sql, false, parameters);
-  });
-
+  /* 
   app.post("/api/messages", async (req, res) => {
+    let content = req.body.content;
+    let time = Date.now();
+    let usersConversationsId = req.body.usersConversationsId;
+    let conversationId = req.body.conversationId;
+    let senderUserId = req.session.user.id;
+    let userName = req.session.user.userName;
+    let senderUserRole = req.session.user.role;
+
     let message = {
-      content: req.body.content,
-      time: Date.now(),
-      usersConversationsId: req.body.usersConversationsId,
-      conversationId: req.body.conversationId
+      content,
+      time,
+      usersConversationsId,
+      conversationId,
+      senderUserId,
+      userName,
+      senderUserRole
     };
     broadcast("new-message", message);
     const sql =
       "INSERT INTO messages (content, time, usersConversationsId) VALUES (?,?,?)";
-    const parameters = [
-      req.body.content,
-      message.time,
-      req.body.usersConversationsId
-    ];
+    const parameters = [content, time, usersConversationsId];
     let result = await sqlQuery("messages", req, res, sql, true, parameters);
+  }); */
+
+  app.put("/api/messages/:id", async (req, res) => {
+    if (!req.params.id) {
+      res.status(400).json({ error: "Bad request, conversationId missing" });
+    }
+    const sql = `UPDATE messages
+          SET ${Object.keys(req.body).map(x => x + " = ?")}
+          WHERE id = ? `;
+    const parameters = Object.values(req.body).map(x => x);
+    parameters.push(req.params.id);
+    console.log(sql);
+    consnole.log(parameters);
+    await sqlQuery("messages", req, res, sql, true, parameters);
+  });
+
+  app.delete("/api/messages/:id", async (req, res) => {
+    if (!req.params.id) {
+      res.status(400).json({ error: "Bad request, conversationId missing" });
+    }
+    const sql = `DELETE FROM messages WHERE id=?`;
+    const parameters = [req.params.id];
+    await sqlQuery("messages", req, res, sql, true, parameters);
+  });
+
+  //
+  app.get("/api/conversation-messages/:id", async (req, res) => {
+    if (!req.params.id) {
+      res.status(400).json({ error: "Bad request, conversationId missing" });
+    }
+    const sql =
+      "SELECT * FROM users_conversations_messages_with_user_info WHERE conversationId = ?";
+    const parameters = [req.params.id];
+    await sqlQuery("conversation-messages", req, res, sql, false, parameters);
+  });
+
+  //Edit userinfo
+  app.put("/api/edit-my-user-info/:id", async (req, res) => {
+    if (!req.params.id) {
+      res.status(400).json({ error: "Bad request, conversationId missing" });
+    }
+    delete req.body.role;
+    if (+req.params.id === +req.session.user?.id) {
+      const sql = `UPDATE users
+          SET ${Object.keys(req.body).map(x => x + " = ?")}
+          WHERE id = ?
+        `;
+      const parameters = Object.values(req.body).map(x => x);
+      parameters.push(req.params.id);
+      let result = await sqlQuery(
+        "edit-my-user-info",
+        req,
+        res,
+        sql,
+        true,
+        parameters
+      );
+    } else {
+      res.status(405).json({ error: "Not allowed" });
+    }
   });
 }
 
@@ -250,7 +445,6 @@ async function sqlQuery(path, req, res, sql, justOne, parameters) {
 
     if (result instanceof Array) {
       if (result.length === 0) {
-        console.log("In if instanceof");
         res.json({ message: "No entries found" });
         return;
       }
@@ -266,7 +460,6 @@ async function sqlQuery(path, req, res, sql, justOne, parameters) {
     res.json(result);
     return result;
   } catch (error) {
-    console.log("Error in tryCatch");
     res.status(500);
     res.json({ error: error + "" });
     return { error: error + "" };

@@ -1,20 +1,20 @@
 import React from "react";
 import { Row, Col } from "react-bootstrap";
 import Header from "../components/Header";
-import RegisterForm from "../components/RegisterForm";
+import AdminUserEdit from "../components/AdminUserEdit";
 
-function Register() {
+function Admin() {
   return (
     <div>
       <Header />
       <Row className='mt-3'>
         <Col xs={1} md={2}></Col>
         <Col xs={10} md={8} className='form'>
-          <RegisterForm />
+          <AdminUserEdit />
         </Col>
       </Row>
     </div>
   );
 }
 
-export default Register;
+export default Admin;

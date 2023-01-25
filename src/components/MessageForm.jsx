@@ -5,17 +5,16 @@ import useStates from "../utilities/useStates";
 import "../../public/css/conversationPage.css";
 
 function MessageForm(props) {
-  const { loggedIn, setLoggedIn, state } = props;
+  const { state } = props;
   const [content, setContent] = useState("");
 
   async function submitMessage(event) {
-    console.log("ID!!!", state.id);
-
     event.preventDefault();
+    console.log("StateId", state.conversation.id);
     let message = {
       content: content,
-      usersConversationsId: state.id,
-      conversationId: state.conversationId
+      usersConversationsId: state.conversation.id,
+      conversationId: state.conversation.conversationId
     };
     let result = await (
       await fetch("/api/messages", {

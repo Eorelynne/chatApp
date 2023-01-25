@@ -13,30 +13,19 @@ import useStates from "../utilities/useStates.js";
 import { Link, useNavigate } from "react-router-dom";
 import "../../public/css/header.css";
 
-function Header(props) {
-  // const { loggedIn, setLoggedIn } = props;
+function Header() {
   const navigate = useNavigate();
   let l = useStates("loggedIn");
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     (async () => {
       let data = await (await fetch("/api/login")).json();
       if (data.message !== "No entries found" && !data.error) {
-        // setLoggedIn({ data });
-        // console.log(loggedIn);
-        l = { ...data };
-        console.log(l.id);
+        Object.assign(l, data);
+        console.log("i header", l.id);
       }
     })();
   }, []);
-
-  useEffect(() => {
-    let x = !l.id || l.id === 0 ? false : true;
-    console.log("X", x);
-    console.log("L.id", l.id);
-    setIsLoggedIn(x);
-  }, [l.id]);
 
   async function logout() {
     let result = await (await fetch("/api/login", { method: "DELETE" })).json();
@@ -45,18 +34,12 @@ function Header(props) {
     navigate("/");
   }
 
-  /* #255b9b" */
   return (
     <>
-      <Navbar
-        style={{ background: "#062E53" }}
-        //bg='white'
-        //fixed='top'
-        className='navbar'
-      >
+      <Navbar style={{ background: "#062E53" }} className='navbar'>
         <Container fluid className='row'>
           <Col xs={2} style={{ color: "#e47521" }} className='pt-4'>
-            {isLoggedIn && (
+            {l.loggedIn && (
               <NavItem>
                 <Nav.Link as={Link} to='/my-profile-page'>
                   {l.userName}
@@ -90,24 +73,24 @@ function Header(props) {
                 className='hamburger-img'
               />
               <NavDropdown id='basic-nav-dropdown' drop='start'>
-                {!isLoggedIn && (
+                {!l.loggedIn && (
                   <NavDropdown.Item href='/login'>Login</NavDropdown.Item>
                 )}
-                {!isLoggedIn && (
+                {!l.loggedIn && (
                   <NavDropdown.Item href='/register'>Register</NavDropdown.Item>
                 )}
-                {isLoggedIn && (
+                {l.loggedIn && (
                   <NavDropdown.Item href='/my-page'>My Page</NavDropdown.Item>
                 )}
-                {/* {isLoggedIn && ( */}
-                <NavDropdown.Item onClick={logout}>Logout</NavDropdown.Item>
-                {/* )} */}
-                {isLoggedIn && (
+                {l.loggedIn && (
                   <NavDropdown.Item href='/my-profile-page'>
                     My profile
                   </NavDropdown.Item>
                 )}
-                {isLoggedIn && l.role === "admin" && (
+                {/*  {l.loggedIn && ( */}
+                <NavDropdown.Item onClick={logout}>Logout</NavDropdown.Item>
+                {/* )} */}
+                {l.loggedIn && l.role === "admin" && (
                   <NavDropdown.Item href='/admin-page'>Admin</NavDropdown.Item>
                 )}
               </NavDropdown>

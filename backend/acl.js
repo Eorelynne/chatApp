@@ -4,7 +4,6 @@ const require = createRequire(url);
 const aclRules = require("./acl-rules.json");
 
 export function acl(path, req) {
-  return true;
   let role = req.session.user ? req.session.user.role : "anonymus";
   let method = req.method.toLowerCase();
   // method = method === "patch" ? "put" : method;

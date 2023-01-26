@@ -76,6 +76,7 @@ app.get("/api/sse/:conversationId", (req, res) => {
 
   res.set({
     "Content-Type": "text/event-stream",
+    Connection: "keep-alive",
     "Cache-Control": "no-cache"
   });
 
@@ -83,9 +84,9 @@ app.get("/api/sse/:conversationId", (req, res) => {
     user: {
       userName: req.session.user.userName,
       userId: req.session.user.id,
-      conversationId: req.params.conversationId
+      userRole: req.session.user.role
     },
-
+    conversationId: req.params.conversationId,
     message: req.session.user.userName + " connected "
   });
 });

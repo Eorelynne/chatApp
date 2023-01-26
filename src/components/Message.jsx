@@ -10,29 +10,33 @@ function Message(props) {
   return (
     <>
       {/*  {!!l.id && !!message.senderUserId && ( */}
-      <Container
-        className={
-          l.id === message.senderUserId
-            ? "sent-message message"
-            : "recieved-message message"
-        }
-      >
+      <Container>
         {!!message && (
-          <Row>
-            <Col>
-              <p>{new Date(message.time).toLocaleString()}</p>
-            </Col>
+          <Col
+            /*  xs={8}
+            sm={4} */
+            className={
+              l.id === message.senderUserId
+                ? "sent-message message mt-2 col-md-4 col-8 ms-auto"
+                : "recieved-message message mt-2 col-md-4 col-8 me-auto"
+            }
+          >
             <Row>
               <Col>
-                <h5>{message.content}</h5>
+                <p>{new Date(message.time).toLocaleString()}</p>
               </Col>
             </Row>
             <Row>
               <Col>
-                <h5>{message.userName}</h5>
+                <p>{message.content}</p>
               </Col>
             </Row>
-          </Row>
+            <Row>
+              <Col>
+                <p>{message.userName}</p>
+              </Col>
+            </Row>
+          </Col>
         )}
       </Container>
       {/* )} */}

@@ -40,6 +40,7 @@ export async function restApi(connection, app) {
     let passwordIsValid = checkPassword(req.body.password);
     if (!passwordIsValid) {
       res.json({ error: "Wrong passwordformat" });
+      return;
     }
     let password = passwordEncryptor(req.body.password);
     const sql =
@@ -311,8 +312,15 @@ export async function restApi(connection, app) {
     }
     const sql =
       "SELECT * FROM userConversation_with_latest_message_time WHERE conversationId =?";
-    const params = [req.params.id];
-    await sqlQuery("conversation-latest-message", req, res, sql);
+    const parameters = [req.params.id];
+    await sqlQuery(
+      "conversation-latest-message",
+      req,
+      res,
+      sql,
+      true,
+      parameters
+    );
   });
 
   //Conversations with messages
@@ -407,6 +415,28 @@ export async function restApi(connection, app) {
     await sqlQuery("conversation-messages", req, res, sql, false, parameters);
   });
 
+  //Ban from chat
+  app.put("/api/ban-from-chat/:id", async (req, res) => {
+    console.log(req.session.user.role);
+    console.log(req.body.creatorId);
+    console.log(req.session.user.id);
+    if (!req.params.id || !req.body.banReason || !req.body.creatorId) {
+      res.status(400).json({ error: "Bad request, input missing" });
+      return;
+    }
+    if (
+      +req.body.creatorId !== +req.session.user.id &&
+      req.session.user.role !== "admin"
+    ) {
+      res.status(405).json({ error: "Not allowed" });
+      return;
+    }
+    const sql =
+      "UPDATE users_conversations SET isBanned = ?, banReason =? WHERE id =?";
+    const parameters = [true, req.body.banReason, req.params.id];
+    await sqlQuery("ban-from-chat", req, res, sql, true, parameters);
+  });
+
   //Edit userinfo
   app.put("/api/edit-my-user-info/:id", async (req, res) => {
     if (!req.params.id) {
@@ -445,7 +475,7 @@ async function sqlQuery(path, req, res, sql, justOne, parameters) {
 
     if (result instanceof Array) {
       if (result.length === 0) {
-        res.json({ message: "No entries found" });
+        res.json({ error: "No entries found" });
         return;
       }
       if (justOne) {
@@ -457,6 +487,7 @@ async function sqlQuery(path, req, res, sql, justOne, parameters) {
       delete result.password;
       req.session.user = result;
     }
+    console.log(result);
     res.json(result);
     return result;
   } catch (error) {

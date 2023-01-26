@@ -15,20 +15,20 @@
 }
 
 .messageListContainer {
-  border: 2px solid black;
+  border: 2px solid rgb(6, 46, 83);
   border-radius: 5px;
   overflow-y: scroll;
 }
 
 .sent-message {
-  align-content: end;
+  align-items: end;
 }
 
 .recieved-message {
-  align-content: start;
+  align-items: start;
 }
 
 .message {
-  border: 2px solid black;
+  border: 2px solid rgb(6, 46, 83);
   border-radius: 5px;
 }

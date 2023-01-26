@@ -56,7 +56,7 @@ function CreateConversation(props) {
           />
         </Form.Group>
         <Form.Group>
-          <Button className='btn mt-1' type='submit'>
+          <Button className='btn mt-1 create-btn' type='submit'>
             Create
           </Button>
         </Form.Group>

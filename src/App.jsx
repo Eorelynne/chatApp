@@ -10,7 +10,6 @@ import Login from "./views/Login";
 import MyPage from "./views/MyPage";
 import NotFound from "./views/NotFound";
 import ConversationPit from "./views/ConversationPit";
-import Profile from "./views/Profile";
 
 function App() {
   let l = useStates("loggedIn", {
@@ -56,7 +55,6 @@ function App() {
           <Route path='/register' element={<Register />} />
           <Route path='/my-page' element={<MyPage />} />
           <Route path='/conversation-pit' element={<ConversationPit />} />
-          <Route path='/my-profile-page' element={<Profile />} />
           <Route path='/*' element={<NotFound />} />
         </Routes>
       </BrowserRouter>

@@ -39,11 +39,11 @@ function Header() {
       <Navbar style={{ background: "#062E53" }} className='navbar'>
         <Container fluid className='row'>
           <Col xs={2} style={{ color: "#e47521" }} className='pt-4'>
-            {l.loggedIn && (
+            {l.id !== 0 && (
               <NavItem>
-                <Nav.Link as={Link} to='/my-profile-page'>
-                  {l.userName}
-                </Nav.Link>
+                {/*  <Nav.Link as={Link} to='/my-profile-page'> */}
+                {l.userName}
+                {/* </Nav.Link> */}
               </NavItem>
             )}
           </Col>
@@ -51,11 +51,7 @@ function Header() {
             <Container className='row'>
               <Navbar.Brand className='logo'>
                 <Nav.Link as={Link} to='/'>
-                  <img
-                    alt='logo'
-                    src='../../public/logo.png'
-                    className='logo-img'
-                  />
+                  <img alt='logo' src='/logo.png' className='logo-img' />
                 </Nav.Link>
               </Navbar.Brand>
             </Container>
@@ -69,30 +65,30 @@ function Header() {
             <Nav className='me-auto'>
               <img
                 alt='hamburger'
-                src='../../public/hamburger2.png'
+                src='/hamburger2.png'
                 className='hamburger-img'
               />
               <NavDropdown id='basic-nav-dropdown' drop='start'>
-                {!l.loggedIn && (
-                  <NavDropdown.Item href='/login'>Login</NavDropdown.Item>
+                {(l.id === 0 || !l.id) && (
+                  <NavDropdown.Item href='/login'>Login Hej</NavDropdown.Item>
                 )}
-                {!l.loggedIn && (
+                {(l.id === 0 || !l.id) && (
                   <NavDropdown.Item href='/register'>Register</NavDropdown.Item>
                 )}
-                {l.loggedIn && (
+                {(l.id !== 0 || l.id) && (
                   <NavDropdown.Item href='/my-page'>My Page</NavDropdown.Item>
                 )}
-                {l.loggedIn && (
+                {/*  {(l.id !== 0 || l.id) && (
                   <NavDropdown.Item href='/my-profile-page'>
                     My profile
                   </NavDropdown.Item>
+                )} */}
+                {l.id !== 0 && l.id && (
+                  <NavDropdown.Item onClick={logout}>Logout</NavDropdown.Item>
                 )}
-                {/*  {l.loggedIn && ( */}
-                <NavDropdown.Item onClick={logout}>Logout</NavDropdown.Item>
-                {/* )} */}
-                {l.loggedIn && l.role === "admin" && (
+                {/* {(l.id !== 0 || l.id) && l.role === "admin" && (
                   <NavDropdown.Item href='/admin-page'>Admin</NavDropdown.Item>
-                )}
+                )} */}
               </NavDropdown>
             </Nav>
           </Col>

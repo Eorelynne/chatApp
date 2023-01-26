@@ -16,7 +16,7 @@ function UserList(props) {
     if (l.id === 0 || !l.id) {
       (async () => {
         let data = await (await fetch("/api/login")).json();
-        if (data.message !== "No entries found" && !data.error) {
+        if (!data.error) {
           Object.assign(l, data);
           console.log("In useEffect in userList");
           console.log(l);

@@ -75,10 +75,11 @@ export function login(db, app) {
   app.delete("/api/login", (req, res) => {
     if (!acl("login", req)) {
       res.status(405).json({ error: "Not allowed" });
+      return;
     }
-    console.log(req.session);
+
     delete req.session.user;
-    console.log(req.session);
+
     res.json({ success: "Logged out" });
   });
 }

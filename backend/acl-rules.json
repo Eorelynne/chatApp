@@ -53,6 +53,12 @@
     "users-in-conversation": {
       "get": true
     },
+    "conversation-latest-message": {
+      "get": true
+    },
+    "ban-from-chat": {
+      "put": true
+    },
     "sse": {
       "get": true
     }
@@ -120,6 +126,12 @@
     },
     "user-get-users": {
       "get": true
+    },
+    "conversation-latest-message": {
+      "get": true
+    },
+    "ban-from-chat": {
+      "put": true
     },
     "sse": {
       "get": true

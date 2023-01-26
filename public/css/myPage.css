@@ -1,29 +1,29 @@
 .listContainer {
-  border: 2px solid black;
+  border: 2px solid rgb(6, 46, 83);
   border-radius: 5px;
   padding-left: 0px;
   padding-right: 0px;
 }
 
 .accept-btn {
-  background-color: rgb(57, 239, 227) !important;
+  background-color: rgb(6, 46, 83) !important;
   border-radius: 5px;
   padding: 5px;
 }
 .accept-btn:hover {
-  background-color: rgba(243, 15, 15, 0.978) !important;
+  background-color: rgba(6, 46, 83, 0.4) !important;
   border-radius: 5px;
   padding: 5px;
 }
 
 .decline-btn {
-  background-color: rgb(207, 15, 15) !important;
+  background-color: rgb(228, 117, 33) !important;
   border-radius: 5px;
   padding: 5px;
 }
 
 .decline-btn:hover {
-  background-color: rgba(207, 15, 15, 0.4) !important;
+  background-color: rgba(228, 117, 33, 0.4) !important;
 }
 
 .userList {
@@ -53,6 +53,21 @@
   border: none;
 }
 
+.custom-toggle {
+  color: green;
+}
 .headlineContainer {
   text-align: center;
+}
+
+.create-btn {
+  background-color: rgb(6, 46, 83);
+}
+
+.create-btn:hover {
+  background-color: rgb((6, 46, 83, 0.4));
+}
+
+.li {
+  padding-left: 0;
 }

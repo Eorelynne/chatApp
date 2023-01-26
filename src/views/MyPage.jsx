@@ -27,14 +27,10 @@ function MyPage() {
     if (l.id === 0 || !l.id) {
       (async () => {
         let data = await (await fetch(`/api/login`)).json();
-        if (data.message !== "No entries found") {
+        if (!data.error) {
           Object.assign(l, data);
           l.loggedIn = true;
-        } else if (
-          data.message === "No entries found" ||
-          l.id === 0 ||
-          l.id === undefined
-        ) {
+        } else if (data.error === "No entries found" || l.id === 0 || !l.id) {
           navigate("/");
         }
       })();
@@ -57,7 +53,7 @@ function MyPage() {
     (async () => {
       let data = await (await fetch(`/api/invitations-user`)).json();
 
-      if (data.message !== "No entries found") {
+      if (!data.error) {
         setInvitationList(data);
       } else if (data.message === "No entries found") {
         setInvitationList([]);
@@ -67,17 +63,39 @@ function MyPage() {
 
   useEffect(() => {
     console.log("running useEffect in Mypage - conversations");
-    /* if (l.id !== 0 && l.id !== undefined) */
-    (async () => {
-      let data = await (await fetch(`/api/conversations-by-user`)).json();
-      if (data.message !== "No entries found") {
-        setConversationList(data);
-      } else if (data.message === "No entries found") {
-        /* setConversationList([]); */
-        console.log("Empty List");
-      }
-    })();
+    /* if (l.id !== 0 && l.id !== undefined) */ console.log(l.role);
+    if (l.role === "admin") {
+      (async () => {
+        let data = await (await fetch(`/api/conversations`)).json();
+        if (!data.error) {
+          setConversationList(data);
+        }
+      })();
+    } else
+      (async () => {
+        let data = await (await fetch(`/api/conversations-by-user`)).json();
+        if (!data.error) {
+          setConversationList(data);
+        }
+      })();
   }, []);
+
+  useEffect(() => {
+    (async () => {
+      /*    for (let conversation of conversationList) { */
+      /*  console.log("in myPage: ", conversation.conversationId); */
+      let data = await (
+        await fetch(`/api/conversation-latest-message/22`)
+      ).json;
+      console.log(data);
+      /* let latestMessage = {
+          conversationId: data.conversationId,
+          messageTime: data.latestMessageTime
+        };
+        console.log(latestMessage); 
+      }*/
+    })();
+  }, [conversationList]);
 
   return (
     <>

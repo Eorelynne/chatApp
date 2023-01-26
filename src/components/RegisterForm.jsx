@@ -15,7 +15,7 @@ function RegisterForm() {
   let l = useStates("loggedIn");
   const [secondPassword, setSecondPassword] = useState("");
   const [showModal, setShowModal] = useState(false);
-  const [message, setMessage] = useState("");
+  const [modalMessage, setModalMessage] = useState("");
   const handleClose = () => setShowModal(false);
   const navigate = useNavigate();
 
@@ -34,48 +34,59 @@ function RegisterForm() {
 
   async function submitForm(event) {
     event.preventDefault();
-
-    let formInfoIsValid = false;
-    while (!formInfoIsValid) {
-      if (
-        l.firstName.length === 0 ||
-        l.lastName.length === 0 ||
-        l.userName.length === 0 ||
-        l.email.length === 0 ||
-        l.firstPassword.length === 0 ||
-        secondPassword.length === 0
-      ) {
-        formInfoIsValid = false;
-        setMessage("All fields must be filled");
-        setShowModal(true);
-      } else {
+    /* let formInfoIsValid = false;
+    while (!formInfoIsValid) { */
+    if (
+      l.firstName.length === 0 ||
+      l.lastName.length === 0 ||
+      l.userName.length === 0 ||
+      l.email.length === 0 ||
+      l.password.length === 0 ||
+      secondPassword.length === 0
+    ) {
+      console.log("ininputCheck");
+      /* formInfoIsValid = false; */
+      setModalMessage("All fields must be filled");
+      setShowModal(true);
+    } /* else {
         formInfoIsValid = true;
       }
-      if (l.password !== secondPassword) {
-        formInfoIsValid = false;
-        setMessage("The entered passwords must match");
-        setShowModal(true);
-      } else {
+    } 
+    formInfoIsValid = false;
+     while (!formInfoIsValid) { */
+    if (l.password !== secondPassword) {
+      console.log("inMatchCheck");
+      /* formInfoIsValid = false; */
+      setModalMessage("The entered passwords must match");
+      setShowModal(true);
+    } /* else {
         formInfoIsValid = true;
       }
-      let isPasswordApproved = checkPassword(l.password);
-      let isEmailApproved = checkEmail(l.email);
-      if (!isEmailApproved || !isPasswordApproved) {
-        formInfoIsValid = false;
-        setMessage("Wrong email or password");
-        setShowModal(true);
-      } else {
+    } */
+    /*  formInfoIsValid = false;
+    while (!formInfoIsValid) { */
+    let isPasswordApproved = checkPassword(l.password);
+    let isEmailApproved = checkEmail(l.email);
+    console.log("invalidationcheck");
+    console.log(isPasswordApproved);
+    console.log(isEmailApproved);
+    if (!isEmailApproved || !isPasswordApproved) {
+      /* formInfoIsValid = false; */
+      setModalMessage("Wrong format in email or password");
+      setShowModal(true);
+    } /* else {
         formInfoIsValid = true;
       }
-    }
+    } */
 
     let userToSave = {
       firstName: l.firstName,
       lastName: l.lastName,
       userName: l.userName,
       email: l.email,
-      password: l.firstPassword
+      password: l.password
     };
+    console.log(userToSave);
     let result = await (
       await fetch("/api/users", {
         method: "POST",
@@ -85,7 +96,7 @@ function RegisterForm() {
     ).json();
     console.log(result);
     resetForm();
-    setMessage("You are now registered");
+    setModalMessage("You are now registered");
     setShowModal(true);
     setTimeout(goToLogin, 3000);
   }
@@ -168,7 +179,7 @@ function RegisterForm() {
         <Modal show={showModal} onHide={handleClose}>
           <Modal.Header closeButton></Modal.Header>
           <Modal.Body>
-            <p className='custom-label'>{message}</p>
+            <p className='custom-label'>{modalMessage}</p>
           </Modal.Body>
           <Modal.Footer>
             <Button className='custom-button' onClick={handleClose}>

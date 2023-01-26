@@ -7,7 +7,12 @@ import useStates from "../utilities/useStates.js";
 import "../../public/css/myPage.css";
 
 function MyConversationPits(props) {
-  const { conversationList, setConversationList } = props;
+  const {
+    conversationList,
+    setConversationList,
+    bannedFromList,
+    setBannedFromList
+  } = props;
   let m = useStates("newMessage");
 
   function sortOnConversationName(a, b) {
@@ -31,9 +36,16 @@ function MyConversationPits(props) {
     <>
       <Container className='scrollContainer'>
         <ul>
-          {conversationList.map((conversation, index) => (
-            <ConversationListItem key={index} conversation={conversation} />
-          ))}
+          {conversationList &&
+            conversationList.map((conversation, index) => (
+              <ConversationListItem key={index} conversation={conversation} />
+            ))}
+        </ul>
+        <ul>
+          {bannedFromList &&
+            bannedFromList.map((conversation, index) => (
+              <ConversationListItem key={index} conversation={conversation} />
+            ))}
         </ul>
       </Container>
     </>

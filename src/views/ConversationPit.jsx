@@ -84,6 +84,7 @@ function ConversationPit() {
 
   useEffect(() => {
     console.log("Running useEffect newMessage");
+    console.log(state.conversation.conversationId);
     if (state.conversation.conversationId === m.conversationId) {
       setMessageList(messageList => [...messageList, newMessage]);
       setNewMessage(m);
@@ -165,6 +166,9 @@ function ConversationPit() {
     <>
       <Header />
       <Container>
+        <Col className='conversationPitHeadline pt-2'>
+          {state.conversation && <h5>{state.conversation.name}</h5>}
+        </Col>
         <Row>
           <Col className='lg-1 md-1 xs-1'>
             <Row>

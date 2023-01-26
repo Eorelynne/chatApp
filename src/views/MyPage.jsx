@@ -16,6 +16,7 @@ function MyPage() {
   const [userList, setUserList] = useState([]);
   const [conversationList, setConversationList] = useState([]);
   const [invitationList, setInvitationList] = useState([]);
+  const [bannedFromList, setBannedFromList] = useState([]);
 
   let l = useStates("loggedIn");
   let m = useStates("newMessage");
@@ -55,8 +56,6 @@ function MyPage() {
 
       if (!data.error) {
         setInvitationList(data);
-      } else if (data.message === "No entries found") {
-        setInvitationList([]);
       }
     })();
   }, []);
@@ -78,6 +77,11 @@ function MyPage() {
           setConversationList(data);
         }
       })();
+    let bannedList = conversationList.filter(x => x.isBanned);
+    setBannedFromList(...bannedList);
+    console.log(bannedFromList);
+    let newConversationList = conversationList.filter(x => !x.isBanned);
+    setConversationList(...newConversationList);
   }, []);
 
   useEffect(() => {
@@ -87,7 +91,7 @@ function MyPage() {
       let data = await (
         await fetch(`/api/conversation-latest-message/22`)
       ).json;
-      console.log(data);
+      //console.log(data);
       /* let latestMessage = {
           conversationId: data.conversationId,
           messageTime: data.latestMessageTime
@@ -100,36 +104,34 @@ function MyPage() {
   return (
     <>
       <Header />
-      <Container fluid>
-        <Row className='ms-2 mt-3 me-2 mb-3 pt-2'>
-          <Col className='listContainer'>
+      <Container>
+        <Row className='mb-3 pt-2'>
+          <Col className='listContainer m-2'>
             <InvitedToList
               invitationList={invitationList}
               setInvitationList={setInvitationList}
             />
           </Col>
         </Row>
-        <Row className='conversationUserListRow mb-3 pt-2 ms-2 me-2'>
-          <Col xs={5} className='listContainer ps-1'>
+        <Row gap={2} className='conversationUserListRow mb-3 pt-2'>
+          <Col className='listContainer col-lg-4 col-sm-6'>
             <UserList userList={userList} />
           </Col>
-          <Col xs={5} className='listContainer ps-1'>
-            <Col className='headlineContainer'>
-              <h5 className='mt-2'>My conversation pits</h5>
-            </Col>
-            {conversationList.length === 0 && (
+          <Col className='listContainer col-lg-4 col-sm-6'>
+            <h5 className='mt-2 text-center'>My conversation pits</h5>
+            {!!conversationList && conversationList.length === 0 && (
               <p className='mt-3'>No active conversations</p>
             )}
-            {conversationList.length !== 0 && (
+            {!!conversationList && conversationList.length !== 0 && (
               <MyConversationPits
                 conversationList={conversationList}
                 setConversationList={setConversationList}
+                bannedFromList={bannedFromList}
+                setBannedFromList={setBannedFromList}
               />
             )}
           </Col>
-        </Row>
-        <Row className=' pt-2 mb-3 mt-3 ms-2 me-2'>
-          <Col className='listContainer pt-2'>
+          <Col className='listContainer pt-2 col-lg-4 col-sm-12'>
             <CreateConversation
               conversationName={conversationName}
               setConversationName={setConversationName}

@@ -38,7 +38,7 @@ function AcceptBtn(props) {
 
   return (
     <>
-      <Button onClick={joinConversation} className='accept-btn'>
+      <Button onClick={joinConversation} size='sm' className='accept-btn'>
         Join
       </Button>
     </>

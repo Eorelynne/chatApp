@@ -40,10 +40,10 @@ function CreateConversation(props) {
 
   return (
     <>
-      <Col className='headlineContainer'>
-        <h4>Start a conversation</h4>
+      <Col className='headlineContainer  ms-2 me-2'>
+        <h5>Start a conversation</h5>
       </Col>
-      <Form onSubmit={submitForm} className='pt-1 pb-2'>
+      <Form onSubmit={submitForm} className='pt-1 pb-2  ms-2 me-2'>
         <Form.Group className='mb-1' controlId='formBasicConversationName'>
           <Form.Label>Name your conversation</Form.Label>
           <Form.Control

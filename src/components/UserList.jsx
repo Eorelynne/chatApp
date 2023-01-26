@@ -1,6 +1,6 @@
 import React from "react";
 import { useEffect, useState } from "react";
-import { Container, Row, Col } from "react-bootstrap";
+import { Container, Row, Col, Form } from "react-bootstrap";
 import useStates from "../utilities/useStates";
 import User from "../components/User";
 
@@ -55,22 +55,36 @@ function UserList(props) {
 
   return (
     <>
-      <Row>
-        <Col>
-          <input
-            id='filter'
-            name='filter'
-            type='text'
-            value={filter}
-            onChange={event => setFilter(event.target.value)}
-          />
-        </Col>
-      </Row>
-      <Row>
-        <Col className='mt-2 headlineContainer'>
-          <h5>Users</h5>
-        </Col>
-      </Row>
+      <Container>
+        <Row>
+          <Col className='mt-2 headlineContainer'>
+            <h5>Users</h5>
+          </Col>
+        </Row>
+        <Row>
+          <Col className='col-lg-8 col-sm-4'>
+            <Form>
+              <Form.Group className='' controlId='basicSearch'>
+                <Form.Label>Search</Form.Label>
+                <Form.Control
+                  type='text'
+                  id='filter'
+                  name='filter'
+                  value={filter}
+                  onChange={event => setFilter(event.target.value)}
+                />
+              </Form.Group>
+            </Form>
+            {/* <input
+              id='filter'
+              name='filter'
+              type='text'
+              value={filter}
+              onChange={event => setFilter(event.target.value)}
+            /> */}
+          </Col>
+        </Row>
+      </Container>
       <Container className='userList scrollContainer pt-1'>
         <ul>
           {userList

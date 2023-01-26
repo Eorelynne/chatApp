@@ -12,16 +12,21 @@ function InvitedToList(props) {
   } = props;
 
   return (
-    <Container>
-      <Row>
-        <h3>Invitations</h3>
+    <Container className='invitationsHeadline'>
+      <Row className='mt-2'>
+        <h5>Invitations</h5>
       </Row>
+      <Row className='pb-1'>
+        <Col xs={3} className='custom-label'>
+          Conversation Pit
+        </Col>
+        <Col xs={3} className='custom-label'>
+          Invited by
+        </Col>
+      </Row>
+      <hr />
       {invitationList.length !== 0 && (
-        <Container>
-          <Row>
-            <Col xs={3}>Conversation Pit</Col>
-            <Col xs={3}>Invited by</Col>
-          </Row>
+        <Container className='scrollContainer'>
           {invitationList.map((invitation, index) => (
             <InvitedConversation
               key={index}
@@ -35,7 +40,7 @@ function InvitedToList(props) {
         </Container>
       )}
       {invitationList.length === 0 && (
-        <Col>
+        <Col className='custom-label'>
           <p>No pending invitations</p>
         </Col>
       )}

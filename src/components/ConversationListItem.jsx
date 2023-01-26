@@ -14,15 +14,21 @@ function ConversationListItem(props) {
     });
   }
 
+  console.log(conversation);
   return (
     <>
       <li>
         <Button
-          className='conversationItem'
+          className={
+            conversation.isBanned
+              ? "conversationItem bannedItem"
+              : "conversationItem"
+          }
           onClick={navigateToConversationPit}
         >
           {conversation.name}
         </Button>
+        {!!conversation.isBanned && <p>{conversation.banReason}</p>}
       </li>
     </>
   );

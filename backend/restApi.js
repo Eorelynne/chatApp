@@ -409,8 +409,7 @@ export async function restApi(connection, app) {
     if (!req.params.id) {
       res.status(400).json({ error: "Bad request, conversationId missing" });
     }
-    const sql =
-      "SELECT * FROM users_conversations_messages_with_user_info WHERE conversationId = ?";
+    const sql = `SELECT * FROM users_conversations_messages_with_user_info WHERE conversationId = ?`;
     const parameters = [req.params.id];
     await sqlQuery("conversation-messages", req, res, sql, false, parameters);
   });
@@ -487,7 +486,6 @@ async function sqlQuery(path, req, res, sql, justOne, parameters) {
       delete result.password;
       req.session.user = result;
     }
-    console.log(result);
     res.json(result);
     return result;
   } catch (error) {

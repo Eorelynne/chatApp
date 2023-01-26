@@ -20,8 +20,8 @@ function Header() {
   useEffect(() => {
     (async () => {
       let data = await (await fetch("/api/login")).json();
-      if (data.message !== "No entries found" && !data.error) {
-        Object.assign(l, data);
+      if (!data.error) {
+        l = data;
         console.log("i header", l.id);
       }
     })();
@@ -70,7 +70,7 @@ function Header() {
               />
               <NavDropdown id='basic-nav-dropdown' drop='start'>
                 {(l.id === 0 || !l.id) && (
-                  <NavDropdown.Item href='/login'>Login Hej</NavDropdown.Item>
+                  <NavDropdown.Item href='/login'>Login</NavDropdown.Item>
                 )}
                 {(l.id === 0 || !l.id) && (
                   <NavDropdown.Item href='/register'>Register</NavDropdown.Item>

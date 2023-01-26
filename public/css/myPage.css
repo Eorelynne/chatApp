@@ -9,21 +9,27 @@
   background-color: rgb(6, 46, 83) !important;
   border-radius: 5px;
   padding: 5px;
+  font-size: x-small;
 }
 .accept-btn:hover {
   background-color: rgba(6, 46, 83, 0.4) !important;
   border-radius: 5px;
   padding: 5px;
+  font-size: x-small;
 }
 
 .decline-btn {
   background-color: rgb(228, 117, 33) !important;
   border-radius: 5px;
   padding: 5px;
+  font-size: x-small;
 }
 
 .decline-btn:hover {
   background-color: rgba(228, 117, 33, 0.4) !important;
+  border-radius: 5px;
+  padding: 5px;
+  font-size: x-small;
 }
 
 .userList {
@@ -54,7 +60,7 @@
 }
 
 .custom-toggle {
-  color: green;
+  color: rgb(6, 46, 83);
 }
 .headlineContainer {
   text-align: center;
@@ -65,9 +71,25 @@
 }
 
 .create-btn:hover {
-  background-color: rgb((6, 46, 83, 0.4));
+  background-color: rgb(6, 46, 83, 0.4) !important;
 }
 
 .li {
   padding-left: 0;
+}
+
+.invitationsHeadline {
+  text-align: center;
+}
+
+@media screen and (max-width: 600px) {
+  .body {
+    font-size: 10px;
+  }
+  .custom-label {
+    font-size: 12px !important;
+  }
+  .custom-text {
+    font-size: 9px !important;
+  }
 }

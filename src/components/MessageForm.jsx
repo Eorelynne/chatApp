@@ -8,8 +8,6 @@ function MessageForm(props) {
   const { state } = props;
   const [content, setContent] = useState("");
 
-  console.log("state", state);
-
   async function submitMessage(event) {
     event.preventDefault();
     let message = {

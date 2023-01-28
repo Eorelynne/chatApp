@@ -16,7 +16,7 @@ import MessageList from "../components/MessageList";
 import MessageForm from "../components/MessageForm";
 import Header from "../components/Header";
 import Message from "../components/Message";
-/* import NewMessage from "../components/NewMessage"; */
+
 import "../../public/css/conversationPage.css";
 import "../../public/css/MyPage.css";
 import useStates from "../utilities/useStates.js";
@@ -26,8 +26,7 @@ function ConversationPit() {
   const { state } = location;
   const [messageList, setMessageList] = useState([]);
   const [userList, setUserList] = useState([]);
-  const [connected, setConnected] = useState([]);
-  const [connectionMessage, setConnectionMessage] = useState([]);
+  const [connectionMessage, setConnectionMessage] = useState("");
   const [banInput, setBanInput] = useState("");
   const [showMessageModal, setShowMessageModal] = useState(false);
   const [showInputModal, setShowInputModal] = useState(false);
@@ -80,7 +79,7 @@ function ConversationPit() {
           )
         ).json();
         if (!data.error) {
-          console.log("userList", userList);
+          /*  console.log("userList", userList); */
           setUserList(data);
         }
       })();
@@ -102,25 +101,25 @@ function ConversationPit() {
     if (sse) {
       sse.close();
     }
-    console.log(
+    /*     console.log(
       "state.conversation.conversationId",
-      state.conversation.conversationId
-    );
+      state.conversation.conversationId 
+    );*/
     sse = new EventSource(`/api/sse/${state.conversation.conversationId}`);
 
     sse.addEventListener("connect", message => {
       let data = JSON.parse(message.data);
-      setConnected([...connected, data.user]);
       setConnectionMessage(data.message);
+      /* setConnectionMessage(data.message); */
 
       console.log("[connect]", data);
     });
     sse.addEventListener("disconnect", message => {
       let data = JSON.parse(message.data);
-      let filteredConnected = connected.filter(
-        x => x.user.userId !== data.user.userId
-      );
-      setConnected(filteredConnected);
+      /* let filteredConnected = connected.filter(
+        x => x.user.userId !== data.user.userId 
+      );*/
+      setConnectionMessage(data.message);
       console.log("[disconnect]", data);
       /* setConnectionMessage(data.message); */
     });
@@ -132,8 +131,6 @@ function ConversationPit() {
       setMessageList(messageList => [...messageList, m.message]);
     });
   }
-  console.log("connected");
-  console.log(connected);
 
   const scrollToNewMessage = () => {
     document.getElementById("new-message:nth-last-child(1)").scrollIntoView();
@@ -183,7 +180,8 @@ function ConversationPit() {
       setShowMessageModal(true);
     }
   }
-  console.log("activeUser", activeUser);
+
+  console.log("connectionMessage", connectionMessage);
   return (
     <>
       <Header />
@@ -232,13 +230,17 @@ function ConversationPit() {
           >
             <Row>
               <Col
-                /* xs={{ span: 6, offset: 3 }} */ className='lg-10 xs-10 mt-2 mb-2'
+              /* className='col-lg-10 xs-10 mt-2 mb-2' */
               >
                 <h3> {state.name}</h3>
               </Col>
             </Row>
             <Row id='newMessage'>
               <Col className='messageListContainer mb-5 pt-2 pb-2'>
+                <DisplayConnected
+                  connectionMessage={connectionMessage}
+                  setConnectionMessage={setConnectionMessage}
+                />
                 <MessageList
                   messageList={messageList}
                   setMessageList={setMessageList}
@@ -304,3 +306,12 @@ function ConversationPit() {
 }
 
 export default ConversationPit;
+
+function DisplayConnected(props) {
+  const { connectionMessage, setConnectionMessage } = props;
+  return (
+    <>
+      <p>{connectionMessage}</p>
+    </>
+  );
+}

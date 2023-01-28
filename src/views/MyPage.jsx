@@ -25,7 +25,6 @@ function MyPage() {
   const location = useLocation();
   const { state } = location;
 
-  /* console.log("mypageL", l); */
   /*  useEffect(() => {
     if (!l.id || l.id === 0) {
       (async () => {
@@ -59,14 +58,10 @@ function MyPage() {
   }, []);
 
   useEffect(() => {
-    /*  console.log("running useEffect in Mypage - conversations"); */
     if (l.id && l.id !== 0) {
       if (l.role === "admin") {
         (async () => {
           let data = await (await fetch(`/api/conversations`)).json();
-          /*  console.log("Adminkonversationer körs"); */
-          /*  console.log("Data");
-          console.log(data); */
           if (!data.error) {
             setConversationList(data);
           }
@@ -74,7 +69,6 @@ function MyPage() {
       } else {
         (async () => {
           let data = await (await fetch(`/api/conversations-by-user`)).json();
-          /*   console.log("Kör userfunktion"); */
 
           if (!data.error) {
             setConversationList(data);
@@ -88,19 +82,19 @@ function MyPage() {
   useEffect(() => {
     "Running useEffect notbanned";
     let newConversationList = conversationList.filter(x => !x.isBanned);
-    console.log("newConversationList", newConversationList);
+    /*     console.log("newConversationList", newConversationList); */
     setConversationList(newConversationList);
   }, [listIsSet]);
 
   useEffect(() => {
     "Running useEffect banlist";
     let bannedList = conversationList.filter(x => x.isBanned);
-    console.log("BannedList", bannedList);
+    /* console.log("BannedList", bannedList); */
     setBannedFromList(bannedList);
   }, [conversationList, listIsSet]);
 
-  console.log("bannedFromList", bannedFromList);
-  console.log("not banned from list", conversationList);
+  /*   console.log("bannedFromList", bannedFromList);
+  console.log("not banned from list", conversationList); */
 
   /*  useEffect(() => {
     (async () => {

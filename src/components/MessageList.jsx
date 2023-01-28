@@ -19,19 +19,21 @@ function MessageList(props) {
   }
 
   return (
-    <div>
-      <Col>
+    <>
+      <Col className='scroll-container message-list'>
         {messageList.length !== 0 &&
           messageList
             .sort(sortOnTime)
-            .map((message, index) => <Message key={index} message={message} />)}
+            .map((message, index) => (
+              <Message id='newMessage' key={index} message={message} />
+            ))}
       </Col>
       {messageList.length === 0 && (
         <Col>
           <p>No messages yet</p>
         </Col>
       )}
-    </div>
+    </>
   );
 }
 

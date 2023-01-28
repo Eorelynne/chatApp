@@ -53,9 +53,7 @@
     "users-in-conversation": {
       "get": true
     },
-    "conversation-latest-message": {
-      "get": true
-    },
+
     "ban-from-chat": {
       "put": true
     },
@@ -127,11 +125,12 @@
     "user-get-users": {
       "get": true
     },
-    "conversation-latest-message": {
-      "get": true
-    },
+
     "ban-from-chat": {
       "put": true
+    },
+    "conversations-admin": {
+      "get": true
     },
     "sse": {
       "get": true

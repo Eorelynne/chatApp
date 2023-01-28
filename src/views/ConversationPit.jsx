@@ -23,34 +23,29 @@ function ConversationPit() {
   const location = useLocation();
   const { state } = location;
   const [messageList, setMessageList] = useState([]);
-  const [newMessage, setNewMessage] = useState({});
   const [userList, setUserList] = useState([]);
   const [connected, setConnected] = useState([]);
   const [connectionMessage, setConnectionMessage] = useState([]);
   const [banInput, setBanInput] = useState([]);
 
-  const ServicesRef = useRef(null);
+  /* const ServicesRef = useRef(null); */
 
-  console.log(state);
+  //console.log(state);
   let l = useStates("loggedIn");
   let m = useStates("newMessage");
 
-  useEffect(() => {
-    if (l.id === 0 || !l.id) {
+  /*  useEffect(() => {
+    if (!l.id || l.id === 0) {
       (async () => {
         let data = await (await fetch(`/api/login`)).json();
-        if (data.message !== "No entries found") {
+        if (!data.error) {
           Object.assign(l, data);
-        } else if (
-          data.message === "No entries found" ||
-          l.id === 0 ||
-          l.id === undefined
-        ) {
+        } else if (data.error) {
           navigate("/login");
         }
       })();
     }
-  }, []);
+  }, []); */
 
   useEffect(() => {
     if (state.conversation.conversationId) {
@@ -60,7 +55,11 @@ function ConversationPit() {
             `/api/conversation-messages/${state.conversation.conversationId}`
           )
         ).json();
-        setMessageList([...data]);
+        if (!data.error) {
+          console.log("data in messageList is array");
+          console.log(data);
+          setMessageList(data);
+        }
       })();
     } else {
       console.log("No state.id");
@@ -81,26 +80,18 @@ function ConversationPit() {
       })();
     }
   }, []);
-
-  useEffect(() => {
-    console.log("Running useEffect newMessage");
-    console.log(state.conversation.conversationId);
-    if (state.conversation.conversationId === m.conversationId) {
-      setMessageList(messageList => [...messageList, newMessage]);
-      setNewMessage(m);
-      console.log("newmessage");
-      console.log(newMessage);
-    }
-  }, [m]);
+  let sse;
 
   useEffect(() => {
     startSSE();
+    return () => {
+      sse.close();
+    };
   }, []);
 
-  useEffect(() => {
+  /* useEffect(() => {
     gotoServices();
-  }, []);
-  let sse;
+  }, []); */
   function startSSE() {
     if (sse) {
       sse.close();
@@ -112,7 +103,7 @@ function ConversationPit() {
       let data = JSON.parse(message.data);
       setConnected([...connected, data.user]);
       setConnectionMessage(data.message);
-      console.log(connected);
+
       console.log("[connect]", data);
     });
     sse.addEventListener("disconnect", message => {
@@ -122,29 +113,31 @@ function ConversationPit() {
       );
       setConnected(filteredConnected);
       console.log("[disconnect]", data);
-      setConnectionMessage(data.message);
+      /* setConnectionMessage(data.message); */
     });
-
     sse.addEventListener("new-message", message => {
       let data = JSON.parse(message.data);
       console.log("[new-message]", data);
       /* Object.assign(m, data); */
-      m = data;
-      console.log("m");
-      console.log(m);
+      m.message = data;
+      setMessageList(messageList => [...messageList, m.message]);
     });
   }
   console.log("connected");
   console.log(connected);
 
-  function gotoServices() {
+  const scrollToNewMessage = () => {
+    document.getElementById("new-message:nth-last-child(1)").scrollIntoView();
+  };
+  /*  scrollToNewMessage(); */
+  /* function gotoServices() {
     window.scrollTo({
       top: ServicesRef.current.offsetTop,
       behavior: "smooth"
     });
-  }
+  } */
 
-  async function banFromChat(users_conversationId) {
+  async function banFromChat(users_conversationId, userRole) {
     if (l.role === "admin" || l.id === state.conversation.creatorId) {
       /*   await (
         await fetch(`/api/ban-from-chat/${users_conversationId}`, {
@@ -155,10 +148,11 @@ function ConversationPit() {
           body: JSON.stringify({
             creatorId: state.conversation.creatorId,
             banReason: banInput
+            bannedUserRole: userRole
           })
         })
-      ).json;
-      console.log("BANNED"); */
+      ).json;*/
+      console.log("BANNED");
     }
   }
 
@@ -183,7 +177,10 @@ function ConversationPit() {
                         <Dropdown.Toggle className='userNameDropdown-toggle custom-toggle'></Dropdown.Toggle>
                         <Dropdown.Menu>
                           <Dropdown.Item
-                            onClick={banFromChat(user.users_conversationsId)}
+                            onClick={banFromChat(
+                              user.users_conversationsId,
+                              user.role
+                            )}
                           >
                             Ban from chat
                           </Dropdown.Item>
@@ -203,7 +200,7 @@ function ConversationPit() {
           <Col
             /* sm={{ span: 6, offset: 3 }}
             lg={{ span: 4, offset: 4 }} */
-            className='messageFormContainer mt-4 lg-10 xs-10'
+            className='messageFormContainer mt-4 col-lg-10 col-sm-10'
           >
             <Row>
               <Col
@@ -212,7 +209,7 @@ function ConversationPit() {
                 <h3> {state.name}</h3>
               </Col>
             </Row>
-            <Row>
+            <Row id='newMessage'>
               <Col className='messageListContainer mb-5 pt-2 pb-2'>
                 <MessageList
                   messageList={messageList}
@@ -221,11 +218,11 @@ function ConversationPit() {
                 />
               </Col>
             </Row>
-            <Row>
-              <Col ref={ServicesRef}>
-                <NewMessage newMessage={newMessage} />
+            {/*  <Row>
+              <Col id='newMessage'  ref={ServicesRef} >
+                <NewMessage newMessage={m.message} />
               </Col>
-            </Row>
+            </Row> */}
           </Col>
         </Row>
       </Container>

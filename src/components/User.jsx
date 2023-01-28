@@ -12,40 +12,37 @@ function User(props) {
     loggedInConversationList,
     setLoggedInConversationList
   } = props;
+
   let l = useStates("loggedIn");
   const [showModal, setShowModal] = useState(false);
   const handleClose = () => setShowModal(false);
 
   async function inviteUser(conversation) {
-    console.log(conversation);
-    console.log(userItem);
-    console.log(l);
     let result;
     if (conversation.id && userItem.id && l) {
-      result = await (
-        await fetch("/api/conversations-invite", {
-          method: "POST",
-          headers: {
-            "Content-Type": "Application/json"
-          },
-          body: JSON.stringify({
-            conversationId: conversation.id,
-            userId: userItem.id,
-            creatorId: l.id
+      if (conversation.creatorId === l.id) {
+        result = await (
+          await fetch("/api/conversations-invite", {
+            method: "POST",
+            headers: {
+              "Content-Type": "Application/json"
+            },
+            body: JSON.stringify({
+              conversationId: conversation.id,
+              userId: userItem.id,
+              creatorId: l.id
+            })
           })
-        })
-      ).json();
+        ).json();
+      }
+      console.log("Result in User");
+      console.log(result);
+      setShowModal(false);
     }
-    console.log("Result in User");
-    console.log(result);
-    setShowModal(false);
   }
 
   function showConversationList() {
-    for (let loggedInConversation of loggedInConversationList) {
-      console.log(loggedInConversation);
-    }
-    console.log("running conversationList");
+    console.log("loggedInConversation", loggedInConversationList);
 
     setShowModal(true);
   }
@@ -61,20 +58,22 @@ function User(props) {
           </Dropdown.Menu>
         </Dropdown>
       </li>
-      <Modal show={showModal} onHide={handleClose}>
+      <Modal show={showModal} onHide={handleClose} backdrop='static'>
         <Modal.Header style={{ background: "#062E53" }}></Modal.Header>
         <Modal.Body>
           <ul>
-            {loggedInConversationList.map((conversation, index) => (
-              <li
-                key={index}
-                /*  onClick={() => {
-                  inviteUser(conversation);
-                }} */
-              >
-                {conversation.name}
-              </li>
-            ))}
+            {!!loggedInConversationList &&
+              loggedInConversationList.length !== 0 &&
+              loggedInConversationList.map((conversation, index) => (
+                <li
+                  key={index}
+                  onClick={() => {
+                    inviteUser(conversation);
+                  }}
+                >
+                  {conversation.name}
+                </li>
+              ))}
           </ul>
         </Modal.Body>
         <Modal.Footer>

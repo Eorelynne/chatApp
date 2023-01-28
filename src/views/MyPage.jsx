@@ -19,33 +19,29 @@ function MyPage() {
   const [bannedFromList, setBannedFromList] = useState([]);
 
   let l = useStates("loggedIn");
-  let m = useStates("newMessage");
+  let m = useStates("newMessage", { message: null });
   const navigate = useNavigate();
   const location = useLocation();
   const { state } = location;
 
-  useEffect(() => {
+  /*  useEffect(() => {
     if (l.id === 0 || !l.id) {
       (async () => {
         let data = await (await fetch(`/api/login`)).json();
         if (!data.error) {
           Object.assign(l, data);
-          l.loggedIn = true;
-        } else if (data.error === "No entries found" || l.id === 0 || !l.id) {
+        } else if (data.error || l.id === 0 || !l.id) {
           navigate("/");
         }
       })();
     }
-  }, []);
+  }, []); */
 
   useEffect(() => {
     (async () => {
       let data = await (await fetch(`/api/user-get-users`)).json();
-      if (data.message !== "No entries found") {
-        let prevList = userList;
+      if (!data.error) {
         setUserList(data);
-      } else if (data.error === "No entries found") {
-        console.log(userList);
       }
     })();
   }, []);
@@ -62,32 +58,45 @@ function MyPage() {
 
   useEffect(() => {
     console.log("running useEffect in Mypage - conversations");
-    /* if (l.id !== 0 && l.id !== undefined) */ console.log(l.role);
-    if (l.role === "admin") {
-      (async () => {
-        let data = await (await fetch(`/api/conversations`)).json();
-        if (!data.error) {
-          setConversationList(data);
-        }
-      })();
-    } else
-      (async () => {
-        let data = await (await fetch(`/api/conversations-by-user`)).json();
-        if (!data.error) {
-          setConversationList(data);
-        }
-      })();
-    let bannedList = conversationList.filter(x => x.isBanned);
-    setBannedFromList(...bannedList);
-    console.log(bannedFromList);
-    let newConversationList = conversationList.filter(x => !x.isBanned);
-    setConversationList(...newConversationList);
+    if (l.id && l.id !== 0) {
+      if (l.role === "admin") {
+        (async () => {
+          let data = await (await fetch(`/api/conversations`)).json();
+          console.log("Adminkonversationer körs");
+          /*  console.log("Data");
+          console.log(data); */
+          if (!data.error) {
+            setConversationList(data);
+          }
+        })();
+      } else {
+        (async () => {
+          let data = await (await fetch(`/api/conversations-by-user`)).json();
+          console.log("Kör userfunktion");
+
+          if (!data.error) {
+            setConversationList(data);
+          }
+        })();
+      }
+    }
   }, []);
 
   useEffect(() => {
+    let bannedList = conversationList.filter(x => x.isBanned);
+    setBannedFromList(bannedList);
+
+    let newConversationList = conversationList.filter(x => !x.isBanned);
+    setConversationList(newConversationList);
+  }, []);
+  /* 
+  console.log("bannedFromList");
+  console.log(bannedFromList);
+ */
+  /*  useEffect(() => {
     (async () => {
-      /*    for (let conversation of conversationList) { */
-      /*  console.log("in myPage: ", conversation.conversationId); */
+      /*    for (let conversation of conversationList) { 
+      /*  console.log("in myPage: ", conversation.conversationId); 
       let data = await (
         await fetch(`/api/conversation-latest-message/22`)
       ).json;
@@ -97,9 +106,9 @@ function MyPage() {
           messageTime: data.latestMessageTime
         };
         console.log(latestMessage); 
-      }*/
+      }
     })();
-  }, [conversationList]);
+  }, [conversationList]); */
 
   return (
     <>

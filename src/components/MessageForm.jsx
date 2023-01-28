@@ -10,7 +10,6 @@ function MessageForm(props) {
 
   async function submitMessage(event) {
     event.preventDefault();
-    console.log("StateId", state.conversation.id);
     let message = {
       content: content,
       usersConversationsId: state.conversation.id,
@@ -23,7 +22,6 @@ function MessageForm(props) {
         body: JSON.stringify(message)
       })
     ).json();
-    console.log(result);
     setContent("");
   }
 

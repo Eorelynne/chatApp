@@ -18,6 +18,7 @@ export async function restApi(connection, app) {
   app.get("/api/users/:id", async (req, res) => {
     if (!req.params.id) {
       res.status(400).json({ error: "Bad request, id missing" });
+      return;
     }
     const sql =
       "SELECT id, firstName, lastName, userName, email, role FROM users WHERE id = ?";
@@ -59,6 +60,7 @@ export async function restApi(connection, app) {
   app.put("/api/users/:id", async (req, res) => {
     if (!req.params.id) {
       res.status(400).json({ error: "Bad request, id missing" });
+      return;
     }
     const sql = `UPDATE users
           SET ${Object.keys(req.body).map(x => x + " = ?")}
@@ -74,6 +76,7 @@ export async function restApi(connection, app) {
   app.delete("/api/users/:id", async (req, res) => {
     if (!req.params.id) {
       res.status(400).json({ error: "Bad request, id missing" });
+      return;
     }
     const sql = "DELETE FROM users WHERE id = ?";
     const parameters = [req.params.id];
@@ -83,6 +86,7 @@ export async function restApi(connection, app) {
   app.get("/api/users-by-username/:username", async (req, res) => {
     if (!req.params.username) {
       res.status(400).json({ error: "Bad request, userName missing" });
+      return;
     }
     const sql = "SELECT * FROM users WHERE username = ?";
     const parameters = [req.params.username];
@@ -112,6 +116,7 @@ export async function restApi(connection, app) {
   app.get("/api/conversations/:id", async (req, res) => {
     if (!req.params.id) {
       res.status(400).json({ error: "Bad request, conversationId missing" });
+      return;
     }
     const sql = "SELECT * FROM conversations WHERE id=?";
     const parameters = [req.params.id];
@@ -122,6 +127,11 @@ export async function restApi(connection, app) {
   app.post("/api/conversations", async (req, res) => {
     if (!req.body.name) {
       res.status(400).json({ error: "Bad request, conversation name missing" });
+      return;
+    }
+    if (!req.session.user) {
+      res.status(403).json({ error: "Not logged in" });
+      return;
     }
     const sql = "INSERT INTO conversations (name, creatorId) VALUES(?,?)";
     const parameters = [req.body.name, req.session.user.id];
@@ -139,6 +149,7 @@ export async function restApi(connection, app) {
   app.put("/api/conversations/:id", async (req, res) => {
     if (!req.params.id) {
       res.status(400).json({ error: "Bad request, conversationId missing" });
+      return;
     }
     const sql = `UPDATE conversations
           SET ${Object.keys(req.body).map(x => x + " = ?")}
@@ -155,6 +166,7 @@ export async function restApi(connection, app) {
   app.delete("/api/conversations/:id", async (req, res) => {
     if (!req.params.id) {
       res.status(400).json({ error: "Bad request, conversationId missing" });
+      return;
     }
     const sql = "DELETE FROM conversations WHERE id = ?";
     const parameters = [req.params.id];
@@ -172,6 +184,7 @@ export async function restApi(connection, app) {
   app.get("/api/invitations/:id", async (req, res) => {
     if (!req.params.id) {
       res.status(400).json({ error: "Bad request, invitation id missing" });
+      return;
     }
     const sql = `SELECT * FROM invitations WHERE id=?`;
     const parameters = [req.params.id];
@@ -182,6 +195,7 @@ export async function restApi(connection, app) {
   app.post("/api/invitations", async (req, res) => {
     if (!req.body.conversationId || !req.body.userId) {
       res.status(400).json({ error: "Bad request, input missing" });
+      return;
     }
     const sql = `INSERT INTO invitations (conversationId, userId, isInvitePending) VALUES (?,?,?)`;
     const parameters = [req.body.conversationId, req.body.userId, true];
@@ -192,6 +206,7 @@ export async function restApi(connection, app) {
   app.put("api/invitations/:id", async (req, res) => {
     if (!req.params.id) {
       res.status(400).json({ error: "Bad request, conversationId missing" });
+      return;
     }
     const sql = `UPDATE invitations
           SET ${Object.keys(req.body).map(x => x + " = ?")}
@@ -208,6 +223,7 @@ export async function restApi(connection, app) {
   app.delete("/api/invitations/:id", async (req, res) => {
     if (!req.params.id) {
       res.status(400).json({ error: "Bad request, conversationId missing" });
+      return;
     }
     const sql = `DELETE FROM invitations WHERE id =?`;
     const parameters = [req.params.id];
@@ -216,6 +232,10 @@ export async function restApi(connection, app) {
 
   //Get all pending invites
   app.get("/api/invitations-pending", async (req, res) => {
+    if (!req.session.user) {
+      res.status(403).json({ error: "Not logged in" });
+      return;
+    }
     const sql =
       "SELECT * FROM invitations WHERE userId = ? AND isInvitePending = ?";
     const parameters = [req.session.user.id, true];
@@ -224,6 +244,10 @@ export async function restApi(connection, app) {
 
   //Join conversation (in req.body creatorId)
   app.post("/api/conversations-join/:id", async (req, res) => {
+    if (!req.session.user) {
+      res.status(403).json({ error: "Not logged in" });
+      return;
+    }
     if (!req.params.id || !req.body.creatorId) {
       res.status(400).json({ error: "Bad request, input missing" });
       return;
@@ -248,8 +272,8 @@ export async function restApi(connection, app) {
   app.post("/api/conversations-invite", async (req, res) => {
     if (!req.session.user) {
       res.status(403).json({ error: "not allowed" });
+      return;
     }
-    console.log(req.session.user);
     if (+req.session.user.id !== +req.body.creatorId) {
       res.status(403).json({ error: "not allowed" });
       return;
@@ -262,6 +286,10 @@ export async function restApi(connection, app) {
 
   //Invitation by user
   app.get("/api/invitations-user", async (req, res) => {
+    if (!req.session.user) {
+      res.status(403).json({ error: "Not logged in" });
+      return;
+    }
     const sql =
       "SELECT * FROM invitations_conversations_with_creator WHERE userId=? AND isInvitePending = ?";
     const parameters = [req.session.user.id, true];
@@ -271,6 +299,7 @@ export async function restApi(connection, app) {
   app.put("/api/conversations-invite/:id", async (req, res) => {
     if (!req.params.id) {
       res.status(400).json({ error: "Bad request, input missing" });
+      return;
     }
     const sql = " UPDATE invitations SET isInvitePending = ? WHERE id = ?";
     const parameters = [false, req.params.id];
@@ -278,16 +307,28 @@ export async function restApi(connection, app) {
   });
   //Get conversations by user
   app.get("/api/conversations-by-user/", async (req, res) => {
+    if (!req.session.user) {
+      res.status(403).json({ error: "Not logged in" });
+      return;
+    }
     const sql =
-      "SELECT * FROM conversations_with_users_conversations WHERE userId = ?";
+      "SELECT * FROM latest_message_time_and_users_latest_message_time WHERE userId = ?";
     const parameters = [req.session.user.id];
     await sqlQuery("conversations-by-user", req, res, sql, false, parameters);
+  });
+
+  app.get("/api/conversations-admin/", async (req, res) => {
+    const sql =
+      "SELECT * FROM conversations_with_users_conversations GROUP BY conversationId";
+    /*  const parameters = [req.session.user.id]; */
+    await sqlQuery("conversations-admin", req, res, sql, false, parameters);
   });
 
   //Get conversation by creator
   app.get(`/api/conversation-by-creator/:id`, async (req, res) => {
     if (!req.params.id) {
       res.status(400).json({ error: "Bad request, input missing" });
+      return;
     }
     const sql = "SELECT * FROM conversations WHERE creatorId =?";
     const parameters = [req.params.id];
@@ -298,6 +339,7 @@ export async function restApi(connection, app) {
   app.get("/api/users-in-conversation/:id", async (req, res) => {
     if (!req.params.id) {
       res.status(400).json({ error: "Bad request, conversationId missing" });
+      return;
     }
     const sql =
       "SELECT * FROM users_conversations_with_user_and_conversation WHERE conversationId =?";
@@ -305,28 +347,11 @@ export async function restApi(connection, app) {
     await sqlQuery("users-in-conversation", req, res, sql, false, parameters);
   });
 
-  //Get latest messagetime of conversation
-  app.get("/api/conversation-latest-message/:id", async (req, res) => {
-    if (!req.params.id) {
-      res.status(400).json({ error: "Bad request, conversationId missing" });
-    }
-    const sql =
-      "SELECT * FROM userConversation_with_latest_message_time WHERE conversationId =?";
-    const parameters = [req.params.id];
-    await sqlQuery(
-      "conversation-latest-message",
-      req,
-      res,
-      sql,
-      true,
-      parameters
-    );
-  });
-
   //Conversations with messages
   app.get(`/api/conversation-with-messages/:id`, async (req, res) => {
     if (!req.params.id) {
       res.status(400).json({ error: "Bad request, conversationId missing" });
+      return;
     }
     const sql =
       "SELECT * FROM userConversation_with_messages WHERE conversationId =?";
@@ -350,40 +375,17 @@ export async function restApi(connection, app) {
   app.get("/api/messages/:id", async (req, res) => {
     if (!req.params.id) {
       res.status(400).json({ error: "Bad request, message id missing" });
+      return;
     }
     const sql = "SELECT * FROM messages WHERE id= ?";
     const parameters = [req.params.id];
     await sqlQuery("messages", req, res, sql, true, parameters);
   });
-  /* 
-  app.post("/api/messages", async (req, res) => {
-    let content = req.body.content;
-    let time = Date.now();
-    let usersConversationsId = req.body.usersConversationsId;
-    let conversationId = req.body.conversationId;
-    let senderUserId = req.session.user.id;
-    let userName = req.session.user.userName;
-    let senderUserRole = req.session.user.role;
-
-    let message = {
-      content,
-      time,
-      usersConversationsId,
-      conversationId,
-      senderUserId,
-      userName,
-      senderUserRole
-    };
-    broadcast("new-message", message);
-    const sql =
-      "INSERT INTO messages (content, time, usersConversationsId) VALUES (?,?,?)";
-    const parameters = [content, time, usersConversationsId];
-    let result = await sqlQuery("messages", req, res, sql, true, parameters);
-  }); */
 
   app.put("/api/messages/:id", async (req, res) => {
     if (!req.params.id) {
       res.status(400).json({ error: "Bad request, conversationId missing" });
+      return;
     }
     const sql = `UPDATE messages
           SET ${Object.keys(req.body).map(x => x + " = ?")}
@@ -398,6 +400,7 @@ export async function restApi(connection, app) {
   app.delete("/api/messages/:id", async (req, res) => {
     if (!req.params.id) {
       res.status(400).json({ error: "Bad request, conversationId missing" });
+      return;
     }
     const sql = `DELETE FROM messages WHERE id=?`;
     const parameters = [req.params.id];
@@ -408,6 +411,7 @@ export async function restApi(connection, app) {
   app.get("/api/conversation-messages/:id", async (req, res) => {
     if (!req.params.id) {
       res.status(400).json({ error: "Bad request, conversationId missing" });
+      return;
     }
     const sql = `SELECT * FROM users_conversations_messages_with_user_info WHERE conversationId = ?`;
     const parameters = [req.params.id];
@@ -416,10 +420,19 @@ export async function restApi(connection, app) {
 
   //Ban from chat
   app.put("/api/ban-from-chat/:id", async (req, res) => {
+    if (!req.session.user) {
+      res.status(403).json({ error: "Not logged in" });
+      return;
+    }
     console.log(req.session.user.role);
     console.log(req.body.creatorId);
     console.log(req.session.user.id);
-    if (!req.params.id || !req.body.banReason || !req.body.creatorId) {
+    if (
+      !req.params.id ||
+      !req.body.banReason ||
+      !req.body.creatorId ||
+      !req.body.bannedUserRole
+    ) {
       res.status(400).json({ error: "Bad request, input missing" });
       return;
     }
@@ -427,7 +440,11 @@ export async function restApi(connection, app) {
       +req.body.creatorId !== +req.session.user.id &&
       req.session.user.role !== "admin"
     ) {
-      res.status(405).json({ error: "Not allowed" });
+      res.status(403).json({ error: "Not allowed" });
+      return;
+    }
+    if (req.body.bannedUserRole === "admin") {
+      res.status(403).json({ error: "Not allowed to ban admin" });
       return;
     }
     const sql =
@@ -438,8 +455,13 @@ export async function restApi(connection, app) {
 
   //Edit userinfo
   app.put("/api/edit-my-user-info/:id", async (req, res) => {
+    if (!req.session.user) {
+      res.status(403).json({ error: "Not logged in" });
+      return;
+    }
     if (!req.params.id) {
       res.status(400).json({ error: "Bad request, conversationId missing" });
+      return;
     }
     delete req.body.role;
     if (+req.params.id === +req.session.user?.id) {
@@ -458,14 +480,15 @@ export async function restApi(connection, app) {
         parameters
       );
     } else {
-      res.status(405).json({ error: "Not allowed" });
+      res.status(403).json({ error: "Not allowed" });
+      return;
     }
   });
 }
 
 async function sqlQuery(path, req, res, sql, justOne, parameters) {
   if (!acl(path, req)) {
-    res.status(405).json({ error: "Not allowed" });
+    res.status(403).json({ error: "Not allowed" });
     return;
   }
   try {

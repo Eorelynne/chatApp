@@ -1,4 +1,5 @@
 import React from "react";
+import { useEffect } from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import InvitedConversation from "./InvitedConversation";
 import "../../public/css/myPage.css";
@@ -10,6 +11,16 @@ function InvitedToList(props) {
     invitationAnswer,
     setInvitationAnswer
   } = props;
+
+  useEffect(() => {
+    (async () => {
+      let data = await (await fetch(`/api/invitations-user`)).json();
+
+      if (!data.error) {
+        setInvitationList(data);
+      }
+    })();
+  }, [invitationAnswer]);
 
   return (
     <Container className='invitationsHeadline'>
@@ -25,8 +36,8 @@ function InvitedToList(props) {
         </Col>
       </Row>
       <hr />
-      {invitationList.length !== 0 && (
-        <Container className='scrollContainer'>
+      {invitationList && invitationList.length !== 0 && (
+        <Container className='scroll-container invited-to-list'>
           {invitationList.map((invitation, index) => (
             <InvitedConversation
               key={index}

@@ -12,35 +12,32 @@ function UserList(props) {
   let l = useStates("loggedIn");
   const [filter, setFilter] = useState("");
 
-  useEffect(() => {
+  /*  useEffect(() => {
     if (l.id === 0 || !l.id) {
       (async () => {
         let data = await (await fetch("/api/login")).json();
         if (!data.error) {
           Object.assign(l, data);
-          console.log("In useEffect in userList");
-          console.log(l);
+          l.loggedIn = true;
+        }
+      })();
+    }
+  }, []); */
+
+  useEffect(() => {
+    if (l.id && l.id !== 0) {
+      (async () => {
+        let data = await (
+          await fetch(`/api/conversation-by-creator/${l.id}`)
+        ).json();
+        if (!data.error) {
+          setLoggedInConversationList(data);
         }
       })();
     }
   }, []);
 
-  useEffect(() => {
-    if (l.id !== 0 && l.id !== undefined) {
-      (async () => {
-        let data = await (
-          await fetch(`/api/conversation-by-creator/${l.id}`)
-        ).json();
-        console.log(data);
-        setLoggedInConversationList([...data]);
-      })();
-      for (let conversation of loggedInConversationList) {
-        console.log(conversation);
-      }
-    } else {
-      console.log("No loggedIn.id in userList");
-    }
-  }, []);
+  console.log(loggedInConversationList);
 
   function sortOnUserName(a, b) {
     const userNameA = a.userName.toLowerCase();
@@ -64,7 +61,7 @@ function UserList(props) {
         <Row>
           <Col className='col-lg-8 col-sm-4'>
             <Form>
-              <Form.Group className='' controlId='basicSearch'>
+              <Form.Group className=''>
                 <Form.Label>Search</Form.Label>
                 <Form.Control
                   type='text'
@@ -85,7 +82,7 @@ function UserList(props) {
           </Col>
         </Row>
       </Container>
-      <Container className='userList scrollContainer pt-1'>
+      <Container className='user-list scroll-container pt-1'>
         <ul>
           {userList
             .filter(

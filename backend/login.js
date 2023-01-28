@@ -37,6 +37,10 @@ export function login(db, app) {
       res.status(405).json({ error: "Not allowed" });
       return;
     }
+    if (req.session.user) {
+      res.status(400).json({ error: "Already logged in" });
+      return;
+    }
     if (!req.body.email || !req.body.password) {
       res.status(404).json({ error: "Bad request" });
       return;
@@ -50,10 +54,6 @@ export function login(db, app) {
 
     // Note: The session.user property is set in the sqlQuery function
 
-    //Servern kommer ihåg att man är inloggad. Vid varje request skickas cookien med
-    //Express-session ser vilken cookie som är kopplad till sessionen. Är man inloggad kan man läsa av att det finns en user
-    //kopplad till sessionen.
-    //}
     return;
   });
 
@@ -74,10 +74,13 @@ export function login(db, app) {
 
   app.delete("/api/login", (req, res) => {
     if (!acl("login", req)) {
-      res.status(405).json({ error: "Not allowed" });
+      res.status(403).json({ error: "Not allowed" });
       return;
     }
-
+    if (!req.session.user) {
+      res.status(400).json({ error: "Already logged out" });
+      return;
+    }
     delete req.session.user;
 
     res.json({ success: "Logged out" });

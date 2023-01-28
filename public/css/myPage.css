@@ -32,8 +32,10 @@
   font-size: x-small;
 }
 
-.userList {
+.user-list {
   align-content: flex-start;
+  height: 20vh;
+  padding-left: 0vw;
 }
 
 .conversationUserListRow {
@@ -41,10 +43,21 @@
   height: 35vh;
 }
 
-.scrollContainer {
+.scroll-container {
   overflow-y: scroll;
+}
+
+.invited-to-list {
   height: 20vh;
   padding-left: 0vw;
+}
+
+.conversation-list {
+  height: 20vh;
+}
+
+message-list {
+  height: 50vh;
 }
 
 .userNameDropdown-btn {

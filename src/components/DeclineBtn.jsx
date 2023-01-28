@@ -6,7 +6,7 @@ function DeclineBtn(props) {
   const { invitation, invitationAnswer, setInvitationAnswer } = props;
 
   async function declineConversation() {
-    updateInvitation();
+    await updateInvitation();
     setInvitationAnswer(true);
   }
 
@@ -20,6 +20,7 @@ function DeclineBtn(props) {
         body: JSON.stringify({ isInvitePending: false })
       })
     ).json;
+    console.log(result);
   }
 
   return (

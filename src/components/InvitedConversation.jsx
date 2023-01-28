@@ -8,17 +8,17 @@ function InvitedConversation(props) {
   const { invitation, index, invitationList, setInvitationList } = props;
   const [invitationAnswer, setInvitationAnswer] = useState(false);
 
-  useEffect(() => {
+  /*  useEffect(() => {
     console.log(invitationList);
     console.log("invitationAnswer changed");
     if (invitationAnswer) {
-      let filteredInvitationList = invitationList.filter(
+       let filteredInvitationList = invitationList.filter(
         x => +x.invitationId !== +invitation.invitationId
-      );
-      setInvitationList(...filteredInvitationList);
+      ); 
+      setInvitationList(filteredInvitationList);
       console.log(invitationList);
     }
-  }, [invitationAnswer]);
+  }, [invitationAnswer]); */
 
   return (
     /*  <Container fluid> */

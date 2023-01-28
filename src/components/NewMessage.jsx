@@ -2,15 +2,14 @@ import React from "react";
 import { Container, Row, Col } from "react-bootstrap";
 
 function NewMessage(props) {
-  const { message, newMessage } = props;
+  const { newMessage } = props;
 
-  return (
+  return !newMessage ? null : (
     <Container>
       {!!newMessage.time && (
         <Row>
-          <Col>
-            <p>{new Date(newMessage.time).toLocaleString()}</p>
-          </Col>
+          <p>{new Date(newMessage.time).toLocaleString()}</p>
+
           <p>{newMessage.content}</p>
         </Row>
       )}

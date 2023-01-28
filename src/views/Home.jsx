@@ -9,9 +9,8 @@ import "../../public/css/home.css";
 function Home() {
   let l = useStates("loggedIn");
   const navigate = useNavigate();
-  console.log("l i home");
-  console.log(l);
-  useEffect(() => {
+
+  /*  useEffect(() => {
     if (l.id === 0 || !l.id) {
       (async () => {
         let data = await (await fetch("/api/login")).json();
@@ -21,7 +20,7 @@ function Home() {
         }
       })();
     }
-  }, []);
+  }, []); */
 
   return (
     <div className='home'>

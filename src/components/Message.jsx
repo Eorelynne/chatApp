@@ -33,7 +33,10 @@ function Message(props) {
             </Row>
             <Row>
               <Col>
-                <p>{message.userName}</p>
+                {message.senderUserRole === "admin" && (
+                  <p className='mb-0'>Admin</p>
+                )}
+                <p className='mt-0'>{message.userName}</p>
               </Col>
             </Row>
           </Col>

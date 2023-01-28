@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import {
   Nav,
   Navbar,
-  NavDropdown,
+  Dropdown,
   NavItem,
   Container,
   Row,
@@ -17,7 +17,7 @@ function Header() {
   const navigate = useNavigate();
   let l = useStates("loggedIn");
 
-  useEffect(() => {
+  /* useEffect(() => {
     (async () => {
       let data = await (await fetch("/api/login")).json();
       if (!data.error) {
@@ -25,77 +25,117 @@ function Header() {
         console.log("i header", l.id);
       }
     })();
-  }, []);
+  }, []); */
 
   async function logout() {
     let result = await (await fetch("/api/login", { method: "DELETE" })).json();
     console.log(result);
-    l = {};
+    for (let key in l) {
+      delete l[key];
+    }
     navigate("/");
   }
+  if (l?.id !== 0)
+    return (
+      <Navbar style={{ background: "#062E53" }} className='navbar'>
+        <Container fluid className='row'>
+          <UsernameDisplay />
+          <LogoContainer />
+          <LoggedInDropdown />
+        </Container>
+      </Navbar>
+    );
+  else if (!l.id || l.id === 0)
+    return (
+      <Navbar style={{ background: "#062E53" }} className='navbar'>
+        <Container fluid className='row'>
+          <Col xs={2} style={{ color: "#e47521" }} className='pt-4' />
+          <LogoContainer />
+          <LoggedOutDropdown />
+        </Container>
+      </Navbar>
+    );
+  else return null;
 
   return (
     <>
       <Navbar style={{ background: "#062E53" }} className='navbar'>
         <Container fluid className='row'>
-          <Col xs={2} style={{ color: "#e47521" }} className='pt-4'>
-            {l.id !== 0 && (
-              <NavItem>
-                {/*  <Nav.Link as={Link} to='/my-profile-page'> */}
-                {l.userName}
-                {/* </Nav.Link> */}
-              </NavItem>
-            )}
-          </Col>
-          <Col xs={8} className='logo-container'>
-            <Container className='row'>
-              <Navbar.Brand className='logo'>
-                <Nav.Link as={Link} to='/'>
-                  <img alt='logo' src='/logo.png' className='logo-img' />
-                </Nav.Link>
-              </Navbar.Brand>
-            </Container>
-            <Container className='row nameContainer justify-content-center'>
-              <Col>
-                <h4>Conversation Pits</h4>
-              </Col>
-            </Container>
-          </Col>
-          <Col xs={1} className='dropdown-custom justify-content-end'>
-            <Nav className='me-auto'>
-              <img
-                alt='hamburger'
-                src='/hamburger2.png'
-                className='hamburger-img'
-              />
-              <NavDropdown id='basic-nav-dropdown' drop='start'>
-                {(l.id === 0 || !l.id) && (
-                  <NavDropdown.Item href='/login'>Login</NavDropdown.Item>
-                )}
-                {(l.id === 0 || !l.id) && (
-                  <NavDropdown.Item href='/register'>Register</NavDropdown.Item>
-                )}
-                {(l.id !== 0 || l.id) && (
-                  <NavDropdown.Item href='/my-page'>My Page</NavDropdown.Item>
-                )}
-                {/*  {(l.id !== 0 || l.id) && (
-                  <NavDropdown.Item href='/my-profile-page'>
-                    My profile
-                  </NavDropdown.Item>
-                )} */}
-                {l.id !== 0 && l.id && (
-                  <NavDropdown.Item onClick={logout}>Logout</NavDropdown.Item>
-                )}
-                {/* {(l.id !== 0 || l.id) && l.role === "admin" && (
-                  <NavDropdown.Item href='/admin-page'>Admin</NavDropdown.Item>
-                )} */}
-              </NavDropdown>
-            </Nav>
-          </Col>
+          {l.id !== 0 && <UsernameDisplay />}
+          <LogoContainer />
+          {(!l.id || l.id === 0) && <LoggedOutDropdown />}
+          {(l.id || l.id !== 0) && <LoggedInDropdown />}
         </Container>
       </Navbar>
     </>
   );
+
+  function UsernameDisplay() {
+    return (
+      <Col xs={2} style={{ color: "#e47521" }} className='pt-4'>
+        <NavItem>{l.userName}</NavItem>
+      </Col>
+    );
+  }
+
+  function LoggedInDropdown() {
+    return (
+      <Col xs={1} className='dropdown-custom justify-content-end'>
+        <Nav className='me-auto'>
+          <img
+            alt='hamburger'
+            src='/hamburger2.png'
+            className='hamburger-img'
+          />
+          <Dropdown id='basic-nav-dropdown' drop='start'>
+            <Dropdown.Item as={Link} to='/my-page'>
+              My Page
+            </Dropdown.Item>
+            <Dropdown.Item onClick={logout}>Logout</Dropdown.Item>
+          </Dropdown>
+        </Nav>
+      </Col>
+    );
+  }
+  function LoggedOutDropdown() {
+    return (
+      <Col xs={1} className='dropdown-custom justify-content-end'>
+        <Nav className='me-auto'>
+          <img
+            alt='hamburger'
+            src='/hamburger2.png'
+            className='hamburger-img'
+          />
+          <Dropdown id='basic-nav-dropdown' drop='start'>
+            <Dropdown.Item as={Link} to='/login'>
+              Login
+            </Dropdown.Item>
+            <Dropdown.Item as={Link} to='/register'>
+              Register
+            </Dropdown.Item>
+          </Dropdown>
+        </Nav>
+      </Col>
+    );
+  }
+  function LogoContainer() {
+    return (
+      <Col xs={8} className='logo-container'>
+        <Container className='row'>
+          <Navbar.Brand className='logo'>
+            <Nav.Link as={Link} to='/'>
+              <img alt='logo' src='/logo.png' className='logo-img' />
+            </Nav.Link>
+          </Navbar.Brand>
+        </Container>
+        <Container className='row nameContainer justify-content-center'>
+          <Col>
+            <h4>Conversation Pits</h4>
+          </Col>
+        </Container>
+      </Col>
+    );
+  }
 }
 
 export default Header;

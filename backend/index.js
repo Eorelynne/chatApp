@@ -67,7 +67,7 @@ app.get("/api/sse/:conversationId", (req, res) => {
 
   req.on("close", () => {
     connections = connections.filter(x => x.res != res);
-
+    console.log("Disconnected!!!!");
     broadcast("disconnect", {
       conversationId: req.params.conversationId,
       message: req.session.user.userName + " disconnected"
@@ -92,10 +92,7 @@ app.get("/api/sse/:conversationId", (req, res) => {
 });
 
 export async function broadcast(event, data) {
-  console.log("Running broadcast");
   for (let connection of connections) {
-    console.log("data.conversationId");
-    console.log(data.conversationId);
     const sql =
       "SELECT userId FROM users_conversations WHERE conversationId = ?";
     const parameters = [data.conversationId];
@@ -110,16 +107,13 @@ export async function broadcast(event, data) {
     for (let i = 0; i < userList.length; i++) {
       if (+userList[i].userId === +connection.req.session.user.id) {
         inList = true;
-        console.log(userList[i].userId);
-        console.log(connection.req.session.user.id);
         break;
       }
     }
     if (!inList) {
       continue;
     }
-    console.log(connection.req.params.conversationId);
-    console.log(data.conversationId);
+
     if (+connection.req.params.conversationId !== +data.conversationId) {
       continue;
     }
@@ -153,6 +147,7 @@ app.post("/api/messages", async (req, res) => {
     userName,
     senderUserRole
   };
+  console.log("message", message);
   await broadcast("new-message", message);
   const sql =
     "INSERT INTO messages (content, time, usersConversationsId) VALUES (?,?,?)";

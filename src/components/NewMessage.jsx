@@ -1,4 +1,4 @@
-import React from "react";
+/* import React from "react";
 import { Container, Row, Col } from "react-bootstrap";
 
 function NewMessage(props) {
@@ -18,3 +18,4 @@ function NewMessage(props) {
 }
 
 export default NewMessage;
+ */

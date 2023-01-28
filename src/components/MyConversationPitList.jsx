@@ -62,12 +62,19 @@ function MyConversationPits(props) {
 
   return (
     <>
-      <Row>
-        <Col>
-          <FilterForm filter={filter} setFilter={setFilter} />
-        </Col>
-      </Row>
-      <Container className='scroll-container conversation-list'>
+      <Container>
+        <Row>
+          <Col>
+            <h5 className='mt-2 text-center'>My conversation pits</h5>
+          </Col>
+        </Row>
+        <Row>
+          <Col className='col-lg-8 col-sm-4'>
+            <FilterForm filter={filter} setFilter={setFilter} />
+          </Col>
+        </Row>
+      </Container>
+      <Container className='scroll-container conversation-list pt-1'>
         <ul>
           {conversationList &&
             conversationList.length !== 0 &&
@@ -77,11 +84,13 @@ function MyConversationPits(props) {
                 <ConversationListItem key={index} conversation={conversation} />
               ))}
         </ul>
+        <hr />
+        <h5>Banned from</h5>
         <ul>
           {bannedFromList &&
             bannedFromList !== 0 &&
             bannedFromList
-              .sort(window[filter])
+              .sort(eval(filter))
               .map((conversation, index) => (
                 <ConversationListItem key={index} conversation={conversation} />
               ))}
@@ -106,6 +115,7 @@ function FilterForm(props) {
             setFilter(event.target.value);
           }}
         >
+          <option value='sortOnName'>Choose filter</option>
           <option value='sortOnName'>Conversation name</option>
           <option value='sortOnLatestMessage'>Latest conversation</option>
           <option value='sortOnUsersLatestMessage'>My latest message</option>

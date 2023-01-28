@@ -10,17 +10,16 @@ function Home() {
   let l = useStates("loggedIn");
   const navigate = useNavigate();
 
-  /*  useEffect(() => {
+  useEffect(() => {
     if (l.id === 0 || !l.id) {
       (async () => {
         let data = await (await fetch("/api/login")).json();
-        if (data.message !== "No entries found" && !data.error) {
+        if (!data.error) {
           Object.assign(l, data);
-          console.log(l);
         }
       })();
     }
-  }, []); */
+  }, []);
 
   return (
     <div className='home'>

@@ -37,8 +37,6 @@ function UserList(props) {
     }
   }, []);
 
-  console.log(loggedInConversationList);
-
   function sortOnUserName(a, b) {
     const userNameA = a.userName.toLowerCase();
     const userNameB = b.userName.toLowerCase();

@@ -177,7 +177,7 @@ function RegisterForm() {
           </Button>
         </Container>
         <Modal show={showModal} onHide={handleClose}>
-          <Modal.Header closeButton></Modal.Header>
+          <Modal.Header></Modal.Header>
           <Modal.Body>
             <p className='custom-label'>{modalMessage}</p>
           </Modal.Body>

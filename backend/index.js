@@ -60,7 +60,7 @@ app.use((error, req, res, next) => {
 });
 
 login(db, app);
-/* :conversationId */
+
 let connections = [];
 app.get("/api/sse/:conversationId", (req, res) => {
   connections.push({ req, res });
@@ -130,6 +130,18 @@ setInterval(() => {
 }, 25000); */
 
 app.post("/api/messages", async (req, res) => {
+  if (
+    !req.body.content ||
+    !req.body.usersConversationsId ||
+    !req.body.conversationId
+  ) {
+    res.status(404).json({ error: "Input missing" });
+    return;
+  }
+  if (!req.session.user) {
+    res.status(403).json({ error: "Not logged in" });
+    return;
+  }
   let content = req.body.content;
   let time = Date.now();
   let usersConversationsId = req.body.usersConversationsId;

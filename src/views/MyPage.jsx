@@ -17,6 +17,7 @@ function MyPage() {
   const [conversationList, setConversationList] = useState([]);
   const [invitationList, setInvitationList] = useState([]);
   const [bannedFromList, setBannedFromList] = useState([]);
+  const [listIsSet, setListIsSet] = useState(false);
 
   let l = useStates("loggedIn");
   let m = useStates("newMessage", { message: null });
@@ -24,19 +25,20 @@ function MyPage() {
   const location = useLocation();
   const { state } = location;
 
+  /* console.log("mypageL", l); */
   /*  useEffect(() => {
-    if (l.id === 0 || !l.id) {
+    if (!l.id || l.id === 0) {
       (async () => {
         let data = await (await fetch(`/api/login`)).json();
         if (!data.error) {
           Object.assign(l, data);
-        } else if (data.error || l.id === 0 || !l.id) {
+        } else if (data.error || !l.id || l.id === 0) {
           navigate("/");
         }
       })();
     }
-  }, []); */
-
+  }, []);
+ */
   useEffect(() => {
     (async () => {
       let data = await (await fetch(`/api/user-get-users`)).json();
@@ -57,12 +59,12 @@ function MyPage() {
   }, []);
 
   useEffect(() => {
-    console.log("running useEffect in Mypage - conversations");
+    /*  console.log("running useEffect in Mypage - conversations"); */
     if (l.id && l.id !== 0) {
       if (l.role === "admin") {
         (async () => {
           let data = await (await fetch(`/api/conversations`)).json();
-          console.log("Adminkonversationer körs");
+          /*  console.log("Adminkonversationer körs"); */
           /*  console.log("Data");
           console.log(data); */
           if (!data.error) {
@@ -72,7 +74,7 @@ function MyPage() {
       } else {
         (async () => {
           let data = await (await fetch(`/api/conversations-by-user`)).json();
-          console.log("Kör userfunktion");
+          /*   console.log("Kör userfunktion"); */
 
           if (!data.error) {
             setConversationList(data);
@@ -80,19 +82,26 @@ function MyPage() {
         })();
       }
     }
+    setListIsSet(true);
   }, []);
 
   useEffect(() => {
-    let bannedList = conversationList.filter(x => x.isBanned);
-    setBannedFromList(bannedList);
-
+    "Running useEffect notbanned";
     let newConversationList = conversationList.filter(x => !x.isBanned);
+    console.log("newConversationList", newConversationList);
     setConversationList(newConversationList);
-  }, []);
-  /* 
-  console.log("bannedFromList");
-  console.log(bannedFromList);
- */
+  }, [listIsSet]);
+
+  useEffect(() => {
+    "Running useEffect banlist";
+    let bannedList = conversationList.filter(x => x.isBanned);
+    console.log("BannedList", bannedList);
+    setBannedFromList(bannedList);
+  }, [conversationList, listIsSet]);
+
+  console.log("bannedFromList", bannedFromList);
+  console.log("not banned from list", conversationList);
+
   /*  useEffect(() => {
     (async () => {
       /*    for (let conversation of conversationList) { 
@@ -127,7 +136,6 @@ function MyPage() {
             <UserList userList={userList} />
           </Col>
           <Col className='listContainer col-lg-4 col-sm-6'>
-            <h5 className='mt-2 text-center'>My conversation pits</h5>
             {!!conversationList && conversationList.length === 0 && (
               <p className='mt-3'>No active conversations</p>
             )}

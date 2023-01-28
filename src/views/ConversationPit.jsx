@@ -8,13 +8,15 @@ import {
   Dropdown,
   ListGroup,
   Button,
-  ButtonGroup
+  ButtonGroup,
+  Modal,
+  Form
 } from "react-bootstrap";
 import MessageList from "../components/MessageList";
 import MessageForm from "../components/MessageForm";
 import Header from "../components/Header";
 import Message from "../components/Message";
-import NewMessage from "../components/NewMessage";
+/* import NewMessage from "../components/NewMessage"; */
 import "../../public/css/conversationPage.css";
 import "../../public/css/MyPage.css";
 import useStates from "../utilities/useStates.js";
@@ -26,7 +28,11 @@ function ConversationPit() {
   const [userList, setUserList] = useState([]);
   const [connected, setConnected] = useState([]);
   const [connectionMessage, setConnectionMessage] = useState([]);
-  const [banInput, setBanInput] = useState([]);
+  const [banInput, setBanInput] = useState("");
+  const [showMessageModal, setShowMessageModal] = useState(false);
+  const [showInputModal, setShowInputModal] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
+  const [activeUser, setActiveUser] = useState({});
 
   /* const ServicesRef = useRef(null); */
 
@@ -34,6 +40,7 @@ function ConversationPit() {
   let l = useStates("loggedIn");
   let m = useStates("newMessage");
 
+  /*  console.log("conversationPitL", l); */
   /*  useEffect(() => {
     if (!l.id || l.id === 0) {
       (async () => {
@@ -41,7 +48,7 @@ function ConversationPit() {
         if (!data.error) {
           Object.assign(l, data);
         } else if (data.error) {
-          navigate("/login");
+          navigate("/");
         }
       })();
     }
@@ -56,8 +63,6 @@ function ConversationPit() {
           )
         ).json();
         if (!data.error) {
-          console.log("data in messageList is array");
-          console.log(data);
           setMessageList(data);
         }
       })();
@@ -75,6 +80,7 @@ function ConversationPit() {
           )
         ).json();
         if (!data.error) {
+          console.log("userList", userList);
           setUserList(data);
         }
       })();
@@ -96,7 +102,10 @@ function ConversationPit() {
     if (sse) {
       sse.close();
     }
-
+    console.log(
+      "state.conversation.conversationId",
+      state.conversation.conversationId
+    );
     sse = new EventSource(`/api/sse/${state.conversation.conversationId}`);
 
     sse.addEventListener("connect", message => {
@@ -136,26 +145,45 @@ function ConversationPit() {
       behavior: "smooth"
     });
   } */
+  function handleClose() {
+    setShowMessageModal(false);
+    setShowInputModal(false);
+  }
 
-  async function banFromChat(users_conversationId, userRole) {
-    if (l.role === "admin" || l.id === state.conversation.creatorId) {
-      /*   await (
-        await fetch(`/api/ban-from-chat/${users_conversationId}`, {
+  async function banFromChat(usersConversationsId, userRole, userId) {
+    if (
+      (l.role === "admin" && userRole !== "admin") ||
+      (l.id === state.conversation.creatorId &&
+        state.conversation.creatorId !== userId &&
+        userRole !== "admin")
+    ) {
+      await (
+        await fetch(`/api/ban-from-chat/${usersConversationsId}`, {
           method: "put",
           headers: {
             "Content-Type": "application/json"
           },
           body: JSON.stringify({
             creatorId: state.conversation.creatorId,
-            banReason: banInput
+            banReason: banInput,
             bannedUserRole: userRole
           })
         })
-      ).json;*/
-      console.log("BANNED");
+      ).json;
+      setShowInputModal(false);
+      setBanInput("");
+    } else if (userRole === "admin") {
+      setModalMessage("You can't ban admin");
+      setShowMessageModal(true);
+    } else {
+      setShowInputModal(false);
+      setModalMessage(
+        "Only admin or conversation creator can ban from conversation"
+      );
+      setShowMessageModal(true);
     }
   }
-
+  console.log("activeUser", activeUser);
   return (
     <>
       <Header />
@@ -177,10 +205,10 @@ function ConversationPit() {
                         <Dropdown.Toggle className='userNameDropdown-toggle custom-toggle'></Dropdown.Toggle>
                         <Dropdown.Menu>
                           <Dropdown.Item
-                            onClick={banFromChat(
-                              user.users_conversationsId,
-                              user.role
-                            )}
+                            onClick={() => {
+                              setActiveUser(user);
+                              setShowInputModal(true);
+                            }}
                           >
                             Ban from chat
                           </Dropdown.Item>
@@ -226,6 +254,51 @@ function ConversationPit() {
           </Col>
         </Row>
       </Container>
+      <Modal show={showMessageModal} onHide={handleClose}>
+        <Modal.Header></Modal.Header>
+        <Modal.Body>
+          <p className='custom-label'>{modalMessage}</p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button className='custom-button' onClick={handleClose}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
+      {Object.keys(activeUser).length !== 0 && (
+        <Modal show={showInputModal} onHide={handleClose}>
+          <Modal.Header></Modal.Header>
+          <Modal.Body>
+            <Form>
+              <Form.Group>
+                <Form.Label>Why are you banning this user?</Form.Label>
+                <Form.Control
+                  type='text'
+                  id='banInput'
+                  name='banInput'
+                  value={banInput}
+                  onChange={event => setBanInput(event.target.value)}
+                />
+                <Button
+                  onClick={() => {
+                    banFromChat(
+                      activeUser.usersConversationsId,
+                      activeUser.role,
+                      activeUser.userId
+                    );
+                  }}
+                >
+                  Register ban
+                </Button>
+                <Button onClick={handleClose}>Cancel</Button>
+              </Form.Group>
+            </Form>
+          </Modal.Body>
+          {/*  <Modal.Footer>
+          <Button className='custom-button' onClick={handleClose}></Button>
+        </Modal.Footer> */}
+        </Modal>
+      )}
     </>
   );
 }

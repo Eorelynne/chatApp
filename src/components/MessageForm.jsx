@@ -8,11 +8,13 @@ function MessageForm(props) {
   const { state } = props;
   const [content, setContent] = useState("");
 
+  console.log("state", state);
+
   async function submitMessage(event) {
     event.preventDefault();
     let message = {
       content: content,
-      usersConversationsId: state.conversation.id,
+      usersConversationsId: state.conversation.usersConversationsId,
       conversationId: state.conversation.conversationId
     };
     let result = await (

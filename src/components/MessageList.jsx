@@ -17,7 +17,7 @@ function MessageList(props) {
     }
     return 0;
   }
-
+  console.log("l", l);
   return (
     <>
       <Col className='scroll-container message-list'>

@@ -13,8 +13,7 @@ function ConversationListItem(props) {
       state: { ...{ conversation } }
     });
   }
-  console.log("conversation");
-  console.log(conversation);
+
   return (
     <>
       <li>

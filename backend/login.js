@@ -1,5 +1,5 @@
 import { createRequire } from "module";
-import { passwordEncryptor } from "./passwordUtils.js";
+import { passwordEncryptor } from "./loginUtils.js";
 import { sqlQuery } from "./restApi.js";
 import { acl } from "./acl.js";
 const { url } = import.meta;

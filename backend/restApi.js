@@ -1,4 +1,4 @@
-import { passwordEncryptor } from "./passwordUtils.js";
+import { passwordEncryptor, emailValidator } from "./loginUtils.js";
 import { checkPassword } from "../src/utilities/inputCheck.js";
 import { acl } from "./acl.js";
 import { broadcast } from "./index.js";
@@ -40,9 +40,15 @@ export async function restApi(connection, app) {
     delete req.body?.role;
     let passwordIsValid = checkPassword(req.body.password);
     if (!passwordIsValid) {
-      res.json({ error: "Wrong passwordformat" });
+      res.status(400).json({ error: "Wrong password format" });
       return;
     }
+    let emailIsValid = emailValidator(req.body.email);
+    if (!emailIsValid) {
+      res.status(400).json({ error: "Wrong email format" });
+      return;
+    }
+
     let password = passwordEncryptor(req.body.password);
     const sql =
       "INSERT INTO users (firstName, lastName, userName, email, password, role) VALUES (?,?,?,?,?,?)";

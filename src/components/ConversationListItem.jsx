@@ -18,11 +18,7 @@ function ConversationListItem(props) {
     <>
       <li>
         <Button
-          className={
-            conversation.isBanned
-              ? "conversationItem bannedItem"
-              : "conversationItem"
-          }
+          className='conversationItem custom-text'
           onClick={navigateToConversationPit}
         >
           {conversation.name}

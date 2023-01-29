@@ -65,7 +65,9 @@ function MyConversationPits(props) {
       <Container>
         <Row>
           <Col>
-            <h5 className='mt-2 text-center'>My conversation pits</h5>
+            <h5 className='mt-2 text-center custom-headline'>
+              My conversations
+            </h5>
           </Col>
         </Row>
         <Row>
@@ -99,8 +101,9 @@ function FilterForm(props) {
   return (
     <Form>
       <Form.Group>
-        <Form.Label>Filter</Form.Label>
+        <Form.Label className='custom-label'>Filter</Form.Label>
         <Form.Select
+          className='custom-text'
           aria-label='Filter select '
           onChange={() => {
             console.log("Value", event.target.value);
@@ -123,11 +126,11 @@ function BannedFromListItems(props) {
   return (
     <Col>
       <hr />
-      <h5>Banned from</h5>
+      <h5 className='custom-headline'>Banned from</h5>
       <ul>
         {bannedFromList.map((conversation, index) => (
           <li key={index}>
-            <p>{conversation.name}</p>
+            <p className='custom-text'>{conversation.name}</p>
           </li>
         ))}
       </ul>

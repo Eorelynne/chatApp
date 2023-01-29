@@ -105,4 +105,37 @@ message-list {
   .custom-text {
     font-size: 9px !important;
   }
+  .custom-headline {
+    font-size: 16px !important;
+  }
+}
+
+@media screen and (max-width: 800px) {
+  .body {
+    font-size: 10px;
+  }
+  .custom-label {
+    font-size: 14px !important;
+  }
+  .custom-text {
+    font-size: 12px !important;
+  }
+  .custom-headline {
+    font-size: 18px !important;
+  }
+}
+
+@media screen and (max-width: 1200px) {
+  .body {
+    font-size: 10px;
+  }
+  .custom-label {
+    font-size: 16px !important;
+  }
+  .custom-text {
+    font-size: 14px !important;
+  }
+  .custom-headline {
+    font-size: 22px !important;
+  }
 }

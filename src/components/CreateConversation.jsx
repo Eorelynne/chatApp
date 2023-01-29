@@ -1,11 +1,15 @@
 import React from "react";
-import { Form, Button, Col, Row } from "react-bootstrap";
+import { useState } from "react";
+import { Form, Button, Col, Row, Modal } from "react-bootstrap";
 import useStates from "../utilities/useStates.js";
 import "../../public/css/myPage.css";
 
 function CreateConversation(props) {
   let { conversationName, setConversationName } = props;
   let l = useStates("loggedIn");
+  const [showModal, setShowModal] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
+  const handleClose = () => setShowModal(false);
 
   function resetForm() {
     setConversationName("");
@@ -22,8 +26,6 @@ function CreateConversation(props) {
         body: JSON.stringify({ name: conversationName })
       })
     ).json();
-    console.log(result);
-    console.log("userId:", l.id);
     let conversationId = result.insertId;
     await (
       await fetch(`/api/conversations-join/${conversationId}`, {
@@ -34,20 +36,23 @@ function CreateConversation(props) {
         body: JSON.stringify({ creatorId: l.id })
       })
     ).json();
-
+    setModalMessage("Conversation created");
+    setShowModal(true);
     resetForm();
   }
 
   return (
     <>
       <Row className='headlineContainer  ms-2 me-2'>
-        <h5>Start a conversation</h5>
+        <h5 className='custom-headline'>Start a conversation</h5>
       </Row>
       <Row>
         <Col className='col-lg-10 col-sm-10'>
           <Form onSubmit={submitForm} className='pt-1 pb-2  ms-2 me-2'>
             <Form.Group className='mb-1' controlId='formBasicConversationName'>
-              <Form.Label>Name your conversation</Form.Label>
+              <Form.Label className='custom-label'>
+                Name your conversation
+              </Form.Label>
               <Form.Control
                 type='text'
                 value={conversationName}
@@ -65,6 +70,17 @@ function CreateConversation(props) {
           </Form>
         </Col>
       </Row>
+      <Modal show={showModal} onHide={handleClose}>
+        <Modal.Header></Modal.Header>
+        <Modal.Body>
+          <p className='custom-label'>{modalMessage}</p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button className='custom-button' onClick={handleClose}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </>
   );
 }

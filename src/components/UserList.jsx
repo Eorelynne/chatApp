@@ -53,14 +53,14 @@ function UserList(props) {
       <Container>
         <Row>
           <Col className='mt-2 headlineContainer'>
-            <h5>Users</h5>
+            <h5 className='custom-headline'>Users</h5>
           </Col>
         </Row>
         <Row>
           <Col className=' col-lg-10 col-sm-10'>
             <Form>
-              <Form.Group className=''>
-                <Form.Label>Search</Form.Label>
+              <Form.Group>
+                <Form.Label className='custom-label'>Search</Form.Label>
                 <Form.Control
                   type='text'
                   id='filter'
@@ -70,13 +70,6 @@ function UserList(props) {
                 />
               </Form.Group>
             </Form>
-            {/* <input
-              id='filter'
-              name='filter'
-              type='text'
-              value={filter}
-              onChange={event => setFilter(event.target.value)}
-            /> */}
           </Col>
         </Row>
       </Container>

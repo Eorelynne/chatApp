@@ -25,7 +25,7 @@ function InvitedToList(props) {
   return (
     <Container className='invitationsHeadline'>
       <Row className='mt-2'>
-        <h5>Invitations</h5>
+        <h5 className='custom-headline'>Invitations</h5>
       </Row>
       <Row className='pb-1'>
         <Col xs={3} className='custom-label'>

@@ -56,7 +56,7 @@ function MyPage() {
         setInvitationList(data);
       }
     })();
-  }, []);
+  }, [invitationAnswer]);
 
   useEffect(() => {
     if (l.id && l.id !== 0) {
@@ -78,7 +78,11 @@ function MyPage() {
       }
     }
     setListIsSet(true);
-  }, []);
+  }, [invitationAnswer]);
+
+  useEffect(() => {
+    setInvitationAnswer(false);
+  }, [conversationList]);
 
   useEffect(() => {
     "Running useEffect banlist";

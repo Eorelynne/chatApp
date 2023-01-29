@@ -10,20 +10,10 @@ const mysqlStore = require("express-mysql-session")(session);
 export function login(db, app) {
   let pool = db;
 
-  /* const options = {
-    host: process.env.DB_HOST,
-    port: process.env.DB_PORT,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASS,
-    database: process.env.MYSQL_DB
-  };
-*/
-  // const connection = mysql.createPool(options);
   const sessionStore = new mysqlStore({}, pool);
 
   app.use(
     session({
-      // key: "session_cookie_name",
       secret: process.env.SESSION_SECRET,
       store: sessionStore,
       resave: false,
@@ -62,7 +52,6 @@ export function login(db, app) {
       res.status(405).json({ error: "Not allowed" });
       return;
     }
-    console.log(req.session);
     if (req.session.user) {
       res.json(req.session.user);
       return;

@@ -51,7 +51,9 @@ function User(props) {
     <>
       <li>
         <Dropdown as={ButtonGroup}>
-          <Button className='userNameDropdown-btn'>{userItem.userName}</Button>
+          <Button className='userNameDropdown-btn custom-text'>
+            {userItem.userName}
+          </Button>
           <Dropdown.Toggle className='userNameDropdown-toggle'></Dropdown.Toggle>
           <Dropdown.Menu>
             <Dropdown.Item onClick={showConversationList}>Invite</Dropdown.Item>

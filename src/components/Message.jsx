@@ -55,7 +55,6 @@ function ToggleDropdown(props) {
 
   async function deleteMessage() {
     if (l.role === "admin") {
-      console.log("Run delete function");
       await (
         await fetch(`/api/messages/${message.messageId}`, {
           method: "DELETE",

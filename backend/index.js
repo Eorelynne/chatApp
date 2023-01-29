@@ -105,7 +105,10 @@ export async function broadcast(event, data) {
     }
     let inList = false;
     for (let i = 0; i < userList.length; i++) {
-      if (+userList[i].userId === +connection.req.session.user.id) {
+      if (
+        +userList[i].userId === +connection.req.session.user.id ||
+        connection.req.session.user.role === "admin"
+      ) {
         inList = true;
         break;
       }

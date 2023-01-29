@@ -11,7 +11,7 @@ function DeclineBtn(props) {
   }
 
   async function updateInvitation() {
-    let result = await (
+    await (
       await fetch(`/api/conversations-invite/${invitation.invitationId}`, {
         method: "PUT",
         headers: {
@@ -20,7 +20,7 @@ function DeclineBtn(props) {
         body: JSON.stringify({ isInvitePending: false })
       })
     ).json;
-    console.log(result);
+    /* setInvitationAnswer(true); */
   }
 
   return (

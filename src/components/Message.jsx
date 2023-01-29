@@ -1,6 +1,6 @@
 import React from "react";
 import { useEffect } from "react";
-import { Container, Row, Col } from "react-bootstrap";
+import { Container, Row, Col, Dropdown, Button } from "react-bootstrap";
 import useStates from "../utilities/useStates";
 import "../../public/css/conversationPage.css";
 
@@ -9,7 +9,6 @@ function Message(props) {
   let l = useStates("loggedIn");
 
   /*  {!!l.id && !!message.senderUserId && ( */
-
   return (
     <Container id='new-message'>
       {!!message && (
@@ -24,6 +23,9 @@ function Message(props) {
         >
           <Row className='pe-0 ps-0'>
             <Col>
+              {l.role && l.role === "admin" && (
+                <ToggleDropdown message={message} l={l} />
+              )}
               <p>{new Date(message.time).toLocaleString()}</p>
             </Col>
           </Row>
@@ -47,3 +49,39 @@ function Message(props) {
 }
 
 export default Message;
+
+function ToggleDropdown(props) {
+  const { message, l } = props;
+
+  async function deleteMessage() {
+    if (l.role === "admin") {
+      console.log("Run delete function");
+      await (
+        await fetch(`/api/messages/${message.messageId}`, {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json"
+          }
+        })
+      ).json();
+    }
+  }
+
+  return (
+    <Dropdown>
+      <Dropdown.Toggle variant='success' id='dropdown-basic'>
+        Dropdown Button
+      </Dropdown.Toggle>
+
+      <Dropdown.Menu>
+        <Dropdown.Item
+          onClick={() => {
+            deleteMessage();
+          }}
+        >
+          Delete
+        </Dropdown.Item>
+      </Dropdown.Menu>
+    </Dropdown>
+  );
+}

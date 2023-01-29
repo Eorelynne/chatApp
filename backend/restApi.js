@@ -303,13 +303,16 @@ export async function restApi(connection, app) {
   });
   //Update invitation to pending false
   app.put("/api/conversations-invite/:id", async (req, res) => {
-    if (!req.params.id) {
+    console.log(req.params.id);
+    console.log(req.body.isInvitePending);
+
+    if (!req.params.id || req.body.isInvitePending === undefined) {
       res.status(400).json({ error: "Bad request, input missing" });
       return;
     }
     const sql = " UPDATE invitations SET isInvitePending = ? WHERE id = ?";
-    const parameters = [false, req.params.id];
-    await sqlQuery("conversations-invite", req, res, sql, false, parameters);
+    const parameters = [req.body.isInvitePending, req.params.id];
+    await sqlQuery("conversations-invite", req, res, sql, true, parameters);
   });
   //Get conversations by user
   app.get("/api/conversations-by-user/", async (req, res) => {
@@ -325,9 +328,8 @@ export async function restApi(connection, app) {
 
   app.get("/api/conversations-admin/", async (req, res) => {
     const sql =
-      "SELECT * FROM conversations_with_users_conversations GROUP BY conversationId";
-    /*  const parameters = [req.session.user.id]; */
-    await sqlQuery("conversations-admin", req, res, sql, false, parameters);
+      "SELECT usersConversationsId, conversationId, name, creatorId, latestMessageTime FROM latest_message_time_and_users_latest_message_time GROUP BY conversationId";
+    await sqlQuery("conversations-admin", req, res, sql, false);
   });
 
   //Get conversation by creator

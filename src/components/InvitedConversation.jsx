@@ -5,8 +5,14 @@ import AcceptBtn from "./AcceptBtn";
 import DeclineBtn from "./DeclineBtn";
 
 function InvitedConversation(props) {
-  const { invitation, index, invitationList, setInvitationList } = props;
-  const [invitationAnswer, setInvitationAnswer] = useState(false);
+  const {
+    invitation,
+    index,
+    invitationList,
+    setInvitationList,
+    invitationAnswer,
+    setInvitationAnswer
+  } = props;
 
   /*  useEffect(() => {
     console.log(invitationList);

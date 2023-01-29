@@ -9,7 +9,7 @@ function AcceptBtn(props) {
     let conversationData = { creatorId: invitation.creatorId };
     let conversationId = invitation.conversationId;
     console.log(invitation.creatorId, conversationId);
-    let result = await (
+    await (
       await fetch(`/api/conversations-join/${conversationId}`, {
         method: "POST",
         headers: {
@@ -24,7 +24,7 @@ function AcceptBtn(props) {
   }
 
   async function updateInvitation() {
-    let result = await (
+    await (
       await fetch(`/api/conversations-invite/${invitation.invitationId}`, {
         method: "PUT",
         headers: {
@@ -33,7 +33,6 @@ function AcceptBtn(props) {
         body: JSON.stringify({ isInvitePending: false })
       })
     ).json;
-    console.log(result);
   }
 
   return (

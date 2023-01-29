@@ -50,6 +50,7 @@ function ConversationPit() {
       })();
     }
   }, []); */
+  console.log("state", state);
 
   useEffect(() => {
     if (state.conversation.conversationId) {

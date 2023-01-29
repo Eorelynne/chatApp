@@ -18,6 +18,7 @@ function MyPage() {
   const [invitationList, setInvitationList] = useState([]);
   const [bannedFromList, setBannedFromList] = useState([]);
   const [listIsSet, setListIsSet] = useState(false);
+  const [invitationAnswer, setInvitationAnswer] = useState(false);
 
   let l = useStates("loggedIn");
   let m = useStates("newMessage", { message: null });
@@ -61,7 +62,7 @@ function MyPage() {
     if (l.id && l.id !== 0) {
       if (l.role === "admin") {
         (async () => {
-          let data = await (await fetch(`/api/conversations`)).json();
+          let data = await (await fetch(`/api/conversations-admin`)).json();
           if (!data.error) {
             setConversationList(data);
           }
@@ -122,6 +123,8 @@ function MyPage() {
             <InvitedToList
               invitationList={invitationList}
               setInvitationList={setInvitationList}
+              invitationAnswer={invitationAnswer}
+              setInvitationAnswer={setInvitationAnswer}
             />
           </Col>
         </Row>

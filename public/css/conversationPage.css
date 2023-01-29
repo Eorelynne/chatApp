@@ -22,18 +22,24 @@
 
 .sent-message {
   align-items: end;
+  background-color: rgb(6, 46, 83, 0.4);
 }
 
 .recieved-message {
   align-items: start;
+  background-color: rgb(228, 117, 33, 0.4);
 }
 
 .message {
   border: 2px solid rgb(6, 46, 83);
-  border-radius: 5px;
+  border-radius: 15px;
 }
 .message-list {
   height: 60vh;
+}
+
+.message-container {
+  max-height: 20vh;
 }
 
 .bannedItem {
@@ -43,6 +49,11 @@
 
 .conversationPitHeadline {
   text-align: center;
+}
+
+.scroll-container {
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 @media screen and (max-width: 600px) {

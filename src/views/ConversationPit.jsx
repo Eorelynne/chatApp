@@ -1,5 +1,5 @@
 import React from "react";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import {
   Container,
@@ -32,8 +32,6 @@ function ConversationPit() {
   const [showInputModal, setShowInputModal] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
   const [activeUser, setActiveUser] = useState({});
-
-  /* const ServicesRef = useRef(null); */
 
   //console.log(state);
   let l = useStates("loggedIn");
@@ -79,7 +77,6 @@ function ConversationPit() {
           )
         ).json();
         if (!data.error) {
-          /*  console.log("userList", userList); */
           setUserList(data);
         }
       })();
@@ -94,48 +91,32 @@ function ConversationPit() {
     };
   }, []);
 
-  /* useEffect(() => {
-    gotoServices();
-  }, []); */
   function startSSE() {
     if (sse) {
       sse.close();
     }
-    /*     console.log(
-      "state.conversation.conversationId",
-      state.conversation.conversationId 
-    );*/
+
     sse = new EventSource(`/api/sse/${state.conversation.conversationId}`);
 
     sse.addEventListener("connect", message => {
       let data = JSON.parse(message.data);
       setConnectionMessage(data.message);
-      /* setConnectionMessage(data.message); */
 
       console.log("[connect]", data);
     });
     sse.addEventListener("disconnect", message => {
       let data = JSON.parse(message.data);
-      /* let filteredConnected = connected.filter(
-        x => x.user.userId !== data.user.userId 
-      );*/
       setConnectionMessage(data.message);
       console.log("[disconnect]", data);
-      /* setConnectionMessage(data.message); */
     });
     sse.addEventListener("new-message", message => {
       let data = JSON.parse(message.data);
       console.log("[new-message]", data);
-      /* Object.assign(m, data); */
       m.message = data;
       setMessageList(messageList => [...messageList, m.message]);
     });
   }
 
-  const scrollToNewMessage = () => {
-    document.getElementById("new-message:nth-last-child(1)").scrollIntoView();
-  };
-  /*  scrollToNewMessage(); */
   /* function gotoServices() {
     window.scrollTo({
       top: ServicesRef.current.offsetTop,
@@ -181,7 +162,6 @@ function ConversationPit() {
     }
   }
 
-  console.log("connectionMessage", connectionMessage);
   return (
     <>
       <Header />
@@ -192,6 +172,9 @@ function ConversationPit() {
         <Row>
           <Col className='lg-1 md-1 xs-1'>
             <Row>
+              <Col>
+                <h5>Members</h5>
+              </Col>
               <Dropdown>
                 {userList.length !== 0 &&
                   userList.map((user, index) => (
@@ -216,17 +199,12 @@ function ConversationPit() {
                   ))}
               </Dropdown>
             </Row>
-            <Row>
-              <Col className='xs-1'>
-                <MessageForm state={state} />
-              </Col>
-            </Row>
           </Col>
 
           <Col
             /* sm={{ span: 6, offset: 3 }}
             lg={{ span: 4, offset: 4 }} */
-            className='messageFormContainer mt-4 col-lg-10 col-sm-10'
+            className='messageFormContainer mt-4 col-lg-10 col-sm-10 col-8'
           >
             <Row>
               <Col
@@ -235,8 +213,8 @@ function ConversationPit() {
                 <h3> {state.name}</h3>
               </Col>
             </Row>
-            <Row id='newMessage'>
-              <Col className='messageListContainer mb-5 pt-2 pb-2'>
+            <Row>
+              <Col className='messageListContainer mb-5 pt-2 pb-2 col-xs-10'>
                 <DisplayConnected
                   connectionMessage={connectionMessage}
                   setConnectionMessage={setConnectionMessage}
@@ -248,11 +226,11 @@ function ConversationPit() {
                 />
               </Col>
             </Row>
-            {/*  <Row>
-              <Col id='newMessage'  ref={ServicesRef} >
-                <NewMessage newMessage={m.message} />
-              </Col>
-            </Row> */}
+          </Col>
+        </Row>
+        <Row className=''>
+          <Col className='col-xs-3 col-sm-3 col-md-2 col-lg-2'>
+            <MessageForm state={state} />
           </Col>
         </Row>
       </Container>

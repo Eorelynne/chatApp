@@ -1,4 +1,5 @@
 import React from "react";
+import { useEffect } from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import useStates from "../utilities/useStates";
 import "../../public/css/conversationPage.css";
@@ -7,43 +8,41 @@ function Message(props) {
   const { message, newMessage } = props;
   let l = useStates("loggedIn");
 
+  /*  {!!l.id && !!message.senderUserId && ( */
+
   return (
-    <>
-      {/*  {!!l.id && !!message.senderUserId && ( */}
-      <Container>
-        {!!message && (
-          <Col
-            /*  xs={8}
+    <Container id='new-message'>
+      {!!message && (
+        <Col
+          /*  xs={8}
             sm={4} */
-            className={
-              l.id === message.senderUserId
-                ? "sent-message message mt-2 col-md-4 col-8 ms-auto"
-                : "recieved-message message mt-2 col-md-4 col-8 me-auto"
-            }
-          >
-            <Row>
-              <Col>
-                <p>{new Date(message.time).toLocaleString()}</p>
-              </Col>
-            </Row>
-            <Row>
-              <Col>
-                <p>{message.content}</p>
-              </Col>
-            </Row>
-            <Row>
-              <Col>
-                {message.senderUserRole === "admin" && (
-                  <p className='mb-0'>Admin</p>
-                )}
-                <p className='mt-0'>{message.userName}</p>
-              </Col>
-            </Row>
-          </Col>
-        )}
-      </Container>
-      {/* )} */}
-    </>
+          className={
+            l.id === message.senderUserId
+              ? "sent-message message pt-1 mt-2 col-md-6 col-sm-6 col-6 ms-auto scroll-container message-container"
+              : "recieved-message message pt-1 mt-2 col-md-6 col-sm-6 col-6 me-auto scroll-container message-container"
+          }
+        >
+          <Row className='pe-0 ps-0'>
+            <Col>
+              <p>{new Date(message.time).toLocaleString()}</p>
+            </Col>
+          </Row>
+          <Row className='pe-0 ps-0'>
+            <Col>
+              <p>{message.content}</p>
+            </Col>
+          </Row>
+          <Row className='pe-0 ps-0'>
+            <Col>
+              {message.senderUserRole === "admin" && (
+                <p className='mb-0'>Admin</p>
+              )}
+              <p className='mt-0'>{message.userName}</p>
+            </Col>
+          </Row>
+        </Col>
+      )}
+    </Container>
   );
 }
 

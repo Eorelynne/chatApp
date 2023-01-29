@@ -44,7 +44,7 @@
 }
 
 .scroll-container {
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 
 .invited-to-list {

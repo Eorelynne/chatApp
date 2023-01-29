@@ -81,38 +81,14 @@ function MyPage() {
   }, []);
 
   useEffect(() => {
-    "Running useEffect notbanned";
-    let newConversationList = conversationList.filter(x => !x.isBanned);
-    /*     console.log("newConversationList", newConversationList); */
-    setConversationList(newConversationList);
-  }, [listIsSet]);
-
-  useEffect(() => {
     "Running useEffect banlist";
-    let bannedList = conversationList.filter(x => x.isBanned);
-    /* console.log("BannedList", bannedList); */
-    setBannedFromList(bannedList);
-  }, [conversationList, listIsSet]);
-
-  /*   console.log("bannedFromList", bannedFromList);
-  console.log("not banned from list", conversationList); */
-
-  /*  useEffect(() => {
     (async () => {
-      /*    for (let conversation of conversationList) { 
-      /*  console.log("in myPage: ", conversation.conversationId); 
-      let data = await (
-        await fetch(`/api/conversation-latest-message/22`)
-      ).json;
-      //console.log(data);
-      /* let latestMessage = {
-          conversationId: data.conversationId,
-          messageTime: data.latestMessageTime
-        };
-        console.log(latestMessage); 
+      let data = await (await fetch(`/api/conversations-banned`)).json();
+      if (!data.error) {
+        setBannedFromList(data);
       }
     })();
-  }, [conversationList]); */
+  }, []);
 
   return (
     <>
@@ -145,7 +121,7 @@ function MyPage() {
               />
             )}
           </Col>
-          <Col className='listContainer pt-2 col-lg-4 col-sm-12'>
+          <Col className='listContainer col-lg-4 col-sm-12'>
             <CreateConversation
               conversationName={conversationName}
               setConversationName={setConversationName}

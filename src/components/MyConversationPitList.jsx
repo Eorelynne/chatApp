@@ -69,7 +69,7 @@ function MyConversationPits(props) {
           </Col>
         </Row>
         <Row>
-          <Col className='col-lg-8 col-sm-4'>
+          <Col className='col-lg-10 col-sm-10'>
             <FilterForm filter={filter} setFilter={setFilter} />
           </Col>
         </Row>
@@ -84,17 +84,9 @@ function MyConversationPits(props) {
                 <ConversationListItem key={index} conversation={conversation} />
               ))}
         </ul>
-        <hr />
-        <h5>Banned from</h5>
-        <ul>
-          {bannedFromList &&
-            bannedFromList !== 0 &&
-            bannedFromList
-              .sort(eval(filter))
-              .map((conversation, index) => (
-                <ConversationListItem key={index} conversation={conversation} />
-              ))}
-        </ul>
+        {bannedFromList && bannedFromList !== 0 && (
+          <BannedFromListItems bannedFromList={bannedFromList} />
+        )}
       </Container>
     </>
   );
@@ -122,5 +114,23 @@ function FilterForm(props) {
         </Form.Select>
       </Form.Group>
     </Form>
+  );
+}
+
+function BannedFromListItems(props) {
+  const { bannedFromList } = props;
+
+  return (
+    <Col>
+      <hr />
+      <h5>Banned from</h5>
+      <ul>
+        {bannedFromList.map((conversation, index) => (
+          <li key={index}>
+            <p>{conversation.name}</p>
+          </li>
+        ))}
+      </ul>
+    </Col>
   );
 }

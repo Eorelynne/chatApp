@@ -118,12 +118,6 @@ function ConversationPit() {
     });
   }
 
-  /* function gotoServices() {
-    window.scrollTo({
-      top: ServicesRef.current.offsetTop,
-      behavior: "smooth"
-    });
-  } */
   function handleClose() {
     setShowMessageModal(false);
     setShowInputModal(false);

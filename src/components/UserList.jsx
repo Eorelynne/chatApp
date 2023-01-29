@@ -57,7 +57,7 @@ function UserList(props) {
           </Col>
         </Row>
         <Row>
-          <Col className='col-lg-8 col-sm-4'>
+          <Col className=' col-lg-10 col-sm-10'>
             <Form>
               <Form.Group className=''>
                 <Form.Label>Search</Form.Label>

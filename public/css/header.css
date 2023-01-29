@@ -15,6 +15,16 @@
 .dropdown-custom {
   justify-content: end;
 }
+.btn-custom {
+  background-color: #e47521 !important;
+  color: #e47521 !important;
+  border-color: rgb(6, 46, 83) !important;
+}
+.btn-custom:hover {
+  background-color: rgb(228, 117, 33, 0.4) !important;
+  color: rgb(228, 117, 33, 0.4) !important;
+  border-color: rgb(6, 46, 83, 0.4) !important;
+}
 
 .nameContainer {
   font-family: "Kaushan";

@@ -38,6 +38,9 @@
     "conversations-by-user": {
       "get": true
     },
+    "conversations-banned": {
+      "get": true
+    },
     "conversation-by-creator": {
       "get": true
     },
@@ -130,6 +133,9 @@
       "put": true
     },
     "conversations-admin": {
+      "get": true
+    },
+    "conversations-banned": {
       "get": true
     },
     "sse": {

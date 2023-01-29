@@ -4,6 +4,7 @@ import {
   Nav,
   Navbar,
   Dropdown,
+  DropdownButton,
   NavItem,
   Container,
   Row,
@@ -82,16 +83,17 @@ function Header() {
     return (
       <Col xs={1} className='dropdown-custom justify-content-end'>
         <Nav className='me-auto'>
-          <img
-            alt='hamburger'
-            src='/hamburger2.png'
-            className='hamburger-img'
-          />
-          <Dropdown id='basic-nav-dropdown' drop='start'>
-            <Dropdown.Item as={Link} to='/my-page'>
-              My Page
-            </Dropdown.Item>
-            <Dropdown.Item onClick={logout}>Logout</Dropdown.Item>
+          <Dropdown id='dropdown-basic-button' drop='start'>
+            <Dropdown.Toggle
+              className='btn-custom'
+              id='dropdown-basic'
+            ></Dropdown.Toggle>
+            <Dropdown.Menu>
+              <Dropdown.Item as={Link} to='/my-page'>
+                My Page
+              </Dropdown.Item>
+              <Dropdown.Item onClick={logout}>Logout</Dropdown.Item>
+            </Dropdown.Menu>
           </Dropdown>
         </Nav>
       </Col>
@@ -101,18 +103,19 @@ function Header() {
     return (
       <Col xs={1} className='dropdown-custom justify-content-end'>
         <Nav className='me-auto'>
-          <img
-            alt='hamburger'
-            src='/hamburger2.png'
-            className='hamburger-img'
-          />
-          <Dropdown id='basic-nav-dropdown' drop='start'>
-            <Dropdown.Item as={Link} to='/login'>
-              Login
-            </Dropdown.Item>
-            <Dropdown.Item as={Link} to='/register'>
-              Register
-            </Dropdown.Item>
+          <Dropdown id='dropdown-custom-button' drop='start'>
+            <Dropdown.Toggle
+              className='btn-custom'
+              id='dropdown-basic'
+            ></Dropdown.Toggle>
+            <Dropdown.Menu>
+              <Dropdown.Item as={Link} to='/login'>
+                Login
+              </Dropdown.Item>
+              <Dropdown.Item as={Link} to='/register'>
+                Register
+              </Dropdown.Item>
+            </Dropdown.Menu>
           </Dropdown>
         </Nav>
       </Col>

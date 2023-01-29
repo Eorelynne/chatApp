@@ -321,8 +321,8 @@ export async function restApi(connection, app) {
       return;
     }
     const sql =
-      "SELECT * FROM latest_message_time_and_users_latest_message_time WHERE userId = ?";
-    const parameters = [req.session.user.id];
+      "SELECT * FROM latest_message_time_and_users_latest_message_time WHERE userId = ? AND isBanned =?";
+    const parameters = [req.session.user.id, false];
     await sqlQuery("conversations-by-user", req, res, sql, false, parameters);
   });
 
@@ -330,6 +330,17 @@ export async function restApi(connection, app) {
     const sql =
       "SELECT usersConversationsId, conversationId, name, creatorId, latestMessageTime FROM latest_message_time_and_users_latest_message_time GROUP BY conversationId";
     await sqlQuery("conversations-admin", req, res, sql, false);
+  });
+
+  app.get("/api/conversations-banned/", async (req, res) => {
+    if (!req.session.user) {
+      res.status(403).json({ error: "Not logged in" });
+      return;
+    }
+    const sql =
+      "SELECT conversationId, usersConversationsId, name FROM latest_message_time_and_users_latest_message_time WHERE userId = ? AND isBanned =?";
+    const parameters = [req.session.user.id, true];
+    await sqlQuery("conversations-banned", req, res, sql, false, parameters);
   });
 
   //Get conversation by creator
@@ -350,8 +361,8 @@ export async function restApi(connection, app) {
       return;
     }
     const sql =
-      "SELECT * FROM users_conversations_with_user_and_conversation WHERE conversationId =?";
-    const parameters = [req.params.id];
+      "SELECT * FROM users_conversations_with_user_and_conversation WHERE conversationId =? AND isBanned = ?";
+    const parameters = [req.params.id, false];
     await sqlQuery("users-in-conversation", req, res, sql, false, parameters);
   });
 

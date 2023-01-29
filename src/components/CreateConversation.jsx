@@ -1,5 +1,5 @@
 import React from "react";
-import { Form, Button, Col } from "react-bootstrap";
+import { Form, Button, Col, Row } from "react-bootstrap";
 import useStates from "../utilities/useStates.js";
 import "../../public/css/myPage.css";
 
@@ -40,27 +40,31 @@ function CreateConversation(props) {
 
   return (
     <>
-      <Col className='headlineContainer  ms-2 me-2'>
+      <Row className='headlineContainer  ms-2 me-2'>
         <h5>Start a conversation</h5>
-      </Col>
-      <Form onSubmit={submitForm} className='pt-1 pb-2  ms-2 me-2'>
-        <Form.Group className='mb-1' controlId='formBasicConversationName'>
-          <Form.Label>Name your conversation</Form.Label>
-          <Form.Control
-            type='text'
-            value={conversationName}
-            onChange={event => {
-              setConversationName(event.target.value);
-            }}
-            placeholder=''
-          />
-        </Form.Group>
-        <Form.Group>
-          <Button className='btn mt-1 create-btn' type='submit'>
-            Create
-          </Button>
-        </Form.Group>
-      </Form>
+      </Row>
+      <Row>
+        <Col className='col-lg-10 col-sm-10'>
+          <Form onSubmit={submitForm} className='pt-1 pb-2  ms-2 me-2'>
+            <Form.Group className='mb-1' controlId='formBasicConversationName'>
+              <Form.Label>Name your conversation</Form.Label>
+              <Form.Control
+                type='text'
+                value={conversationName}
+                onChange={event => {
+                  setConversationName(event.target.value);
+                }}
+                placeholder=''
+              />
+            </Form.Group>
+            <Form.Group>
+              <Button className='btn mt-1 create-btn' type='submit'>
+                Create
+              </Button>
+            </Form.Group>
+          </Form>
+        </Col>
+      </Row>
     </>
   );
 }

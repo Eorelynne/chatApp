@@ -43,7 +43,7 @@ function CreateConversation(props) {
 
   return (
     <>
-      <Row className='headlineContainer  ms-2 me-2'>
+      <Row className='headlineContainer pt-1 ms-2 me-2'>
         <h5 className='custom-headline'>Start a conversation</h5>
       </Row>
       <Row>

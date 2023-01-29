@@ -1,7 +1,7 @@
 import React from "react";
 import { useEffect } from "react";
 import { Container, Row, Col, Dropdown, Button } from "react-bootstrap";
-import useStates from "../utilities/useStates";
+import useStates from "../utilities/useStates.js";
 import "../../public/css/conversationPage.css";
 
 function Message(props) {

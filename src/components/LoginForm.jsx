@@ -52,7 +52,12 @@ function loginForm(props) {
       Object.assign(l, result);
       l.loggedIn = true;
       resetForm();
-      navigate("/my-page");
+      console.log(l.role);
+      if (l.role === "user") {
+        navigate("/my-page");
+      } else if (l.role === "admin") {
+        navigate("/admin");
+      }
     } else {
       console.log("Not logged in");
       setErrorMessage("Email or password is wrong");

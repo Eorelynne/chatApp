@@ -66,7 +66,7 @@ function MyConversationPits(props) {
         <Row>
           <Col>
             <h5 className='mt-2 text-center custom-headline'>
-              My conversations
+              My Conversations
             </h5>
           </Col>
         </Row>

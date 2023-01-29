@@ -138,6 +138,9 @@
     "conversations-banned": {
       "get": true
     },
+    "users-conversations-admin": {
+      "get": true
+    },
     "sse": {
       "get": true
     }

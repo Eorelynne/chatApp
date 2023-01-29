@@ -461,6 +461,28 @@ export async function restApi(connection, app) {
     await sqlQuery("ban-from-chat", req, res, sql, true, parameters);
   });
 
+  app.get("/api/users-conversations-admin/:id", async (req, res) => {
+    if (!req.session.user.id) {
+      res.status(403).json({ error: "Not allowed" });
+      return;
+    }
+    if (!req.params.id) {
+      res.status(400).json({ error: "Input missing" });
+    }
+    const sql =
+      "SELECT * FROM users_conversations WHERE userId = ? and conversationId = ?";
+    const parameters = [req.session.user.id, req.params.id];
+    console.log(sql);
+    console.log(parameters);
+    await sqlQuery(
+      "users-conversations-admin",
+      req,
+      res,
+      sql,
+      true,
+      parameters
+    );
+  });
   //Edit userinfo
   app.put("/api/edit-my-user-info/:id", async (req, res) => {
     if (!req.session.user) {
@@ -505,7 +527,8 @@ async function sqlQuery(path, req, res, sql, justOne, parameters) {
 
     if (result instanceof Array) {
       if (result.length === 0) {
-        res.json({ error: "No entries found" });
+        console.log("In instance of array, no entries found");
+        res.status(404).json({ error: "No entries found" });
         return;
       }
       if (justOne) {
@@ -517,9 +540,11 @@ async function sqlQuery(path, req, res, sql, justOne, parameters) {
       delete result.password;
       req.session.user = result;
     }
+    console.log(result);
     res.json(result);
     return result;
   } catch (error) {
+    console.log(error);
     res.status(500).json({ error: error + "" });
     return { error: error + "" };
   }

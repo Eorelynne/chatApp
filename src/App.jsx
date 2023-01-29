@@ -10,18 +10,30 @@ import Login from "./views/Login";
 import MyPage from "./views/MyPage";
 import NotFound from "./views/NotFound";
 import ConversationPit from "./views/ConversationPit";
+import Admin from "./views/Admin";
 
 function App() {
-  let l = useStates("loggedIn", {
-    id: 0,
-    firstName: "",
-    lastName: "",
-    userName: "",
-    email: "",
-    role: ""
+  let l = useStates("appState", {
+    loggedIn: {
+      id: 0,
+      firstName: "",
+      lastName: "",
+      userName: "",
+      email: "",
+      role: ""
+    },
+    newMessage: {
+      content: "",
+      time: 0,
+      usersConversationsId: 0,
+      conversationId: 0,
+      senderUserId: 0,
+      userName: "",
+      senderUserRole: ""
+    }
   });
 
-  let m = useStates("newMessage", {
+  /* let m = useStates("newMessage", {
     content: "",
     time: 0,
     usersConversationsId: 0,
@@ -29,7 +41,7 @@ function App() {
     senderUserId: 0,
     userName: "",
     senderUserRole: ""
-  });
+  }); */
 
   let a = useStates("activeUsers", []);
   // temporary test from console
@@ -55,6 +67,7 @@ function App() {
           <Route path='/register' element={<Register />} />
           <Route path='/my-page' element={<MyPage />} />
           <Route path='/conversation-pit' element={<ConversationPit />} />
+          <Route path='/admin' element={<Admin />} />
           <Route path='/*' element={<NotFound />} />
         </Routes>
       </BrowserRouter>

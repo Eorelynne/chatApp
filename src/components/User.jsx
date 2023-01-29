@@ -35,15 +35,11 @@ function User(props) {
           })
         ).json();
       }
-      /*   console.log("Result in User");
-      console.log(result); */
       setShowModal(false);
     }
   }
 
   function showConversationList() {
-    /*     console.log("loggedInConversation", loggedInConversationList); */
-
     setShowModal(true);
   }
 

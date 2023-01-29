@@ -89,9 +89,16 @@ function Header() {
               id='dropdown-basic'
             ></Dropdown.Toggle>
             <Dropdown.Menu>
-              <Dropdown.Item as={Link} to='/my-page'>
-                My Page
-              </Dropdown.Item>
+              {l.role && l.role === "user" && (
+                <Dropdown.Item as={Link} to='/my-page'>
+                  My Page
+                </Dropdown.Item>
+              )}
+              {l.role && l.role === "admin" && (
+                <Dropdown.Item as={Link} to='/admin'>
+                  Admin
+                </Dropdown.Item>
+              )}
               <Dropdown.Item onClick={logout}>Logout</Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>

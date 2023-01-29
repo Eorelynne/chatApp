@@ -74,8 +74,6 @@ export async function restApi(connection, app) {
         `;
     const parameters = Object.values(req.body).map(x => x);
     parameters.push(req.params.id);
-    console.log(sql);
-    console.log(parameters);
     await sqlQuery("conversations", req, res, sql, true, parameters);
   });
 
@@ -163,8 +161,7 @@ export async function restApi(connection, app) {
         `;
     const parameters = Object.values(req.body).map(x => x);
     parameters.push(req.params.id);
-    console.log(sql);
-    consnole.log(parameters);
+
     await sqlQuery("conversations", req, res, sql, true, parameters);
   });
 
@@ -220,8 +217,7 @@ export async function restApi(connection, app) {
         `;
     const parameters = Object.values(req.body).map(x => x);
     parameters.push(req.params.id);
-    console.log(sql);
-    consnole.log(parameters);
+
     await sqlQuery("invitations", req, res, sql, true, parameters);
   });
 
@@ -269,8 +265,7 @@ export async function restApi(connection, app) {
     const sql =
       "INSERT INTO users_conversations (userId, conversationId, conversationRole, isBanned, banReason) VALUES (?,?,?,?,?)";
     const parameters = [userId, conversationId, conversationRole, false, ""];
-    console.log(sql);
-    console.log(parameters);
+
     await sqlQuery("conversations-join", req, res, sql, true, parameters);
   });
 
@@ -303,9 +298,6 @@ export async function restApi(connection, app) {
   });
   //Update invitation to pending false
   app.put("/api/conversations-invite/:id", async (req, res) => {
-    console.log(req.params.id);
-    console.log(req.body.isInvitePending);
-
     if (!req.params.id || req.body.isInvitePending === undefined) {
       res.status(400).json({ error: "Bad request, input missing" });
       return;
@@ -411,8 +403,7 @@ export async function restApi(connection, app) {
           WHERE id = ? `;
     const parameters = Object.values(req.body).map(x => x);
     parameters.push(req.params.id);
-    console.log(sql);
-    consnole.log(parameters);
+
     await sqlQuery("messages", req, res, sql, true, parameters);
   });
 
@@ -443,9 +434,7 @@ export async function restApi(connection, app) {
       res.status(403).json({ error: "Not logged in" });
       return;
     }
-    console.log(req.session.user.role);
-    console.log(req.body.creatorId);
-    console.log(req.session.user.id);
+
     if (
       !req.params.id ||
       !req.body.banReason ||
@@ -531,8 +520,7 @@ async function sqlQuery(path, req, res, sql, justOne, parameters) {
     res.json(result);
     return result;
   } catch (error) {
-    res.status(500);
-    res.json({ error: error + "" });
+    res.status(500).json({ error: error + "" });
     return { error: error + "" };
   }
 }

@@ -15,7 +15,6 @@ export function passwordVerifyer(password) {
   if (password.length < 8 || !password?.match(regexp)) {
     return isPasswordApproved;
   }
-  console.log("Running verifyer");
   isPasswordApproved = true;
   return isPasswordApproved;
 }

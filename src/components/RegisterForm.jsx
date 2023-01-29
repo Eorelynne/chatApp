@@ -91,6 +91,10 @@ function RegisterForm() {
       setModalMessage(result.error);
       setShowModal(true);
       return;
+    } else if (result.error.startsWith("Error: Duplicate entry")) {
+      setModalMessage("Username or email already exist");
+      setShowModal(true);
+      return;
     } else {
       resetForm();
       setModalMessage("You are now registered");

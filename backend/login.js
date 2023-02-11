@@ -40,8 +40,8 @@ export function login(db, app) {
     WHERE email = ? AND
     password = ? `;
     let parameters = [req.body.email, password];
-    await sqlQuery("login", req, res, sql, true, parameters);
-
+    let result = await sqlQuery("login", req, res, sql, true, parameters);
+    res.json(result);
     // Note: The session.user property is set in the sqlQuery function
 
     return;

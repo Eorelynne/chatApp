@@ -17,14 +17,14 @@ function Admin() {
   /*  const [listIsSet, setListIsSet] = useState(false);
    */
 
-  let l = useStates("loggedIn");
-  let m = useStates("newMessage", { message: null });
+  let l = useStates("appState");
+  /* let m = useStates("newMessage", { message: null }); */
   const navigate = useNavigate();
   const location = useLocation();
   const { state } = location;
 
   useEffect(() => {
-    if (!l.role || l.role !== "admin") {
+    if (!l.loggedIn.role || l.loggedIn.role !== "admin") {
       navigate("/");
     }
   }, []);
@@ -38,18 +38,8 @@ function Admin() {
     })();
   }, []);
 
-  /*  useEffect(() => {
-    (async () => {
-      let data = await (await fetch(`/api/invitations-user`)).json();
-
-      if (!data.error) {
-        setInvitationList(data);
-      }
-    })();
-  }, [invitationAnswer]); */
-
   useEffect(() => {
-    if (l.id && l.id !== 0) {
+    if (l.loggedIn.id && l.loggedIn.id !== 0) {
       (async () => {
         let data = await (await fetch(`/api/conversations-admin`)).json();
         if (!data.error) {

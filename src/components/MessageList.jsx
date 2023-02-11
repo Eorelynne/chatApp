@@ -1,5 +1,5 @@
 import React from "react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Message from "../components/Message";
 import { Col } from "react-bootstrap";
 import useStates from "../utilities/useStates.js";
@@ -7,7 +7,7 @@ import "../../public/css/conversationPage.css";
 
 function MessageList(props) {
   const { messageList, setMessageList, state } = props;
-  let l = useStates("loggedIn");
+  let l = useStates("appState");
 
   function sortOnTime(a, b) {
     const timeA = a.time;

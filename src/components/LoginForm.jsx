@@ -6,13 +6,13 @@ import { Form, Button, Container, Modal } from "react-bootstrap";
 import "../../public/css/form.css";
 
 function loginForm(props) {
-  const { showModal, setShowModal, loggedIn, setLoggedIn } = props;
+  const { showModal, setShowModal } = props;
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const handleClose = () => setShowModal(false);
   const navigate = useNavigate();
-  let l = useStates("loggedIn");
+  let l = useStates("appState");
 
   function resetForm() {
     setEmail("");
@@ -44,18 +44,18 @@ function loginForm(props) {
       })
     ).json();
     let result = await (await fetch("/api/login")).json();
-    if (
-      result.id !== 0 &&
-      result.id !== undefined &&
-      result.error !== "Not logged in"
-    ) {
-      Object.assign(l, result);
-      l.loggedIn = true;
+    if (result.id && result.id !== 0 && result.error !== "Not logged in") {
+      (l.loggedIn.id = result.id),
+        (l.loggedIn.firstName = result.firstName),
+        (l.loggedIn.lastName = result.lastName),
+        (l.loggedIn.userName = result.userName),
+        (l.loggedIn.email = result.email),
+        (l.loggedIn.role = result.role);
       resetForm();
-      console.log(l.role);
-      if (l.role === "user") {
+      console.log(l.loggedIn.role);
+      if (l.loggedIn.role === "user") {
         navigate("/my-page");
-      } else if (l.role === "admin") {
+      } else if (l.loggedIn.role === "admin") {
         navigate("/admin");
       }
     } else {

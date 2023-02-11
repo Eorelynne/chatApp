@@ -16,7 +16,7 @@ import "../../public/css/header.css";
 
 function Header() {
   const navigate = useNavigate();
-  let l = useStates("loggedIn");
+  let l = useStates("appState");
 
   /* useEffect(() => {
     (async () => {
@@ -31,12 +31,12 @@ function Header() {
   async function logout() {
     let result = await (await fetch("/api/login", { method: "DELETE" })).json();
     console.log(result);
-    for (let key in l) {
-      delete l[key];
+    for (let key in l.loggedIn) {
+      delete l.loggedIn[key];
     }
     navigate("/");
   }
-  if (l?.id !== 0)
+  if (l.loggedIn?.id !== 0)
     return (
       <Navbar style={{ background: "#062E53" }} className='navbar'>
         <Container fluid className='row'>
@@ -46,7 +46,7 @@ function Header() {
         </Container>
       </Navbar>
     );
-  else if (!l.id || l.id === 0)
+  else if (!l.loggedIn.id || l.loggedIn.id === 0)
     return (
       <Navbar style={{ background: "#062E53" }} className='navbar'>
         <Container fluid className='row'>
@@ -62,10 +62,10 @@ function Header() {
     <>
       <Navbar style={{ background: "#062E53" }} className='navbar'>
         <Container fluid className='row'>
-          {l.id !== 0 && <UsernameDisplay />}
+          {l.loggedIn.id !== 0 && <UsernameDisplay />}
           <LogoContainer />
-          {(!l.id || l.id === 0) && <LoggedOutDropdown />}
-          {(l.id || l.id !== 0) && <LoggedInDropdown />}
+          {(!l.loggedIn.id || l.loggedIn.id === 0) && <LoggedOutDropdown />}
+          {(l.loggedIn.id || l.loggedIn.id !== 0) && <LoggedInDropdown />}
         </Container>
       </Navbar>
     </>
@@ -74,7 +74,7 @@ function Header() {
   function UsernameDisplay() {
     return (
       <Col xs={2} style={{ color: "#e47521" }} className='pt-4'>
-        <NavItem>{l.userName}</NavItem>
+        <NavItem>{l.loggedIn.userName}</NavItem>
       </Col>
     );
   }
@@ -84,17 +84,18 @@ function Header() {
       <Col xs={1} className='dropdown-custom justify-content-end'>
         <Nav className='me-auto'>
           <Dropdown id='dropdown-basic-button' drop='start'>
-            <Dropdown.Toggle
-              className='btn-custom'
-              id='dropdown-basic'
-            ></Dropdown.Toggle>
+            <h1>
+              <Dropdown.Toggle className='btn-custom' id='dropdown-basic'>
+                ...
+              </Dropdown.Toggle>
+            </h1>
             <Dropdown.Menu>
-              {l.role && l.role === "user" && (
+              {l.loggedIn.role && l.loggedIn.role === "user" && (
                 <Dropdown.Item as={Link} to='/my-page'>
                   My Page
                 </Dropdown.Item>
               )}
-              {l.role && l.role === "admin" && (
+              {l.loggedIn.role && l.loggedIn.role === "admin" && (
                 <Dropdown.Item as={Link} to='/admin'>
                   Admin
                 </Dropdown.Item>

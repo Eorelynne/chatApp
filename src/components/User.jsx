@@ -13,16 +13,28 @@ function User(props) {
     setLoggedInConversationList
   } = props;
 
-  let l = useStates("loggedIn");
+  let l = useStates("appState");
   const [showModal, setShowModal] = useState(false);
-  const handleClose = () => setShowModal(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
+  const handleClose = () => {
+    setShowModal(false);
+    setShowSuccessModal(false);
+  };
 
   async function inviteUser(conversation) {
     let result;
-    if (conversation.id && userItem.id && l) {
-      if (conversation.creatorId === l.id) {
+    /*  console.log("userItem", userItem.id);
+    console.log("l.loggedIn.id", l.loggedIn.id);
+    console.log("conversation", conversation);
+    console.log("conversation.creatorId", conversation.creatorId);
+    console.log(conversation.id && userItem.id && l.loggedIn.id);
+    console.log(+conversation.creatorId === +l.loggedIn.id); */
+    if (conversation.id && userItem.id && l.loggedIn.id) {
+      if (+conversation.creatorId === +l.loggedIn.id) {
+        console.log("running frontend");
         result = await (
-          await fetch("/api/conversations-invite", {
+          await fetch("/api/invitations", {
             method: "POST",
             headers: {
               "Content-Type": "Application/json"
@@ -30,12 +42,21 @@ function User(props) {
             body: JSON.stringify({
               conversationId: conversation.id,
               userId: userItem.id,
-              creatorId: l.id
+              creatorId: l.loggedIn.id
             })
           })
         ).json();
       }
-      setShowModal(false);
+      if (!result.error) {
+        setModalMessage(
+          userItem.userName + " is invited to " + conversation.name
+        );
+        setShowModal(false);
+        setShowSuccessModal(true);
+      }
+    } else {
+      setModalMessage(result.error);
+      setShowSuccessModal(true);
     }
   }
 
@@ -74,6 +95,15 @@ function User(props) {
               ))}
           </ul>
         </Modal.Body>
+        <Modal.Footer>
+          <Button className='custom-button' onClick={handleClose}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
+      <Modal show={showSuccessModal} onHide={handleClose} backdrop='static'>
+        <Modal.Header style={{ background: "#062E53" }}></Modal.Header>
+        <Modal.Body>{modalMessage}</Modal.Body>
         <Modal.Footer>
           <Button className='custom-button' onClick={handleClose}>
             Close

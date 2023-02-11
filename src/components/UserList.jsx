@@ -9,7 +9,7 @@ import "../../public/css/myPage.css";
 function UserList(props) {
   const { userList } = props;
   const [loggedInConversationList, setLoggedInConversationList] = useState([]);
-  let l = useStates("loggedIn");
+  let l = useStates("appState");
   const [filter, setFilter] = useState("");
 
   /*  useEffect(() => {
@@ -25,10 +25,10 @@ function UserList(props) {
   }, []); */
 
   useEffect(() => {
-    if (l.id && l.id !== 0) {
+    if (l.loggedIn.id && l.loggedIn.id !== 0) {
       (async () => {
         let data = await (
-          await fetch(`/api/conversation-by-creator/${l.id}`)
+          await fetch(`/api/conversation-by-creator/${l.loggedIn.id}`)
         ).json();
         if (!data.error) {
           setLoggedInConversationList(data);
@@ -78,7 +78,8 @@ function UserList(props) {
           {userList
             .filter(
               userItem =>
-                userItem.userName.toLowerCase() !== l.userName.toLowerCase()
+                userItem.userName.toLowerCase() !==
+                l.loggedIn.userName.toLowerCase()
             )
             .sort(sortOnUserName)
             .filter(

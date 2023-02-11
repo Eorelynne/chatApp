@@ -7,7 +7,7 @@ import useStates from "../utilities/useStates.js";
 import "../../public/css/form.css";
 
 function RegisterForm() {
-  let l = useStates("loggedIn");
+  let l = useStates("appState");
   const [password, setPassword] = useState("");
   const [secondPassword, setSecondPassword] = useState("");
   const [showModal, setShowModal] = useState(false);
@@ -16,10 +16,10 @@ function RegisterForm() {
   const navigate = useNavigate();
 
   function resetForm() {
-    l.firstName = "";
-    l.lastName = "";
-    l.userName = "";
-    l.email = "";
+    l.loggedIn.firstName = "";
+    l.loggedIn.lastName = "";
+    l.loggedIn.userName = "";
+    l.loggedIn.email = "";
     setPassword("");
     setSecondPassword("");
   }
@@ -32,39 +32,26 @@ function RegisterForm() {
     event.preventDefault();
 
     if (
-      l.firstName.length === 0 ||
-      l.lastName.length === 0 ||
-      l.userName.length === 0 ||
-      l.email.length === 0 ||
+      l.loggedIn.firstName.length === 0 ||
+      l.loggedIn.lastName.length === 0 ||
+      l.loggedIn.userName.length === 0 ||
+      l.loggedIn.email.length === 0 ||
       password.length === 0 ||
       secondPassword.length === 0
     ) {
-      console.log("ininputCheck");
-      console.log(l.firstName.length);
-      console.log(l.lastName.length);
-      console.log(l.userName.length);
-      console.log(l.email.length);
-      console.log(password.length);
-      console.log(secondPassword.length);
       setModalMessage("All fields must be filled");
       setShowModal(true);
       return;
     }
 
     if (password !== secondPassword) {
-      console.log("inMatchCheck");
-      console.log(password);
-      console.log(secondPassword);
       setModalMessage("The entered passwords must match");
       setShowModal(true);
       return;
     }
 
     let isPasswordApproved = checkPassword(password);
-    let isEmailApproved = checkEmail(l.email);
-    console.log("invalidationcheck");
-    console.log("password", isPasswordApproved);
-    console.log("email", isEmailApproved);
+    let isEmailApproved = checkEmail(l.loggedIn.email);
     if (!isEmailApproved || !isPasswordApproved) {
       setModalMessage("Wrong format in email or password");
       setShowModal(true);
@@ -72,13 +59,13 @@ function RegisterForm() {
     }
 
     let userToSave = {
-      firstName: l.firstName,
-      lastName: l.lastName,
-      userName: l.userName,
-      email: l.email,
+      firstName: l.loggedIn.firstName,
+      lastName: l.loggedIn.lastName,
+      userName: l.loggedIn.userName,
+      email: l.loggedIn.email,
       password: password
     };
-    console.log(userToSave);
+
     let result = await (
       await fetch("/api/users", {
         method: "POST",
@@ -87,19 +74,19 @@ function RegisterForm() {
       })
     ).json();
     if (result.error === "Wrong email format") {
-      console.log("Email is wrong");
       setModalMessage(result.error);
       setShowModal(true);
       return;
-    } else if (result.error.startsWith("Error: Duplicate entry")) {
-      setModalMessage("Username or email already exist");
-      setShowModal(true);
-      return;
-    } else {
+    } else if (!result.error) {
+      console.log("Registered");
       resetForm();
       setModalMessage("You are now registered");
       setShowModal(true);
       setTimeout(goToLogin, 3000);
+    } else if (result.error.startsWith("Error: Duplicate entry")) {
+      setModalMessage("Username or email already exist");
+      setShowModal(true);
+      return;
     }
   }
 
@@ -110,8 +97,8 @@ function RegisterForm() {
           <Form.Label>First Name</Form.Label>
           <Form.Control
             type='text'
-            value={l.firstName}
-            {...l.bind("firstName")}
+            value={l.loggedIn.firstName}
+            {...l.loggedIn.bind("firstName")}
           />
         </Form.Group>
 
@@ -119,8 +106,8 @@ function RegisterForm() {
           <Form.Label>Last Name</Form.Label>
           <Form.Control
             type='text'
-            value={l.lastName}
-            {...l.bind("lastName")}
+            value={l.loggedIn.lastName}
+            {...l.loggedIn.bind("lastName")}
           />
         </Form.Group>
 
@@ -128,8 +115,8 @@ function RegisterForm() {
           <Form.Label>User name</Form.Label>
           <Form.Control
             type='text'
-            value={l.userName}
-            {...l.bind("userName")}
+            value={l.loggedIn.userName}
+            {...l.loggedIn.bind("userName")}
           />
           <Form.Text className='text-muted'>
             This is the name your friends will see.
@@ -138,7 +125,11 @@ function RegisterForm() {
 
         <Form.Group className='mb-3' controlId='formBasicEmail'>
           <Form.Label>Email address</Form.Label>
-          <Form.Control type='email' value={l.email} {...l.bind("email")} />
+          <Form.Control
+            type='email'
+            value={l.loggedIn.email}
+            {...l.loggedIn.bind("email")}
+          />
         </Form.Group>
 
         <Form.Group className='mb-3' controlId='formBasicPassword'>

@@ -5,8 +5,13 @@ import useStates from "../utilities/useStates.js";
 import "../../public/css/myPage.css";
 
 function CreateConversation(props) {
-  let { conversationName, setConversationName } = props;
-  let l = useStates("loggedIn");
+  const {
+    conversationName,
+    setConversationName,
+    isNewConversation,
+    setIsNewConversation
+  } = props;
+  let l = useStates("appState");
   const [showModal, setShowModal] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
   const handleClose = () => setShowModal(false);
@@ -33,11 +38,12 @@ function CreateConversation(props) {
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify({ creatorId: l.id })
+        body: JSON.stringify({ creatorId: l.loggedIn.id })
       })
     ).json();
     setModalMessage("Conversation created");
     setShowModal(true);
+    setIsNewConversation(true);
     resetForm();
   }
 

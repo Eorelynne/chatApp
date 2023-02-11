@@ -7,17 +7,16 @@ import "../../public/css/conversationPage.css";
 function MessageForm(props) {
   const { state } = props;
   const [content, setContent] = useState("");
-  let l = useStates("loggedIn");
+  let l = useStates("appState");
 
   async function submitMessage(event) {
     event.preventDefault();
-    if (l.role && l.role === "admin") {
+    if (l.loggedIn.role && l.loggedIn.role === "admin") {
       adminMessage();
       return;
     } else {
       let message = {
         content: content,
-        usersConversationsId: state.conversation.usersConversationsId,
         conversationId: state.conversation.conversationId
       };
       let result = await (

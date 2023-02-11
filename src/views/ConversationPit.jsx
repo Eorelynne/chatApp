@@ -1,6 +1,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
   Container,
   Row,
@@ -32,25 +32,29 @@ function ConversationPit() {
   const [showInputModal, setShowInputModal] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
   const [activeUser, setActiveUser] = useState({});
+  const navigate = useNavigate();
 
   //console.log(state);
-  let l = useStates("loggedIn");
-  let m = useStates("newMessage");
+  let l = useStates("appState");
+  /* let m = useStates("newMessage"); */
 
-  /*  console.log("conversationPitL", l); */
-  /*  useEffect(() => {
-    if (!l.id || l.id === 0) {
+  useEffect(() => {
+    if (l.loggedIn.id === 0 || !l.loggedIn.id) {
       (async () => {
-        let data = await (await fetch(`/api/login`)).json();
+        let data = await (await fetch("/api/login")).json();
         if (!data.error) {
-          Object.assign(l, data);
+          l.loggedIn.id = data.id;
+          l.loggedIn.firstName = data.firstName;
+          l.loggedIn.lastName = data.lastName;
+          l.loggedIn.userName = data.userName;
+          l.loggedIn.email = data.email;
+          l.loggedIn.role = data.role;
         } else if (data.error) {
           navigate("/");
         }
       })();
     }
-  }, []); */
-  console.log("state", state);
+  }, []);
 
   useEffect(() => {
     if (state.conversation.conversationId) {
@@ -65,7 +69,7 @@ function ConversationPit() {
         }
       })();
     } else {
-      console.log("No state.id");
+      setMessageList([]);
     }
   }, []);
 
@@ -113,8 +117,8 @@ function ConversationPit() {
     sse.addEventListener("new-message", message => {
       let data = JSON.parse(message.data);
       console.log("[new-message]", data);
-      m.message = data;
-      setMessageList(messageList => [...messageList, m.message]);
+      l.loggedIn.message = data;
+      setMessageList(messageList => [...messageList, l.loggedIn.message]);
     });
   }
 
@@ -125,9 +129,9 @@ function ConversationPit() {
 
   async function banFromChat(usersConversationsId, userRole, userId) {
     if (
-      (l.role === "admin" && userRole !== "admin") ||
-      (l.id === state.conversation.creatorId &&
-        state.conversation.creatorId !== userId &&
+      (l.loggedIn.role === "admin" && userRole !== "admin") ||
+      (+l.loggedIn.id === +state.conversation.creatorId &&
+        +state.conversation.creatorId !== +userId &&
         userRole !== "admin")
     ) {
       await (

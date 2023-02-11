@@ -94,7 +94,7 @@ app.get("/api/sse/:conversationId", (req, res) => {
 export async function broadcast(event, data) {
   for (let connection of connections) {
     const sql =
-      "SELECT userId FROM users_conversations WHERE conversationId = ?";
+      "SELECT userId FROM usersconversations WHERE conversationId = ?";
     const parameters = [data.conversationId];
     let userList;
     try {
@@ -133,11 +133,7 @@ setInterval(() => {
 }, 25000); */
 
 app.post("/api/messages", async (req, res) => {
-  if (
-    !req.body.content ||
-    !req.body.usersConversationsId ||
-    !req.body.conversationId
-  ) {
+  if (!req.body.content || !req.body.conversationId) {
     res.status(404).json({ error: "Input missing" });
     return;
   }
@@ -145,9 +141,18 @@ app.post("/api/messages", async (req, res) => {
     res.status(403).json({ error: "Not logged in" });
     return;
   }
+  let sql =
+    "SELECT * FROM usersconversations WHERE userId = ? AND conversationID = ?";
+  let parameters = [req.session.user.id, req.body.conversationId];
+  let result = await sqlQuery("messages", req, res, sql, true, parameters);
+  if (result.error && req.session.user.role !== "admin") {
+    res.json({ error: "Not in conversation" });
+    return;
+  }
+
   let content = req.body.content;
   let time = Date.now();
-  let usersConversationsId = req.body.usersConversationsId;
+  /* let usersConversationsId = req.body.usersConversationsId; */
   let conversationId = req.body.conversationId;
   let senderUserId = req.session.user.id;
   let userName = req.session.user.userName;
@@ -156,7 +161,7 @@ app.post("/api/messages", async (req, res) => {
   let message = {
     content,
     time,
-    usersConversationsId,
+    /* usersConversationsId, */
     conversationId,
     senderUserId,
     userName,
@@ -164,10 +169,11 @@ app.post("/api/messages", async (req, res) => {
   };
   console.log("message", message);
   await broadcast("new-message", message);
-  const sql =
-    "INSERT INTO messages (content, time, usersConversationsId) VALUES (?,?,?)";
-  const parameters = [content, time, usersConversationsId];
-  let result = await sqlQuery("messages", req, res, sql, true, parameters);
+  sql =
+    "INSERT INTO messages (content, time, userId, conversationId) VALUES (?,?,?,?)";
+  parameters = [content, time, senderUserId, conversationId];
+  result = await sqlQuery("messages", req, res, sql, true, parameters);
+  res.json(result);
 });
 
 restApi(db, app);

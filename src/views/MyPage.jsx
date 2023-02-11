@@ -19,31 +19,39 @@ function MyPage() {
   const [bannedFromList, setBannedFromList] = useState([]);
   const [listIsSet, setListIsSet] = useState(false);
   const [invitationAnswer, setInvitationAnswer] = useState(false);
+  const [isNewConversation, setIsNewConversation] = useState(false);
 
-  let l = useStates("loggedIn");
-  let m = useStates("newMessage", { message: null });
+  let l = useStates("appState");
+  //let m = useStates("newMessage", { message: null });
   const navigate = useNavigate();
   const location = useLocation();
   const { state } = location;
 
-  /*  useEffect(() => {
-    if (!l.id || l.id === 0) {
+  useEffect(() => {
+    if (l.loggedIn.id === 0 || !l.loggedIn.id) {
       (async () => {
-        let data = await (await fetch(`/api/login`)).json();
+        let data = await (await fetch("/api/login")).json();
         if (!data.error) {
-          Object.assign(l, data);
-        } else if (data.error || !l.id || l.id === 0) {
+          l.loggedIn.id = data.id;
+          l.loggedIn.firstName = data.firstName;
+          l.loggedIn.lastName = data.lastName;
+          l.loggedIn.userName = data.userName;
+          l.loggedIn.email = data.email;
+          l.loggedIn.role = data.role;
+        } else if (data.error) {
           navigate("/");
         }
       })();
     }
   }, []);
- */
+
   useEffect(() => {
     (async () => {
       let data = await (await fetch(`/api/user-get-users`)).json();
       if (!data.error) {
         setUserList(data);
+      } else {
+        setUserList([]);
       }
     })();
   }, []);
@@ -51,34 +59,27 @@ function MyPage() {
   useEffect(() => {
     (async () => {
       let data = await (await fetch(`/api/invitations-user`)).json();
-
       if (!data.error) {
         setInvitationList(data);
+      } else {
+        setInvitationList([]);
       }
     })();
   }, [invitationAnswer]);
 
   useEffect(() => {
-    if (l.id && l.id !== 0) {
-      if (l.role === "admin") {
-        (async () => {
-          let data = await (await fetch(`/api/conversations-admin`)).json();
-          if (!data.error) {
-            setConversationList(data);
-          }
-        })();
-      } else {
-        (async () => {
-          let data = await (await fetch(`/api/conversations-by-user`)).json();
-
-          if (!data.error) {
-            setConversationList(data);
-          }
-        })();
-      }
+    if (l.loggedIn.id && l.loggedIn.id !== 0) {
+      (async () => {
+        let data = await (await fetch(`/api/conversations-by-user`)).json();
+        if (!data.error) {
+          setConversationList(data);
+        } else {
+          setConversationList([]);
+        }
+      })();
     }
-    setListIsSet(true);
-  }, [invitationAnswer]);
+    /* setListIsSet(true); */
+  }, [invitationAnswer, isNewConversation]);
 
   useEffect(() => {
     setInvitationAnswer(false);
@@ -90,10 +91,13 @@ function MyPage() {
       let data = await (await fetch(`/api/conversations-banned`)).json();
       if (!data.error) {
         setBannedFromList(data);
+      } else {
+        setBannedFromList([]);
       }
     })();
   }, []);
 
+  console.log("conversationList", conversationList);
   return (
     <>
       <Header />
@@ -129,6 +133,8 @@ function MyPage() {
             <CreateConversation
               conversationName={conversationName}
               setConversationName={setConversationName}
+              isNewConversation={isNewConversation}
+              setIsNewConversation={setIsNewConversation}
             />
           </Col>
         </Row>

@@ -13,7 +13,7 @@ function AcceptBtn(props) {
     let conversationData = { creatorId: invitation.creatorId };
     let conversationId = invitation.conversationId;
     console.log(invitation.creatorId, conversationId);
-    await (
+    let result = await (
       await fetch(`/api/conversations-join/${conversationId}`, {
         method: "POST",
         headers: {

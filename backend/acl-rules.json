@@ -32,7 +32,6 @@
       "get": true
     },
     "conversations-invite": {
-      "post": true,
       "put": true
     },
     "conversations-by-user": {
@@ -56,7 +55,9 @@
     "users-in-conversation": {
       "get": true
     },
-
+    "invitations": {
+      "post": true
+    },
     "ban-from-chat": {
       "put": true
     },
@@ -93,7 +94,6 @@
       "put": true,
       "delete": true
     },
-    "users_conversations": {},
     "conversations-create": {
       "post": true
     },

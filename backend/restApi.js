@@ -125,8 +125,16 @@ export async function restApi(connection, app) {
       res.json({ error: "Not allowed" });
       return;
     }
-    const sql = "SELECT id,  userName, role FROM users";
-    let result = await sqlQuery("user-get-users", req, res, sql, false);
+    const sql = "SELECT id,  userName, role FROM users WHERE role=?";
+    const parameters = ["user"];
+    let result = await sqlQuery(
+      "user-get-users",
+      req,
+      res,
+      sql,
+      false,
+      parameters
+    );
     res.json(result);
   });
 
@@ -246,7 +254,6 @@ export async function restApi(connection, app) {
   //USING
   //Post invite
   app.post("/api/invitations", async (req, res) => {
-    console.log("Running invitation post");
     if (!req.session.user) {
       res.status(403).json({ error: "not allowed" });
       return;
@@ -261,8 +268,6 @@ export async function restApi(connection, app) {
     }
     const sql = `INSERT INTO invitations (conversationId, userId, isInvitePending) VALUES (?,?,?)`;
     const parameters = [req.body.conversationId, req.body.userId, true];
-    console.log("sql", sql);
-    console.log("parameters", parameters);
     let result = await sqlQuery("invitations", req, res, sql, true, parameters);
     res.json(result);
   });
@@ -346,6 +351,7 @@ export async function restApi(connection, app) {
       true,
       parameters
     );
+    console.log(result);
     res.json(result);
   });
 
@@ -615,8 +621,6 @@ export async function restApi(connection, app) {
     const sql =
       "SELECT * FROM usersconversations WHERE userId = ? and conversationId = ?";
     const parameters = [req.session.user.id, req.params.id];
-    console.log(sql);
-    console.log(parameters);
     let result = await sqlQuery(
       "users-conversations-admin",
       req,
@@ -630,7 +634,6 @@ export async function restApi(connection, app) {
 }
 
 async function sqlQuery(path, req, res, sql, justOne, parameters) {
-  console.log("IN sqlQuery");
   if (!acl(path, req)) {
     res.status(403).json({ error: "Not allowed" });
     return;
@@ -656,9 +659,12 @@ async function sqlQuery(path, req, res, sql, justOne, parameters) {
     /* res.json(result); */
     return result;
   } catch (error) {
-    console.log(error);
+    if (error.code == "ER_DUP_ENTRY" || error.errno == 1062) {
+      return { error: "Record already exist in database" };
+    }
+    console.log(result);
     /* res.status(500).json({ error: error + "" }); */
-    return { error: error + "" };
+    return { error: error + " " };
   }
 }
 

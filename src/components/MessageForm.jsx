@@ -11,62 +11,11 @@ function MessageForm(props) {
 
   async function submitMessage(event) {
     event.preventDefault();
-    if (l.loggedIn.role && l.loggedIn.role === "admin") {
-      adminMessage();
-      return;
-    } else {
-      let message = {
-        content: content,
-        conversationId: state.conversation.conversationId
-      };
-      let result = await (
-        await fetch("/api/messages", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(message)
-        })
-      ).json();
-      setContent("");
-    }
-  }
-
-  async function adminMessage() {
-    let usersConversationsId;
-    let result = await (
-      await fetch(
-        `/api/users-conversations-admin/${state.conversation.conversationId}`
-      )
-    ).json;
-    let data;
-    /* if (!result.error) {
-      console.log(result);
-      usersConversationsId = result.id;
-      console.log("usersConversationsIdresult", usersConversationsId);
-    } else { */
-    console.log("No entries found");
-    data = await (
-      await fetch(
-        `/api/conversations-join/${state.conversation.conversationId}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            creatorId: state.conversation.creatorId
-          })
-        }
-      )
-    ).json;
-    console.log("data", data);
-    usersConversationsId = data.insertId;
-    console.log("usersConversationsIddata", usersConversationsId);
     let message = {
       content: content,
-      usersConversationsId: usersConversationsId,
       conversationId: state.conversation.conversationId
     };
-    await (
+    let result = await (
       await fetch("/api/messages", {
         method: "POST",
         headers: { "Content-Type": "application/json" },

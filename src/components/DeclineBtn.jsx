@@ -19,8 +19,8 @@ function DeclineBtn(props) {
         },
         body: JSON.stringify({ isInvitePending: false })
       })
-    ).json;
-    /* setInvitationAnswer(true); */
+    ).json();
+    return;
   }
 
   return (

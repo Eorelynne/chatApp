@@ -10,7 +10,9 @@ function User(props) {
     index,
     userItem,
     loggedInConversationList,
-    setLoggedInConversationList
+    setLoggedInConversationList,
+    isInvitationSent,
+    setIsInvitationSent
   } = props;
 
   let l = useStates("appState");
@@ -24,15 +26,8 @@ function User(props) {
 
   async function inviteUser(conversation) {
     let result;
-    /*  console.log("userItem", userItem.id);
-    console.log("l.loggedIn.id", l.loggedIn.id);
-    console.log("conversation", conversation);
-    console.log("conversation.creatorId", conversation.creatorId);
-    console.log(conversation.id && userItem.id && l.loggedIn.id);
-    console.log(+conversation.creatorId === +l.loggedIn.id); */
     if (conversation.id && userItem.id && l.loggedIn.id) {
       if (+conversation.creatorId === +l.loggedIn.id) {
-        console.log("running frontend");
         result = await (
           await fetch("/api/invitations", {
             method: "POST",
@@ -53,6 +48,7 @@ function User(props) {
         );
         setShowModal(false);
         setShowSuccessModal(true);
+        setIsInvitationSent(true);
       }
     } else {
       setModalMessage(result.error);
@@ -68,7 +64,13 @@ function User(props) {
     <>
       <li>
         <Dropdown as={ButtonGroup}>
-          <Button className='userNameDropdown-btn custom-text'>
+          <Button
+            className={
+              userItem.role === "admin"
+                ? "userNameDropdown-btn custom-text userlist-admin"
+                : "userNameDropdown-btn custom-text userlist-user"
+            }
+          >
             {userItem.userName}
           </Button>
           <Dropdown.Toggle className='userNameDropdown-toggle'></Dropdown.Toggle>

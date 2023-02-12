@@ -9,6 +9,7 @@ import "../../public/css/myPage.css";
 function UserList(props) {
   const { userList } = props;
   const [loggedInConversationList, setLoggedInConversationList] = useState([]);
+  const [isInvitationSent, setIsInvitationSent] = useState(false);
   let l = useStates("appState");
   const [filter, setFilter] = useState("");
 
@@ -35,7 +36,7 @@ function UserList(props) {
         }
       })();
     }
-  }, []);
+  }, [isInvitationSent]);
 
   function sortOnUserName(a, b) {
     const userNameA = a.userName.toLowerCase();
@@ -94,6 +95,8 @@ function UserList(props) {
                 {...{ userItem }}
                 loggedInConversationList={loggedInConversationList}
                 setLoggedInConversationList={setLoggedInConversationList}
+                isInvitationSent={isInvitationSent}
+                setIsInvitationSent={setIsInvitationSent}
               />
             ))}
         </ul>

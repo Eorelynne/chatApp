@@ -77,6 +77,9 @@ function MyConversationPits(props) {
         </Row>
       </Container>
       <Container className='scroll-container conversation-list pt-1'>
+        {!!conversationList && conversationList.length === 0 && (
+          <p className='mt-3'>No active conversations</p>
+        )}
         <ul>
           {conversationList &&
             conversationList.length !== 0 &&
@@ -106,7 +109,6 @@ function FilterForm(props) {
           className='custom-text'
           aria-label='Filter select '
           onChange={() => {
-            console.log("Value", event.target.value);
             setFilter(event.target.value);
           }}
         >
@@ -126,7 +128,7 @@ function BannedFromListItems(props) {
   return (
     <Col>
       <hr />
-      <h5 className='custom-headline'>Banned from</h5>
+      <h5 className='custom-label'>Banned from</h5>
       <ul>
         {bannedFromList.map((conversation, index) => (
           <li key={index}>

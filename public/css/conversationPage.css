@@ -56,6 +56,35 @@
   overflow-x: hidden;
 }
 
+#dropdown-basic-message {
+  background-color: none;
+}
+.sent-message-btn {
+  background-color: rgb(6, 46, 83, 0);
+  border: none;
+  padding: 0px;
+}
+.recieved-message-btn {
+  background-color: rgb(228, 117, 33, 0);
+  border: none;
+  padding-top: 0px;
+}
+
+.sent-message-btn:active {
+  background-color: rgb(6, 46, 83, 0);
+  border: none;
+  padding: 0px;
+}
+.recieved-message-btn:active {
+  background-color: rgb(228, 117, 33, 0);
+  border: none;
+  padding-top: 0px;
+}
+
+#dropdown-basic-message::after {
+  display: none;
+}
+
 @media screen and (max-width: 600px) {
   .body {
     font-size: 10px;

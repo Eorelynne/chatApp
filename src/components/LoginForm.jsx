@@ -59,7 +59,6 @@ function loginForm(props) {
         navigate("/admin");
       }
     } else {
-      console.log("Not logged in");
       setErrorMessage("Email or password is wrong");
       setShowModal(true);
     }

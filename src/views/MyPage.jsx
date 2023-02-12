@@ -79,11 +79,15 @@ function MyPage() {
       })();
     }
     /* setListIsSet(true); */
-  }, [invitationAnswer, isNewConversation]);
+  }, [invitationAnswer, isNewConversation, l.loggedIn.id]);
+
+  useEffect(() => {
+    setIsNewConversation(false);
+  }, []);
 
   useEffect(() => {
     setInvitationAnswer(false);
-  }, [conversationList]);
+  }, []);
 
   useEffect(() => {
     "Running useEffect banlist";
@@ -95,9 +99,8 @@ function MyPage() {
         setBannedFromList([]);
       }
     })();
-  }, []);
+  }, [l.loggedIn.id]);
 
-  console.log("conversationList", conversationList);
   return (
     <>
       <Header />
@@ -117,17 +120,17 @@ function MyPage() {
             <UserList userList={userList} />
           </Col>
           <Col className='listContainer col-lg-4 col-sm-6'>
-            {!!conversationList && conversationList.length === 0 && (
+            {/*  {!!conversationList && conversationList.length === 0 && (
               <p className='mt-3'>No active conversations</p>
-            )}
-            {!!conversationList && conversationList.length !== 0 && (
-              <MyConversationPits
-                conversationList={conversationList}
-                setConversationList={setConversationList}
-                bannedFromList={bannedFromList}
-                setBannedFromList={setBannedFromList}
-              />
-            )}
+            )} */}
+            {/* {!!conversationList && conversationList.length !== 0 && ( */}
+            <MyConversationPits
+              conversationList={conversationList}
+              setConversationList={setConversationList}
+              bannedFromList={bannedFromList}
+              setBannedFromList={setBannedFromList}
+            />
+            {/* )} */}
           </Col>
           <Col className='listContainer col-lg-4 col-sm-12'>
             <CreateConversation

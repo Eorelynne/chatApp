@@ -12,7 +12,6 @@ function AcceptBtn(props) {
   async function joinConversation() {
     let conversationData = { creatorId: invitation.creatorId };
     let conversationId = invitation.conversationId;
-    console.log(invitation.creatorId, conversationId);
     let result = await (
       await fetch(`/api/conversations-join/${conversationId}`, {
         method: "POST",
@@ -21,16 +20,26 @@ function AcceptBtn(props) {
         },
         body: JSON.stringify(conversationData)
       })
-    ).json;
-
-    updateInvitation();
-    setModalMessage("You joined the conversation");
-    setShowModal(true);
+    ).json();
+    console.log("result", result);
+    if (!result.error) {
+      await updateInvitation();
+      setModalMessage("You joined the conversation");
+      setShowModal(true);
+    } else if (result.error == "Record already exist in database") {
+      setModalMessage(
+        "You can't join a conversation you are already in or have been banned from. Please decline."
+      );
+      setShowModal(true);
+    } else {
+      setModalMessage("Something went wrong");
+      setShowModal(true);
+    }
     setInvitationAnswer(true);
   }
 
   async function updateInvitation() {
-    await (
+    let result = await (
       await fetch(`/api/conversations-invite/${invitation.invitationId}`, {
         method: "PUT",
         headers: {
@@ -38,7 +47,12 @@ function AcceptBtn(props) {
         },
         body: JSON.stringify({ isInvitePending: false })
       })
-    ).json;
+    ).json();
+    if (result.error) {
+      setModalMessage("Something went wrong. Invite is still pending.");
+      setShowModal(true);
+    }
+    return;
   }
 
   return (

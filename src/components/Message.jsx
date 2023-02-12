@@ -1,6 +1,13 @@
 import React from "react";
 import { useEffect } from "react";
-import { Container, Row, Col, Dropdown, Button } from "react-bootstrap";
+import {
+  Container,
+  Row,
+  Col,
+  Dropdown,
+  Button,
+  DropdownButton
+} from "react-bootstrap";
 import useStates from "../utilities/useStates.js";
 import "../../public/css/conversationPage.css";
 
@@ -21,11 +28,15 @@ function Message(props) {
               : "recieved-message message pt-1 mt-2 col-md-6 col-sm-6 col-6 me-auto scroll-container message-container"
           }
         >
-          <Row className='pe-0 ps-0'>
-            <Col>
+          <Row className='pe-0 ps-0 align-items-end'>
+            <Col xs={{ span: 1, offset: 6 }}>
               {l.loggedIn.role && l.loggedIn.role === "admin" && (
                 <ToggleDropdown message={message} l={l} />
               )}
+            </Col>
+          </Row>
+          <Row>
+            <Col>
               <p>{new Date(message.time).toLocaleString()}</p>
             </Col>
           </Row>
@@ -70,10 +81,17 @@ function ToggleDropdown(props) {
 
   return (
     <Dropdown>
-      <Dropdown.Toggle variant='success' id='dropdown-basic'>
-        ...
+      <Dropdown.Toggle
+        variant='success'
+        id='dropdown-basic-message'
+        className={
+          l.loggedIn.id === message.senderUserId
+            ? "sent-message-btn "
+            : "recieved-message-btn"
+        }
+      >
+        <h3>...</h3>
       </Dropdown.Toggle>
-
       <Dropdown.Menu>
         <Dropdown.Item
           onClick={() => {

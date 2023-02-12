@@ -83,12 +83,10 @@ function Header() {
     return (
       <Col xs={1} className='dropdown-custom justify-content-end'>
         <Nav className='me-auto'>
-          <Dropdown id='dropdown-basic-button' drop='start'>
-            <h1>
-              <Dropdown.Toggle className='btn-custom' id='dropdown-basic'>
-                ...
-              </Dropdown.Toggle>
-            </h1>
+          <Dropdown id='dropdown-custom-btn' drop='start'>
+            <Dropdown.Toggle className='btn-custom' id='dropdown-basic'>
+              <h1 className='header-btn-txt'> ...</h1>
+            </Dropdown.Toggle>
             <Dropdown.Menu>
               {l.loggedIn.role && l.loggedIn.role === "user" && (
                 <Dropdown.Item as={Link} to='/my-page'>
@@ -111,11 +109,10 @@ function Header() {
     return (
       <Col xs={1} className='dropdown-custom justify-content-end'>
         <Nav className='me-auto'>
-          <Dropdown id='dropdown-custom-button' drop='start'>
-            <Dropdown.Toggle
-              className='btn-custom'
-              id='dropdown-basic'
-            ></Dropdown.Toggle>
+          <Dropdown id='dropdown-custom-btn' drop='start'>
+            <Dropdown.Toggle className='btn-custom' id='dropdown-basic'>
+              <h1 className='header-btn-txt'>...</h1>
+            </Dropdown.Toggle>
             <Dropdown.Menu>
               <Dropdown.Item as={Link} to='/login'>
                 Login

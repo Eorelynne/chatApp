@@ -44,9 +44,9 @@ function CreateConversation(props) {
     setModalMessage("Conversation created");
     setShowModal(true);
     setIsNewConversation(true);
+
     resetForm();
   }
-
   return (
     <>
       <Row className='headlineContainer pt-1 ms-2 me-2'>

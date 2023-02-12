@@ -22,6 +22,12 @@ function CreateConversation(props) {
 
   async function submitForm(event) {
     event.preventDefault();
+    if (conversationName === "" || conversationName === null) {
+      setModalMessage("Conversation must have a name");
+      setShowModal(true);
+      return;
+    }
+
     let result = await (
       await fetch(`/api/conversations/`, {
         method: "POST",
@@ -56,20 +62,21 @@ function CreateConversation(props) {
         <Col className='col-lg-10 col-sm-10'>
           <Form onSubmit={submitForm} className='pt-1 pb-2  ms-2 me-2'>
             <Form.Group className='mb-1' controlId='formBasicConversationName'>
-              <Form.Label className='custom-label'>
+              {/*  <Form.Label className='custom-label'>
                 Name your conversation
-              </Form.Label>
+              </Form.Label> */}
               <Form.Control
                 type='text'
+                size='sm'
                 value={conversationName}
                 onChange={event => {
                   setConversationName(event.target.value);
                 }}
-                placeholder=''
+                placeholder='Conversation name'
               />
             </Form.Group>
             <Form.Group>
-              <Button className='btn mt-1 create-btn' type='submit'>
+              <Button size='sm' className='btn mt-1 create-btn' type='submit'>
                 Create
               </Button>
             </Form.Group>

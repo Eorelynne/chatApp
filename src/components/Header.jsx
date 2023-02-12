@@ -39,7 +39,7 @@ function Header() {
   if (l.loggedIn?.id !== 0)
     return (
       <Navbar style={{ background: "#062E53" }} className='navbar'>
-        <Container fluid className='row'>
+        <Container fluid className='row d-flex justify-content-between'>
           <UsernameDisplay />
           <LogoContainer />
           <LoggedInDropdown />
@@ -49,7 +49,7 @@ function Header() {
   else if (!l.loggedIn.id || l.loggedIn.id === 0)
     return (
       <Navbar style={{ background: "#062E53" }} className='navbar'>
-        <Container fluid className='row'>
+        <Container /* fluid */ className='row'>
           <Col xs={2} style={{ color: "#e47521" }} className='pt-4' />
           <LogoContainer />
           <LoggedOutDropdown />
@@ -73,7 +73,11 @@ function Header() {
 
   function UsernameDisplay() {
     return (
-      <Col xs={2} style={{ color: "#e47521" }} className='pt-4'>
+      <Col
+        xs={{ span: 2, offset: 1 }}
+        style={{ color: "#e47521" }}
+        className='pt-4'
+      >
         <NavItem>{l.loggedIn.userName}</NavItem>
       </Col>
     );
@@ -81,7 +85,7 @@ function Header() {
 
   function LoggedInDropdown() {
     return (
-      <Col xs={1} className='dropdown-custom justify-content-end'>
+      <Col xs={2} className='dropdown-custom justify-content-end '>
         <Nav className='me-auto'>
           <Dropdown id='dropdown-custom-btn' drop='start'>
             <Dropdown.Toggle className='btn-custom' id='dropdown-basic'>
@@ -107,7 +111,7 @@ function Header() {
   }
   function LoggedOutDropdown() {
     return (
-      <Col xs={1} className='dropdown-custom justify-content-end'>
+      <Col xs={2} className='dropdown-custom justify-content-end'>
         <Nav className='me-auto'>
           <Dropdown id='dropdown-custom-btn' drop='start'>
             <Dropdown.Toggle className='btn-custom' id='dropdown-basic'>
@@ -128,17 +132,21 @@ function Header() {
   }
   function LogoContainer() {
     return (
-      <Col xs={8} className='logo-container'>
+      <Col xs={6} className='logo-container'>
         <Container className='row'>
           <Navbar.Brand className='logo'>
             <Nav.Link as={Link} to='/'>
-              <img alt='logo' src='/logo.png' className='logo-img' />
+              <img
+                alt='logo'
+                src='/logo.png'
+                className='logo-img d-inline-block align-top'
+              />
             </Nav.Link>
           </Navbar.Brand>
         </Container>
         <Container className='row nameContainer justify-content-center'>
           <Col>
-            <h4>Conversation Pits</h4>
+            <h5>Conversation Pits</h5>
           </Col>
         </Container>
       </Col>

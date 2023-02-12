@@ -29,19 +29,21 @@ function InvitedConversation(props) {
   return (
     /*  <Container fluid> */
     <Row>
-      <Col className='custom-text xs-3'>
+      <Col className='custom-text col-4 invitation-item'>
         <p>{invitation.conversationName}</p>
       </Col>
-      <Col className='custom-text xs-3'>{invitation.creatorUserName}</Col>
+      <Col className='custom-text col-4 invitation-item'>
+        {invitation.creatorUserName}
+      </Col>
 
-      <Col className='custom-text xs-3'>
+      <Col className='custom-text col-2 p-0'>
         <AcceptBtn
           invitation={invitation}
           invitationAnswer={invitationAnswer}
           setInvitationAnswer={setInvitationAnswer}
         />
       </Col>
-      <Col className='custom-text xs-3'>
+      <Col className='custom-text col-2 p-0'>
         <DeclineBtn
           invitation={invitation}
           invitationAnswer={invitationAnswer}

@@ -101,7 +101,7 @@ export async function restApi(connection, app) {
     res.json(result);
   });
 
-  app.get("/api/users-by-username/:username", async (req, res) => {
+  /*   app.get("/api/users-by-username/:username", async (req, res) => {
     if (!req.params.username) {
       res.status(400).json({ error: "Bad request, userName missing" });
       return;
@@ -117,7 +117,7 @@ export async function restApi(connection, app) {
       parameters
     );
     res.json(result);
-  });
+  }); */
 
   //USING
   app.get("/api/user-get-users", async (req, res) => {
@@ -167,7 +167,7 @@ export async function restApi(connection, app) {
 
   //Start conversation
   app.post("/api/conversations", async (req, res) => {
-    if (!req.body.name) {
+    if (!req.body.name || req.body.name === "") {
       res.status(400).json({ error: "Bad request, conversation name missing" });
       return;
     }
@@ -378,12 +378,22 @@ export async function restApi(connection, app) {
   //USING
   //Update invitation
   app.put("/api/conversations-invite/:id", async (req, res) => {
-    if (!req.params.id || req.body.isInvitePending === undefined) {
+    if (
+      !req.params.id ||
+      req.body.isInvitePending === undefined ||
+      !req.session.user.id
+    ) {
       res.status(400).json({ error: "Bad request, input missing" });
       return;
     }
-    const sql = " UPDATE invitations SET isInvitePending = ? WHERE id = ?";
-    const parameters = [req.body.isInvitePending, req.params.id];
+
+    const sql =
+      " UPDATE invitations SET isInvitePending = ? WHERE id = ? AND userId = ?";
+    const parameters = [
+      req.body.isInvitePending,
+      req.params.id,
+      req.session.user.id
+    ];
     let result = await sqlQuery(
       "conversations-invite",
       req,
@@ -392,6 +402,10 @@ export async function restApi(connection, app) {
       true,
       parameters
     );
+    if (result.affectedRows == 0) {
+      res.json({ error: "Invitation not updated." });
+      return;
+    }
     res.json(result);
   });
 
@@ -471,10 +485,26 @@ export async function restApi(connection, app) {
       res.status(400).json({ error: "Bad request, conversationId missing" });
       return;
     }
-    const sql =
-      "SELECT * FROM conversations_with_usersconversations_with_user WHERE conversationId =? AND isBanned = ?";
-    const parameters = [req.params.id, false];
+    let sql =
+      "SELECT * FROM usersconversations WHERE userId = ? AND conversationID = ?";
+    let parameters = [req.session.user.id, req.params.id];
     let result = await sqlQuery(
+      "users-in-conversation",
+      req,
+      res,
+      sql,
+      true,
+      parameters
+    );
+    if (result.error && req.session.user.role !== "admin") {
+      res.json({ error: "Not in conversation" });
+      return;
+    }
+
+    sql =
+      "SELECT * FROM conversations_with_usersconversations_with_user WHERE conversationId =? AND isBanned = ?";
+    parameters = [req.params.id, false];
+    result = await sqlQuery(
       "users-in-conversation",
       req,
       res,
@@ -491,10 +521,29 @@ export async function restApi(connection, app) {
       res.status(400).json({ error: "Bad request, conversationId missing" });
       return;
     }
-    const sql =
-      "SELECT * FROM userConversation_with_messages WHERE conversationId =?";
-    const parameters = [req.params.id];
+    if (!req.session.user.id) {
+      res.status(400).json({ error: "Not logged in" });
+      return;
+    }
+    let sql =
+      "SELECT * FROM usersconversations WHERE userId = ? AND conversationID = ?";
+    let parameters = [req.session.user.id, req.params.id];
     let result = await sqlQuery(
+      "conversation-with-messages",
+      req,
+      res,
+      sql,
+      true,
+      parameters
+    );
+    if (result.error && req.session.user.role !== "admin") {
+      res.json({ error: "Not in conversation" });
+      return;
+    }
+    sql =
+      "SELECT * FROM userConversation_with_messages WHERE conversationId =?";
+    parameters = [req.params.id];
+    result = await sqlQuery(
       "conversation-with-messages",
       req,
       res,
@@ -555,9 +604,25 @@ export async function restApi(connection, app) {
       res.status(400).json({ error: "Bad request, conversationId missing" });
       return;
     }
-    const sql = `SELECT * FROM usersconversations_conversations_with_messages_and_users WHERE conversationId = ?`;
-    const parameters = [req.params.id];
+    let sql =
+      "SELECT * FROM usersconversations WHERE userId = ? AND conversationID = ?";
+    let parameters = [req.session.user.id, req.params.id];
     let result = await sqlQuery(
+      "conversation-messages",
+      req,
+      res,
+      sql,
+      true,
+      parameters
+    );
+    if (result.error && req.session.user.role !== "admin") {
+      res.json({ error: "Not in conversation" });
+      return;
+    }
+
+    sql = `SELECT * FROM usersconversations_conversations_with_messages_and_users WHERE conversationId = ?`;
+    parameters = [req.params.id];
+    result = await sqlQuery(
       "conversation-messages",
       req,
       res,

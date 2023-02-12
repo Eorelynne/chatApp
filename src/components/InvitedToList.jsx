@@ -28,8 +28,8 @@ function InvitedToList(props) {
         <h5 className='custom-headline'>Invitations</h5>
       </Row>
       <Row className='pb-1'>
-        <Col xs={3} className='custom-label'>
-          Conversation Pit
+        <Col xs={4} className='custom-label'>
+          Conversation
         </Col>
         <Col xs={3} className='custom-label'>
           Invited by
@@ -51,7 +51,7 @@ function InvitedToList(props) {
         </Container>
       )}
       {invitationList.length === 0 && (
-        <Col className='custom-label'>
+        <Col className='custom-text'>
           <p>No pending invitations</p>
         </Col>
       )}

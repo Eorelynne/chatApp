@@ -4,14 +4,14 @@
 }
 
 .logo-img {
-  width: 5vw;
-  height: 5vw;
+  width: 7vw;
+  height: 7vw;
 }
 
-.hamburger-img {
+/* .hamburger-img {
   width: 4vw;
   height: 8vh;
-}
+} */
 .dropdown-custom {
   justify-content: end;
 }
@@ -48,21 +48,8 @@
   font-size: 48px;
   background-color: #062e53 !important;
 }
-
-/* .header-btn-txt:active,
-.header-btn-txt:focus,
-.header-btn-txt:hover {
-  font-size: 48px;
-  background-color: #062e53 !important;
-} */
-
-#dropdown-custom-btn:active,
-#dropdown-custom-btn:hover,
-#dropdown-custom-btn:focus {
-  background-color: #062e53 !important;
-}
-
-@media screen and (max-width: 0px) {
+/* 
+@media screen and (min-width: 600px) {
   .logo {
     display: flex;
     justify-content: end !important;
@@ -71,11 +58,9 @@
     width: 40vw;
     height: 40vh;
   }
-  .hamburger-img {
+  /*   .hamburger-img {
     width: 8vw;
     height: 6vh;
-  }
+  } 
 }
-
-/* logo initial values width: 140px;
-    height: 45px;*/
+ */

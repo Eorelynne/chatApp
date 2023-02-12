@@ -166,69 +166,58 @@ function ConversationPit() {
       <Header />
       <Container>
         <Col className='conversationPitHeadline pt-2'>
-          {state.conversation && <h5>{state.conversation.name}</h5>}
+          {state.conversation && (
+            <h5 className='custom-headline'>{state.conversation.name}</h5>
+          )}
         </Col>
         <Row>
-          <Col className='lg-1 md-1 xs-1'>
-            <Row>
-              <Col>
-                <h5>Members</h5>
-              </Col>
-              <Dropdown>
-                {userList.length !== 0 &&
-                  userList.map((user, index) => (
-                    <Dropdown.Item key={index}>
-                      <Dropdown sm={3} as={ButtonGroup}>
-                        <Button className='userNameDropdown-btn'>
-                          {user.userName}
-                        </Button>
-                        <Dropdown.Toggle className='userNameDropdown-toggle custom-toggle'></Dropdown.Toggle>
-                        <Dropdown.Menu>
-                          <Dropdown.Item
-                            onClick={() => {
-                              setActiveUser(user);
-                              setShowInputModal(true);
-                            }}
-                          >
-                            Ban from chat
-                          </Dropdown.Item>
-                        </Dropdown.Menu>
-                      </Dropdown>
-                    </Dropdown.Item>
-                  ))}
-              </Dropdown>
-            </Row>
-          </Col>
-
-          <Col
-            /* sm={{ span: 6, offset: 3 }}
-            lg={{ span: 4, offset: 4 }} */
-            className='messageFormContainer mt-4 col-lg-10 col-sm-10 col-8'
-          >
-            <Row>
-              <Col
-              /* className='col-lg-10 xs-10 mt-2 mb-2' */
-              >
-                <h3> {state.name}</h3>
-              </Col>
-            </Row>
-            <Row>
-              <Col className='messageListContainer mb-5 pt-2 pb-2 col-xs-10'>
-                <DisplayConnected
-                  connectionMessage={connectionMessage}
-                  setConnectionMessage={setConnectionMessage}
-                />
-                <MessageList
-                  messageList={messageList}
-                  setMessageList={setMessageList}
-                  state={state}
-                />
-              </Col>
-            </Row>
-          </Col>
+          <Col className='custom-label'>Members</Col>
+          <Dropdown>
+            {userList.length !== 0 &&
+              userList.map((user, index) => (
+                <Dropdown.Item key={index}>
+                  <Dropdown size='sm' sm={3} as={ButtonGroup}>
+                    <Button className='userNameDropdown-btn'>
+                      {user.userName}
+                    </Button>
+                    <Dropdown.Toggle className='userNameDropdown-toggle custom-toggle'></Dropdown.Toggle>
+                    <Dropdown.Menu>
+                      <Dropdown.Item
+                        onClick={() => {
+                          setActiveUser(user);
+                          setShowInputModal(true);
+                        }}
+                      >
+                        Ban from chat
+                      </Dropdown.Item>
+                    </Dropdown.Menu>
+                  </Dropdown>
+                </Dropdown.Item>
+              ))}
+          </Dropdown>
         </Row>
-        <Row className=''>
-          <Col className='col-xs-3 col-sm-3 col-md-2 col-lg-2'>
+        <Col className='messageFormContainer mt-4 col-lg-12 col-sm-12 col-12 d-flex justify-content-center'>
+          <Row>
+            <Col>
+              <h3> {state.name}</h3>
+            </Col>
+          </Row>
+          <Row>
+            <Col className='messageListContainer mb-5 pt-2 pb-2 col-12'>
+              <DisplayConnected
+                connectionMessage={connectionMessage}
+                setConnectionMessage={setConnectionMessage}
+              />
+              <MessageList
+                messageList={messageList}
+                setMessageList={setMessageList}
+                state={state}
+              />
+            </Col>
+          </Row>
+        </Col>
+        <Row className='d-flex justify-content-center'>
+          <Col className='col-xs-12 col-sm-12 col-md-10 col-lg-10'>
             <MessageForm state={state} />
           </Col>
         </Row>

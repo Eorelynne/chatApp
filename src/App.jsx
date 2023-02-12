@@ -59,7 +59,7 @@ function App() {
   }; */
 
   return (
-    <div className='App'>
+    <div className='app'>
       <BrowserRouter>
         <Routes>
           <Route path='/' element={<Home />} />

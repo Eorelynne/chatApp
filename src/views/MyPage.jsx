@@ -104,9 +104,9 @@ function MyPage() {
   return (
     <>
       <Header />
-      <Container>
-        <Row className='mb-3 pt-2'>
-          <Col className='listContainer m-2'>
+      <Container className='mb-3'>
+        <Row className='mb-2 pt-2 me-1 ms-1'>
+          <Col className='listContainer'>
             <InvitedToList
               invitationList={invitationList}
               setInvitationList={setInvitationList}
@@ -115,11 +115,13 @@ function MyPage() {
             />
           </Col>
         </Row>
-        <Row gap={2} className='conversationUserListRow mb-3 pt-2'>
-          <Col className='listContainer col-lg-4 col-sm-6'>
+        <Row
+          /* gap={1} */ className='conversationUserListRow me-1 ms-1 mb-3 pt-2 d-flex justify-content-between'
+        >
+          <Col className='listContainer col-lg-4 col-sm-5 col-12 mb-3'>
             <UserList userList={userList} />
           </Col>
-          <Col className='listContainer col-lg-4 col-sm-6'>
+          <Col className='listContainer col-lg-4 col-sm-5 col-12 mb-3'>
             {/*  {!!conversationList && conversationList.length === 0 && (
               <p className='mt-3'>No active conversations</p>
             )} */}
@@ -132,7 +134,7 @@ function MyPage() {
             />
             {/* )} */}
           </Col>
-          <Col className='listContainer col-lg-4 col-sm-12'>
+          <Col className='listContainer col-lg-4 col-xs-12 mb-3'>
             <CreateConversation
               conversationName={conversationName}
               setConversationName={setConversationName}

@@ -1,8 +1,9 @@
 import React from "react";
 import { useEffect, useState } from "react";
-import { Container, Row, Col, Form } from "react-bootstrap";
+import { Container, Row, Col, Form, InputGroup } from "react-bootstrap";
 import ConversationListItem from "./ConversationListItem";
 import useStates from "../utilities/useStates.js";
+import { Filter } from "react-bootstrap-icons";
 
 import "../../public/css/myPage.css";
 
@@ -80,7 +81,7 @@ function MyConversationPits(props) {
         {!!conversationList && conversationList.length === 0 && (
           <p className='mt-3'>No active conversations</p>
         )}
-        <ul>
+        <ul className='ps-3'>
           {conversationList &&
             conversationList.length !== 0 &&
             conversationList
@@ -89,7 +90,9 @@ function MyConversationPits(props) {
                 <ConversationListItem key={index} conversation={conversation} />
               ))}
         </ul>
-        {bannedFromList && bannedFromList !== 0 && (
+      </Container>
+      <Container className='scroll-container banned-list'>
+        {bannedFromList && bannedFromList.length !== 0 && (
           <BannedFromListItems bannedFromList={bannedFromList} />
         )}
       </Container>
@@ -102,23 +105,24 @@ export default MyConversationPits;
 function FilterForm(props) {
   const { filter, setFilter } = props;
   return (
-    <Form>
-      <Form.Group>
-        <Form.Label className='custom-label'>Filter</Form.Label>
-        <Form.Select
-          className='custom-text'
-          aria-label='Filter select '
-          onChange={() => {
-            setFilter(event.target.value);
-          }}
-        >
-          <option value='sortOnName'>Choose filter</option>
-          <option value='sortOnName'>Conversation name</option>
-          <option value='sortOnLatestMessage'>Latest conversation</option>
-          <option value='sortOnUsersLatestMessage'>My latest message</option>
-        </Form.Select>
-      </Form.Group>
-    </Form>
+    <InputGroup className='mb-3'>
+      <InputGroup.Text id='basic-addon1'>
+        <Filter size={10} className='filter-icon' />
+      </InputGroup.Text>
+      <Form.Select
+        className='custom-text'
+        size='sm'
+        aria-label='Filter select '
+        onChange={() => {
+          setFilter(event.target.value);
+        }}
+      >
+        <option value='sortOnName'>Choose filter</option>
+        <option value='sortOnName'>Conversation name</option>
+        <option value='sortOnLatestMessage'>Latest conversation</option>
+        <option value='sortOnUsersLatestMessage'>My latest message</option>
+      </Form.Select>
+    </InputGroup>
   );
 }
 

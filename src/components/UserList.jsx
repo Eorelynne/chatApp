@@ -1,8 +1,9 @@
 import React from "react";
 import { useEffect, useState } from "react";
-import { Container, Row, Col, Form } from "react-bootstrap";
+import { Container, Row, Col, Form, InputGroup } from "react-bootstrap";
 import useStates from "../utilities/useStates";
 import User from "../components/User";
+import { Search } from "react-bootstrap-icons";
 
 import "../../public/css/myPage.css";
 
@@ -59,23 +60,24 @@ function UserList(props) {
         </Row>
         <Row>
           <Col className=' col-lg-10 col-sm-10'>
-            <Form>
-              <Form.Group>
-                <Form.Label className='custom-label'>Search</Form.Label>
-                <Form.Control
-                  type='text'
-                  id='filter'
-                  name='filter'
-                  value={filter}
-                  onChange={event => setFilter(event.target.value)}
-                />
-              </Form.Group>
-            </Form>
+            <InputGroup className='mb-3'>
+              <InputGroup.Text id='basic-addon1'>
+                <Search size={10} className='search-icon' />
+              </InputGroup.Text>
+              <Form.Control
+                type='text'
+                id='filter'
+                name='filter'
+                size='sm'
+                value={filter}
+                onChange={event => setFilter(event.target.value)}
+              />
+            </InputGroup>
           </Col>
         </Row>
       </Container>
       <Container className='user-list scroll-container pt-1'>
-        <ul>
+        <ul className='ps-4'>
           {userList
             .filter(
               userItem =>

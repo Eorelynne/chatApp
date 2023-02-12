@@ -32,16 +32,28 @@
   font-size: x-small;
 }
 
+.create-btn {
+  background-color: rgb(6, 46, 83) !important;
+  border-radius: 5px;
+  padding: 5px;
+  font-size: x-small;
+}
+.create-btn:hover {
+  background-color: rgba(6, 46, 83, 0.4) !important;
+  border-radius: 5px;
+  padding: 5px;
+  font-size: x-small;
+}
+
 .user-list {
   align-content: flex-start;
-  height: 20vh;
+  height: 25vh;
   padding-left: 0vw;
 }
 
-.conversationUserListRow {
-  justify-content: space-between;
-  height: 35vh;
-}
+/* .conversationUserListRow {
+  height: 20vh;
+} */
 
 .scroll-container {
   overflow-y: auto;
@@ -53,7 +65,11 @@
 }
 
 .conversation-list {
-  height: 20vh;
+  height: 10vh;
+}
+
+.banned-list {
+  height: 10vh;
 }
 
 message-list {
@@ -82,9 +98,9 @@ message-list {
 .create-btn {
   background-color: rgb(6, 46, 83);
 }
-
-.create-btn:hover {
-  background-color: rgb(6, 46, 83, 0.4) !important;
+.custom-label,
+.invitation-item {
+  text-align: left;
 }
 
 .li {
@@ -97,49 +113,4 @@ message-list {
 
 .userlist-admin {
   color: rgb(228, 117, 33) !important;
-}
-
-@media screen and (max-width: 600px) {
-  .body {
-    font-size: 10px;
-  }
-  .custom-label {
-    font-size: 12px !important;
-  }
-  .custom-text {
-    font-size: 9px !important;
-  }
-  .custom-headline {
-    font-size: 16px !important;
-  }
-}
-
-@media screen and (max-width: 800px) {
-  .body {
-    font-size: 10px;
-  }
-  .custom-label {
-    font-size: 14px !important;
-  }
-  .custom-text {
-    font-size: 12px !important;
-  }
-  .custom-headline {
-    font-size: 18px !important;
-  }
-}
-
-@media screen and (max-width: 1200px) {
-  .body {
-    font-size: 10px;
-  }
-  .custom-label {
-    font-size: 16px !important;
-  }
-  .custom-text {
-    font-size: 14px !important;
-  }
-  .custom-headline {
-    font-size: 22px !important;
-  }
 }

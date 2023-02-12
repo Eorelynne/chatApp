@@ -24,11 +24,11 @@ function Message(props) {
             sm={4} */
           className={
             l.loggedIn.id === message.senderUserId
-              ? "sent-message message pt-1 mt-2 col-md-6 col-sm-6 col-6 ms-auto scroll-container message-container"
-              : "recieved-message message pt-1 mt-2 col-md-6 col-sm-6 col-6 me-auto scroll-container message-container"
+              ? "sent-message message pt-1 mt-3 col-5  col-sm-5 col-lg-5 ms-auto scroll-container message-container"
+              : "recieved-message message pt-1 mt-3 col-5 col-sm-5  col-lg-5 me-auto scroll-container message-container"
           }
         >
-          <Row className='pe-0 ps-0 align-items-end'>
+          <Row className='pe-0 ps-0'>
             <Col xs={{ span: 1, offset: 6 }}>
               {l.loggedIn.role && l.loggedIn.role === "admin" && (
                 <ToggleDropdown message={message} l={l} />
@@ -37,22 +37,24 @@ function Message(props) {
           </Row>
           <Row>
             <Col>
-              <p>{new Date(message.time).toLocaleString()}</p>
+              <p className='custom-text mb-1'>
+                {new Date(message.time).toLocaleString()}
+              </p>
             </Col>
           </Row>
-          <Row className='pe-0 ps-0'>
+          <Row className='pe-1 ps-1 pt-0'>
             <Col>
-              <p>{message.content}</p>
+              <p className='custom-text'>{message.content}</p>
             </Col>
           </Row>
           <Row className='pe-0 ps-0'>
             <Col>
               {message.senderUserRole === "admin" && (
-                <p className='mb-0' style={{ color: "red" }}>
+                <p className=' pb-0 mb-0 custom-text' style={{ color: "red" }}>
                   Admin
                 </p>
               )}
-              <p className='mt-0'>{message.userName}</p>
+              <p className='mt-0 pt-0 custom-text'>{message.userName}</p>
             </Col>
           </Row>
         </Col>

@@ -1,14 +1,97 @@
 @import url("https://fonts.googleapis.com/css2?family=Kaushan+Script&family=Poppins:ital,wght@0,400;0,700;1,400;1,700&display=swap");
 
-.body {
+.app {
   font-family: "Poppins", sans-serif;
+  font-size: 12;
 }
 
-@media screen and (max-width: 600px) {
-  .body {
+/* @media screen and (max-width: 576px) { */
+/*  .body {
     font-size: 10px;
+  } */
+.custom-headline {
+  font-weight: bold;
+  font-size: 16px !important;
+  color: red;
+}
+.custom-label {
+  /*  font-weight: bold; */
+  font-size: 10px !important;
+}
+.custom-text {
+  font-size: 8px !important;
+}
+/* } */
+
+@media screen and (min-width: 576px /*  max-width: 768px */) {
+  /*  .body {
+    font-size: 10px;
+  } */
+  .custom-headline {
+    font-weight: bold;
+    font-size: 18px !important;
+    color: green;
   }
   .custom-label {
+    /*  font-weight: bold; */
+    font-size: 16px !important;
+  }
+  .custom-text {
+    font-size: 12px !important;
+  }
+  .search-icon,
+  .filter-icon {
+    size: 2;
+  }
+}
+
+@media screen and (min-width: 768px/* max-width: 992px */) {
+  /*  .body {
+    font-size: 10px;
+  } */
+  .custom-headline {
+    font-weight: bold;
+    font-size: 22px !important;
+    color: blue;
+  }
+  .custom-label {
+    /*  font-weight: bold; */
+    font-size: 20px !important;
+  }
+  .custom-text {
+    font-size: 16px !important;
+  }
+}
+
+@media screen and (min-width: 992px/* max-width: 1200px */) {
+  /*  .body {
+    font-size: 10px;
+  } */
+  .custom-headline {
+    font-weight: bold;
+    font-size: 24px !important;
+    color: yellow;
+  }
+  .custom-label {
+    /*  font-weight: bold; */
+    font-size: 18px !important;
+  }
+  .custom-text {
+    font-size: 16px !important;
+  }
+}
+
+@media screen and (min-width: 1200px/* max-width: 1200px */) {
+  /*  .body {
+    font-size: 10px;
+  } */
+  .custom-headline {
+    font-weight: bold;
+    font-size: 22px !important;
+    color: yellow;
+  }
+  .custom-label {
+    /* font-weight: bold; */
     font-size: 16px !important;
   }
   .custom-text {
@@ -16,15 +99,25 @@
   }
 }
 
+/* .custom-headline {
+  font-weight: bold;
+  font-size: 16px;
+}
+
 .custom-label {
   font-weight: bold;
-  font-size: 25px;
+  font-size: 12px;
 }
 
 .custom-text {
-  font-size: 20px;
-}
+  font-size: 8px;
+} */
 
 .pageNotFoundText {
   text-align: center;
+}
+
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px grey;
+  border-radius: 10px;
 }

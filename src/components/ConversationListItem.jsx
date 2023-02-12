@@ -18,7 +18,7 @@ function ConversationListItem(props) {
     <>
       <li>
         <Button
-          className='conversationItem custom-text'
+          className='conversationItem custom-text text-align-left'
           onClick={navigateToConversationPit}
         >
           {conversation.name}

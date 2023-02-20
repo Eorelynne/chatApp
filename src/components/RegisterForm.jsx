@@ -73,6 +73,7 @@ function RegisterForm() {
         body: JSON.stringify(userToSave)
       })
     ).json();
+    console.log(result);
     if (result.error === "Wrong email format") {
       setModalMessage(result.error);
       setShowModal(true);
@@ -83,7 +84,7 @@ function RegisterForm() {
       setModalMessage("You are now registered");
       setShowModal(true);
       setTimeout(goToLogin, 3000);
-    } else if (result.error.startsWith("Error: Duplicate entry")) {
+    } else if (result.error.startsWith("Record already exist in database")) {
       setModalMessage("Username or email already exist");
       setShowModal(true);
       return;

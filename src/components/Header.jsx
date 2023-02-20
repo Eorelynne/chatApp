@@ -18,14 +18,20 @@ function Header() {
   const navigate = useNavigate();
   let l = useStates("appState");
 
-  /* useEffect(() => {
-    (async () => {
-      let data = await (await fetch("/api/login")).json();
-      if (!data.error) {
-        l = data;
-        console.log("i header", l.id);
-      }
-    })();
+  /*  useEffect(() => {
+    if (l.loggedIn.id === 0 || !l.loggedIn.id) {
+      (async () => {
+        let data = await (await fetch("/api/login")).json();
+        if (!data.error) {
+          l.loggedIn.id = data.id;
+          l.loggedIn.firstName = data.firstName;
+          l.loggedIn.lastName = data.lastName;
+          l.loggedIn.userName = data.userName;
+          l.loggedIn.email = data.email;
+          l.loggedIn.role = data.role;
+        }
+      })();
+    }
   }, []); */
 
   async function logout() {

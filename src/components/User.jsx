@@ -41,17 +41,36 @@ function User(props) {
             })
           })
         ).json();
-      }
-      if (!result.error) {
-        setModalMessage(
-          userItem.userName + " is invited to " + conversation.name
-        );
-        setShowModal(false);
+        if (!result.error) {
+          setModalMessage(
+            userItem.userName + " is invited to " + conversation.name
+          );
+          setShowModal(false);
+          setShowSuccessModal(true);
+          setIsInvitationSent(true);
+        } else if (result.error === "User is already in conversation") {
+          setModalMessage(
+            userItem.userName + " is already in this conversation"
+          );
+          setShowSuccessModal(true);
+        } else if (
+          result.error === "User has a pending invite to conversation"
+        ) {
+          setModalMessage(
+            userItem.userName +
+              " already has a pending invite to this conversation"
+          );
+          setShowSuccessModal(true);
+        } else {
+          setModalMessage("Something went wrong");
+          setShowSuccessModal(true);
+        }
+      } else {
+        setModalMessage("You are not the creator of this conversation.");
         setShowSuccessModal(true);
-        setIsInvitationSent(true);
       }
     } else {
-      setModalMessage(result.error);
+      setModalMessage("Something went wrong");
       setShowSuccessModal(true);
     }
   }
@@ -59,6 +78,16 @@ function User(props) {
   function showConversationList() {
     setShowModal(true);
   }
+  /* 
+  function padUserName(userName) {
+    let length = userName.length;
+    console.log("length", length);
+    let padNumber = 25 - length;
+    let paddedUserName = userName.padEnd(25);
+    console.log(paddedUserName);
+    console.log(paddedUserName.length);
+    return paddedUserName;
+  } */
 
   return (
     <>

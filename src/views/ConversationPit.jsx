@@ -128,15 +128,14 @@ function ConversationPit() {
     setShowInputModal(false);
   }
 
-  async function banFromChat(usersConversationsId, userRole, userId) {
+  async function banFromChat(activeUser) {
     if (
-      (l.loggedIn.role === "admin" && userRole !== "admin") ||
+      (l.loggedIn.role === "admin" && activeUser.role !== "admin") ||
       (+l.loggedIn.id === +state.conversation.creatorId &&
-        +state.conversation.creatorId !== +userId &&
-        userRole !== "admin")
+        activeUser.role !== "admin")
     ) {
-      await (
-        await fetch(`/api/ban-from-chat/${usersConversationsId}`, {
+      let result = await (
+        await fetch(`/api/ban-from-chat/${activeUser.usersConversationsId}`, {
           method: "put",
           headers: {
             "Content-Type": "application/json"
@@ -144,13 +143,25 @@ function ConversationPit() {
           body: JSON.stringify({
             creatorId: state.conversation.creatorId,
             banReason: banInput,
-            bannedUserRole: userRole
+            bannedUserRole: activeUser.role,
+            conversationId: activeUser.conversationId
           })
         })
-      ).json;
+      ).json();
+      console.log(result);
       setShowInputModal(false);
       setBanInput("");
-    } else if (userRole === "admin") {
+      if (!result.error) {
+        setModalMessage(activeUser.userName + " is banned from chat");
+        setShowMessageModal(true);
+      } else if (result.error === "You can't ban yourself") {
+        setModalMessage(result.error);
+        setShowMessageModal(true);
+      } else {
+        setModalMessage("Something went wrong");
+        setShowMessageModal(true);
+      }
+    } else if (activeUser.role === "admin") {
       setModalMessage("You can't ban admin");
       setShowMessageModal(true);
     } else {
@@ -260,11 +271,7 @@ function ConversationPit() {
                 />
                 <Button
                   onClick={() => {
-                    banFromChat(
-                      activeUser.usersConversationsId,
-                      activeUser.role,
-                      activeUser.userId
-                    );
+                    banFromChat(activeUser);
                   }}
                 >
                   Register ban

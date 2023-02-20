@@ -115,11 +115,13 @@ function MyPage() {
             />
           </Col>
         </Row>
-        <Row
-          /* gap={1} */ className='conversationUserListRow me-1 ms-1 mb-3 pt-2 d-flex justify-content-between'
-        >
-          <Col className='listContainer col-lg-4 col-sm-5 col-12 mb-3'>
-            <UserList userList={userList} />
+        <Row className='conversationUserListRow me-1 ms-1 mb-3 pt-2 d-flex justify-content-between'>
+          <Col className='listContainer col-lg-4 col-sm-5 col-12 pb-2 mb-3'>
+            <UserList
+              userList={userList}
+              isNewConversation={isNewConversation}
+              setIsNewConversation={setIsNewConversation}
+            />
           </Col>
           <Col className='listContainer col-lg-4 col-sm-5 col-12 mb-3'>
             {/*  {!!conversationList && conversationList.length === 0 && (

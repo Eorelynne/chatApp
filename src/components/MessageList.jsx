@@ -6,7 +6,13 @@ import useStates from "../utilities/useStates.js";
 import "../../public/css/conversationPage.css";
 
 function MessageList(props) {
-  const { messageList, setMessageList, state } = props;
+  const {
+    messageList,
+    setMessageList,
+    messageDeleted,
+    setMessageDeleted,
+    state
+  } = props;
   let l = useStates("appState");
 
   function sortOnTime(a, b) {
@@ -43,7 +49,14 @@ function MessageList(props) {
         {messageList.length !== 0 &&
           messageList
             .sort(sortOnTime)
-            .map((message, index) => <Message key={index} message={message} />)}
+            .map((message, index) => (
+              <Message
+                key={index}
+                message={message}
+                messageDeleted={messageDeleted}
+                setMessageDeleted={setMessageDeleted}
+              />
+            ))}
       </Col>
       {messageList.length === 0 && (
         <Col>

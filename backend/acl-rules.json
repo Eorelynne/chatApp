@@ -34,6 +34,9 @@
     "conversations-invite": {
       "put": true
     },
+    "conversations-create": {
+      "post": true
+    },
     "conversations-by-user": {
       "get": true
     },

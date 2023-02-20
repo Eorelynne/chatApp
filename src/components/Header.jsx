@@ -38,8 +38,11 @@ function Header() {
   }
   if (l.loggedIn?.id !== 0)
     return (
-      <Navbar style={{ background: "#062E53" }} className='navbar'>
-        <Container fluid className='row d-flex justify-content-between'>
+      <Navbar
+        style={{ background: "#062E53" }}
+        className='navbar d-flex justify-content-around mb-3'
+      >
+        <Container fluid className='row'>
           <UsernameDisplay />
           <LogoContainer />
           <LoggedInDropdown />
@@ -49,7 +52,7 @@ function Header() {
   else if (!l.loggedIn.id || l.loggedIn.id === 0)
     return (
       <Navbar style={{ background: "#062E53" }} className='navbar'>
-        <Container /* fluid */ className='row'>
+        <Container fluid className='row d-flex justify-content-between mb-3'>
           <Col xs={2} style={{ color: "#e47521" }} className='pt-4' />
           <LogoContainer />
           <LoggedOutDropdown />
@@ -73,20 +76,16 @@ function Header() {
 
   function UsernameDisplay() {
     return (
-      <Col
-        xs={{ span: 2, offset: 1 }}
-        style={{ color: "#e47521" }}
-        className='pt-4'
-      >
-        <NavItem>{l.loggedIn.userName}</NavItem>
+      <Col xs={2} style={{ color: "#e47521" }} className='pt-4'>
+        <NavItem className='custom-label'>{l.loggedIn.userName}</NavItem>
       </Col>
     );
   }
 
   function LoggedInDropdown() {
     return (
-      <Col xs={2} className='dropdown-custom justify-content-end '>
-        <Nav className='me-auto'>
+      <Col xs={2} className='dropdown-custom '>
+        <Nav className='me-auto d-flex justify-content-end '>
           <Dropdown id='dropdown-custom-btn' drop='start'>
             <Dropdown.Toggle className='btn-custom' id='dropdown-basic'>
               <h1 className='header-btn-txt'> ...</h1>
@@ -112,7 +111,7 @@ function Header() {
   function LoggedOutDropdown() {
     return (
       <Col xs={2} className='dropdown-custom justify-content-end'>
-        <Nav className='me-auto'>
+        <Nav className='me-auto d-flex justify-content-end '>
           <Dropdown id='dropdown-custom-btn' drop='start'>
             <Dropdown.Toggle className='btn-custom' id='dropdown-basic'>
               <h1 className='header-btn-txt'>...</h1>
@@ -132,7 +131,7 @@ function Header() {
   }
   function LogoContainer() {
     return (
-      <Col xs={6} className='logo-container'>
+      <Col xs={7} className='logo-container'>
         <Container className='row'>
           <Navbar.Brand className='logo'>
             <Nav.Link as={Link} to='/'>
@@ -144,10 +143,8 @@ function Header() {
             </Nav.Link>
           </Navbar.Brand>
         </Container>
-        <Container className='row nameContainer justify-content-center'>
-          <Col>
-            <h5>Conversation Pits</h5>
-          </Col>
+        <Container className='row nameContainer d-flex justify-content-center'>
+          <Col className='custom-headline'>Conversation Pits</Col>
         </Container>
       </Col>
     );

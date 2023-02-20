@@ -18,29 +18,31 @@
 .messageListContainer {
   border: 2px solid rgb(6, 46, 83);
   border-radius: 5px;
+  text-align: center;
   /*  overflow-y: scroll; */
 }
 
 .sent-message {
   align-items: end;
-  background-color: rgb(6, 46, 83, 0.4);
+  background-color: rgb(6, 46, 83, 0.9);
+  color: white;
 }
 
 .recieved-message {
   align-items: start;
-  background-color: rgb(228, 117, 33, 0.4);
+  background-color: rgb(6, 46, 83, 0.3);
 }
+/* .admin-message {
+  background-color: rgb(228, 117, 33, 0.4) !important;
+} */
 
 .message {
   border: 2px solid rgb(6, 46, 83);
-  border-radius: 15px;
+  border-radius: 5px;
+  max-height: 15vh;
 }
 .message-list {
   height: 60vh;
-}
-
-.message-container {
-  max-height: 20vh;
 }
 
 .bannedItem {
@@ -53,6 +55,11 @@
 }
 
 .scroll-container {
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.message-scroll-container {
   overflow-y: auto;
   overflow-x: hidden;
 }
@@ -85,9 +92,29 @@
 #dropdown-basic-message::after {
   display: none;
 }
+
+/* width */
+.message-scroll-container::-webkit-scrollbar {
+  width: 5px;
+}
+
+/* Track */
+.message-scroll-container::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px rgb(6, 46, 83, 0);
+  border-radius: 50px;
+}
+
+/* Handle */
+.message-scroll-container::-webkit-scrollbar-thumb {
+  background: white;
+  border-radius: 50px;
+  border: 5px, solid, transparent;
+  background-clip: content-box;
+}
+
 /* width */
 ::-webkit-scrollbar {
-  width: 10px;
+  width: 5px;
 }
 
 /* Track */
@@ -98,8 +125,10 @@
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: rgb(6, 46, 83, 0.5);
+  background: grey;
   border-radius: 50px;
+  border: 5px, solid, transparent;
+  background-clip: content-box;
 }
 /* 
 @media screen and (min-width: 576px) {

@@ -51,8 +51,8 @@ function InvitedToList(props) {
         </Container>
       )}
       {invitationList.length === 0 && (
-        <Col className='custom-text'>
-          <p>No pending invitations</p>
+        <Col className='custom-label text-center mb-3'>
+          No pending invitations
         </Col>
       )}
     </Container>

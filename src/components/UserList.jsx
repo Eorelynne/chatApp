@@ -8,7 +8,7 @@ import { Search } from "react-bootstrap-icons";
 import "../../public/css/myPage.css";
 
 function UserList(props) {
-  const { userList } = props;
+  const { userList, isNewConversation, setIsNewConversation } = props;
   const [loggedInConversationList, setLoggedInConversationList] = useState([]);
   const [isInvitationSent, setIsInvitationSent] = useState(false);
   let l = useStates("appState");
@@ -37,7 +37,7 @@ function UserList(props) {
         }
       })();
     }
-  }, [isInvitationSent]);
+  }, [isInvitationSent, isNewConversation]);
 
   function sortOnUserName(a, b) {
     const userNameA = a.userName.toLowerCase();
@@ -77,7 +77,7 @@ function UserList(props) {
         </Row>
       </Container>
       <Container className='user-list scroll-container pt-1'>
-        <ul className='ps-4'>
+        <ul className='ms-2 ps-4'>
           {userList
             .filter(
               userItem =>

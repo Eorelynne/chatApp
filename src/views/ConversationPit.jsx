@@ -32,6 +32,7 @@ function ConversationPit() {
   const [showInputModal, setShowInputModal] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
   const [activeUser, setActiveUser] = useState({});
+  const [messageDeleted, setMessageDeleted] = useState(false);
   const navigate = useNavigate();
 
   //console.log(state);
@@ -71,7 +72,7 @@ function ConversationPit() {
     } else {
       setMessageList([]);
     }
-  }, []);
+  }, [messageDeleted]);
 
   useEffect(() => {
     if (state.conversation.conversationId) {
@@ -165,57 +166,67 @@ function ConversationPit() {
     <>
       <Header />
       <Container>
-        <Col className='conversationPitHeadline pt-2'>
-          {state.conversation && (
-            <h5 className='custom-headline'>{state.conversation.name}</h5>
-          )}
-        </Col>
         <Row>
-          <Col className='custom-label'>Members</Col>
-          <Dropdown>
-            {userList.length !== 0 &&
-              userList.map((user, index) => (
-                <Dropdown.Item key={index}>
-                  <Dropdown size='sm' sm={3} as={ButtonGroup}>
-                    <Button className='userNameDropdown-btn'>
-                      {user.userName}
-                    </Button>
-                    <Dropdown.Toggle className='userNameDropdown-toggle custom-toggle'></Dropdown.Toggle>
-                    <Dropdown.Menu>
-                      <Dropdown.Item
-                        onClick={() => {
-                          setActiveUser(user);
-                          setShowInputModal(true);
-                        }}
-                      >
-                        Ban from chat
-                      </Dropdown.Item>
-                    </Dropdown.Menu>
-                  </Dropdown>
-                </Dropdown.Item>
-              ))}
-          </Dropdown>
+          <Col className='conversationPitHeadline mb-3 pt-2 col-12'>
+            {state.conversation && (
+              <h5 className='custom-headline'>{state.conversation.name}</h5>
+            )}
+          </Col>
         </Row>
-        <Col className='messageFormContainer mt-4 col-lg-12 col-sm-12 col-12 d-flex justify-content-center'>
-          <Row>
-            <Col>
-              <h3> {state.name}</h3>
-            </Col>
-          </Row>
-          <Row>
-            <Col className='messageListContainer mb-5 pt-2 pb-2 col-12'>
+        <Row className='ms-1 me-1'>
+          <Col className='col-lg-2 col-12 me-1 mb-2'>
+            <h5 className='custom-label'>Members</h5>
+            <Dropdown>
+              {userList.length !== 0 &&
+                userList.map((user, index) => (
+                  <Dropdown.Item key={index}>
+                    <Dropdown size='sm' sm={3} as={ButtonGroup}>
+                      <Button className='userNameDropdown-btn custom-text'>
+                        {user.userName}
+                      </Button>
+                      <Dropdown.Toggle className='userNameDropdown-toggle custom-toggle'></Dropdown.Toggle>
+                      <Dropdown.Menu>
+                        <Dropdown.Item
+                          onClick={() => {
+                            setActiveUser(user);
+                            setShowInputModal(true);
+                          }}
+                        >
+                          Ban from chat
+                        </Dropdown.Item>
+                      </Dropdown.Menu>
+                    </Dropdown>
+                  </Dropdown.Item>
+                ))}
+            </Dropdown>
+          </Col>
+          {/* <Col className='messageFormContainer mt-4 col-lg-12 col-sm-12 col-12 d-flex justify-content-center'> */}
+          {/*  <Col className='messageFormContainer mt-4 col-12 col-lg-10   d-flex justify-content-center'>
+            <h3> {state.name}</h3>
+          </Col> */}
+          <Col
+            xs={12}
+            lg={8}
+            className='messageListContainer mb-5 pt-2 pb-2 ps-0 pe-0 '
+          >
+            <Col className='pt-2'>
               <DisplayConnected
                 connectionMessage={connectionMessage}
                 setConnectionMessage={setConnectionMessage}
               />
+            </Col>
+            <Col>
               <MessageList
                 messageList={messageList}
                 setMessageList={setMessageList}
+                messageDeleted={messageDeleted}
+                setMessageDeleted={setMessageDeleted}
                 state={state}
               />
             </Col>
-          </Row>
-        </Col>
+          </Col>
+        </Row>
+        {/* </Col> */}
         <Row className='d-flex justify-content-center'>
           <Col className='col-xs-12 col-sm-12 col-md-10 col-lg-10'>
             <MessageForm state={state} />

@@ -87,6 +87,7 @@ function User(props) {
               loggedInConversationList.length !== 0 &&
               loggedInConversationList.map((conversation, index) => (
                 <li
+                  className='user-list-item'
                   key={index}
                   onClick={() => {
                     inviteUser(conversation);

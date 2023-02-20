@@ -79,7 +79,9 @@ function MyConversationPits(props) {
       </Container>
       <Container className='scroll-container conversation-list pt-1'>
         {!!conversationList && conversationList.length === 0 && (
-          <p className='mt-3'>No active conversations</p>
+          <p className='custom-label text-center mt-3'>
+            No active conversations
+          </p>
         )}
         <ul className='ps-3'>
           {conversationList &&
@@ -91,6 +93,7 @@ function MyConversationPits(props) {
               ))}
         </ul>
       </Container>
+      <hr />
       <Container className='scroll-container banned-list'>
         {bannedFromList && bannedFromList.length !== 0 && (
           <BannedFromListItems bannedFromList={bannedFromList} />
@@ -131,7 +134,6 @@ function BannedFromListItems(props) {
 
   return (
     <Col>
-      <hr />
       <h5 className='custom-label'>Banned from</h5>
       <ul>
         {bannedFromList.map((conversation, index) => (

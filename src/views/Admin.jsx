@@ -55,11 +55,19 @@ function Admin() {
     <>
       <Header />
       <Container>
-        <Row gap={2} className='conversationUserListRow mb-3 pt-2'>
-          <Col className='listContainer col-lg-4 col-sm-6'>
+        <Row className='conversationUserListRow mb-3 pt-2 d-flex justify-content-between'>
+          <Col
+            xs={{ span: 10, offset: 1 }}
+            sm={5}
+            className='listContainer mb-3 '
+          >
             <UserList userList={userList} />
           </Col>
-          <Col className='listContainer col-lg-4 col-sm-6'>
+          <Col
+            xs={{ span: 10, offset: 1 }}
+            sm={5}
+            className='listContainer mb-3 col-lg-5 col-sm-5'
+          >
             {!!conversationList && conversationList.length === 0 && (
               <p className='mt-3'>No active conversations</p>
             )}

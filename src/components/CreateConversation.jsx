@@ -29,7 +29,7 @@ function CreateConversation(props) {
     }
 
     let result = await (
-      await fetch(`/api/conversations/`, {
+      await fetch(`/api/conversations-create/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -37,7 +37,7 @@ function CreateConversation(props) {
         body: JSON.stringify({ name: conversationName })
       })
     ).json();
-    let conversationId = result.insertId;
+    /*  let conversationId = result.insertId;
     await (
       await fetch(`/api/conversations-join/${conversationId}`, {
         method: "POST",
@@ -46,7 +46,7 @@ function CreateConversation(props) {
         },
         body: JSON.stringify({ creatorId: l.loggedIn.id })
       })
-    ).json();
+    ).json(); */
     setModalMessage("Conversation created");
     setShowModal(true);
     setIsNewConversation(true);

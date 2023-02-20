@@ -25,7 +25,7 @@ function DeclineBtn(props) {
 
   return (
     <>
-      <Button onClick={declineConversation} className='decline-btn' size='sm'>
+      <Button onClick={declineConversation} className='decline-btn' size='lg'>
         Decline
       </Button>
     </>

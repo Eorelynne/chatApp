@@ -45,16 +45,16 @@ function MyConversationPits(props) {
   }
 
   function sortOnUsersLatestMessage(a, b) {
-    const usersLastMessageTimeA = a.usersLastMessageTime;
-    const usersLastMessageTimeB = b.usersLastMessageTime;
+    const latestUserMessageA = a.latestUserMessage;
+    const latestUserMessageB = b.latestUserMessage;
     if (
-      usersLastMessageTimeA > usersLastMessageTimeB ||
-      usersLastMessageTimeB === null
+      latestUserMessageA > latestUserMessageB ||
+      latestUserMessageB === null
     ) {
       return -1;
     } else if (
-      usersLastMessageTimeA < usersLastMessageTimeB ||
-      usersLastMessageTimeA === null
+      latestUserMessageA < latestUserMessageB ||
+      latestUserMessageA === null
     ) {
       return 1;
     }

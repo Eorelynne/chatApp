@@ -16,9 +16,6 @@
     "conversations": {
       "post": true
     },
-    "edit-my-user-info": {
-      "put": true
-    },
     "users": {
       "post": true
     },
@@ -100,9 +97,6 @@
     "conversations-create": {
       "post": true
     },
-    "users-by-username": {
-      "get": true
-    },
     "invitations-user": {
       "get": true
     },
@@ -135,13 +129,7 @@
     "ban-from-chat": {
       "put": true
     },
-    "conversations-admin": {
-      "get": true
-    },
     "conversations-banned": {
-      "get": true
-    },
-    "users-conversations-admin": {
       "get": true
     },
     "sse": {

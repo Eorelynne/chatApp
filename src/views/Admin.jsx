@@ -41,7 +41,7 @@ function Admin() {
   useEffect(() => {
     if (l.loggedIn.id && l.loggedIn.id !== 0) {
       (async () => {
-        let data = await (await fetch(`/api/conversations-admin`)).json();
+        let data = await (await fetch(`/api/conversations`)).json();
         if (!data.error) {
           setConversationList(data);
         }
@@ -50,7 +50,6 @@ function Admin() {
     /* setListIsSet(true) */
   }, []);
 
-  console.log(conversationList);
   return (
     <>
       <Header />

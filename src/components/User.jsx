@@ -78,21 +78,12 @@ function User(props) {
   function showConversationList() {
     setShowModal(true);
   }
-  /* 
-  function padUserName(userName) {
-    let length = userName.length;
-    console.log("length", length);
-    let padNumber = 25 - length;
-    let paddedUserName = userName.padEnd(25);
-    console.log(paddedUserName);
-    console.log(paddedUserName.length);
-    return paddedUserName;
-  } */
 
   return (
     <>
       <li>
         <Dropdown as={ButtonGroup}>
+          <Dropdown.Toggle className='userNameDropdown-toggle'></Dropdown.Toggle>
           <Button
             className={
               userItem.role === "admin"
@@ -102,7 +93,6 @@ function User(props) {
           >
             {userItem.userName}
           </Button>
-          <Dropdown.Toggle className='userNameDropdown-toggle'></Dropdown.Toggle>
           <Dropdown.Menu>
             <Dropdown.Item onClick={showConversationList}>Invite</Dropdown.Item>
           </Dropdown.Menu>

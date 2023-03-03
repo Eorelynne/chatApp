@@ -62,9 +62,6 @@ function CreateConversation(props) {
         <Col className='col-lg-10 col-sm-10'>
           <Form onSubmit={submitForm} className='pt-1 pb-2  ms-2 me-2'>
             <Form.Group className='mb-1' controlId='formBasicConversationName'>
-              {/*  <Form.Label className='custom-label'>
-                Name your conversation
-              </Form.Label> */}
               <Form.Control
                 type='text'
                 size='sm'

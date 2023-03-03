@@ -3,11 +3,6 @@
   justify-content: center !important;
 }
 
-.logo-img {
-  width: 7vw;
-  height: 7vw;
-}
-
 /* .hamburger-img {
   width: 4vw;
   height: 8vh;
@@ -48,19 +43,7 @@
   font-size: 48px;
   background-color: #062e53 !important;
 }
-/* 
-@media screen and (min-width: 600px) {
-  .logo {
-    display: flex;
-    justify-content: end !important;
-  }
-  .logo-img {
-    width: 40vw;
-    height: 40vh;
-  }
-  /*   .hamburger-img {
-    width: 8vw;
-    height: 6vh;
-  } 
+
+.user-name-display {
+  overflow-wrap: break-word;
 }
- */

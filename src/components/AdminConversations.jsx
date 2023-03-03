@@ -29,8 +29,8 @@ function AdminConversations(props) {
           </Col>
         </Row>
       </Container>
-      <Container className='scroll-container conversation-list pt-1'>
-        <ul>
+      <Container className='scroll-container admin-conversation-list pt-1'>
+        <ul className='pb-1'>
           {conversationList &&
             conversationList.length !== 0 &&
             conversationList

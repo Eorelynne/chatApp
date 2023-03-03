@@ -49,6 +49,21 @@ function RegisterForm() {
       setShowModal(true);
       return;
     }
+    if (l.loggedIn.firstName.length > 45) {
+      setModalMessage("First name too long. Max 45 characters");
+      setShowModal(true);
+      return;
+    }
+    if (l.loggedIn.lastName.length > 45) {
+      setModalMessage("Last name too long. Max 45 characters");
+      setShowModal(true);
+      return;
+    }
+    if (l.loggedIn.userName.length > 25) {
+      setModalMessage("Username too long. Max 25 characters");
+      setShowModal(true);
+      return;
+    }
 
     let isPasswordApproved = checkPassword(password);
     let isEmailApproved = checkEmail(l.loggedIn.email);
@@ -73,13 +88,11 @@ function RegisterForm() {
         body: JSON.stringify(userToSave)
       })
     ).json();
-    console.log(result);
     if (result.error === "Wrong email format") {
       setModalMessage(result.error);
       setShowModal(true);
       return;
     } else if (!result.error) {
-      console.log("Registered");
       resetForm();
       setModalMessage("You are now registered");
       setShowModal(true);

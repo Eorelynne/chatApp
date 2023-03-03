@@ -36,7 +36,6 @@ function Header() {
 
   async function logout() {
     let result = await (await fetch("/api/login", { method: "DELETE" })).json();
-    console.log(result);
     for (let key in l.loggedIn) {
       delete l.loggedIn[key];
     }
@@ -46,7 +45,7 @@ function Header() {
     return (
       <Navbar
         style={{ background: "#062E53" }}
-        className='navbar d-flex justify-content-around mb-3'
+        className='navbar d-flex justify-content-evenly mb-2 pe-0'
       >
         <Container fluid className='row'>
           <UsernameDisplay />
@@ -58,7 +57,10 @@ function Header() {
   else if (!l.loggedIn.id || l.loggedIn.id === 0)
     return (
       <Navbar style={{ background: "#062E53" }} className='navbar'>
-        <Container fluid className='row d-flex justify-content-between mb-3'>
+        <Container
+          fluid
+          className='row d-flex justify-content-evenly mb-2 pe-0'
+        >
           <Col xs={2} style={{ color: "#e47521" }} className='pt-4' />
           <LogoContainer />
           <LoggedOutDropdown />
@@ -82,7 +84,11 @@ function Header() {
 
   function UsernameDisplay() {
     return (
-      <Col xs={2} style={{ color: "#e47521" }} className='pt-4'>
+      <Col
+        xs={2}
+        style={{ color: "#e47521" }}
+        className='pt-4 ps-0 pe-0 user-name-display'
+      >
         <NavItem className='custom-label'>{l.loggedIn.userName}</NavItem>
       </Col>
     );
@@ -137,8 +143,8 @@ function Header() {
   }
   function LogoContainer() {
     return (
-      <Col xs={7} className='logo-container'>
-        <Container className='row'>
+      <Row className='col-7 logo-container ps-0 pe-0'>
+        <Col className='col-12'>
           <Navbar.Brand className='logo'>
             <Nav.Link as={Link} to='/'>
               <img
@@ -148,11 +154,11 @@ function Header() {
               />
             </Nav.Link>
           </Navbar.Brand>
-        </Container>
-        <Container className='row nameContainer d-flex justify-content-center'>
-          <Col className='custom-headline'>Conversation Pits</Col>
-        </Container>
-      </Col>
+        </Col>
+        <Col className='col-12 custom-headline nameContainer text-center'>
+          Conversation Pits
+        </Col>
+      </Row>
     );
   }
 }

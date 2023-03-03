@@ -89,6 +89,13 @@
   padding-top: 0px;
 }
 
+.send-btn {
+  background-color: rgb(6, 46, 83) !important;
+  border-radius: 5px;
+  padding: 5px;
+  font-size: x-small;
+}
+
 #dropdown-basic-message::after {
   display: none;
 }

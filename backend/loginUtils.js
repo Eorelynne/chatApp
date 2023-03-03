@@ -9,7 +9,7 @@ const crypto = require("crypto");
 const salt = process.env.PASSWORDSALT;
 
 export function passwordVerifyer(password) {
-  //minst 8 tecken, minst en stor bokstav och en som inte är bokstav.
+  //At least 8 characters, at least one capital letter and one non-letter character.
   let regexp = "^(?=.*[A-Z])(?=.*[-+_!@#$%^&*.,?0-9])";
   let isPasswordApproved = false;
   if (password.length < 8 || !password?.match(regexp)) {

@@ -1,14 +1,12 @@
 import { createRequire } from "module";
-// Only necessary if you need  __filename or __dirname
+
 import { fileURLToPath } from "url";
 import { login } from "./login.js";
 import { restApi, sqlQuery } from "./restApi.js";
 
-// Note: import.meta.url is different for every file
 const { url } = import.meta;
-// Make the require function available
 const require = createRequire(url);
-// Set __filename and __dirname constants
+
 const __filename = fileURLToPath(url);
 const __dirname = fileURLToPath(new URL(".", url));
 
@@ -47,7 +45,6 @@ const db = await connect();
 
 app.use(express.json({ limit: "10KB" }));
 
-//Middleware for json-errorhandling.
 app.use((error, req, res, next) => {
   if (error) {
     res.status(400);
@@ -152,7 +149,6 @@ app.post("/api/messages", async (req, res) => {
 
   let content = req.body.content;
   let time = Date.now();
-  /* let usersConversationsId = req.body.usersConversationsId; */
   let conversationId = req.body.conversationId;
   let senderUserId = req.session.user.id;
   let userName = req.session.user.userName;
@@ -161,13 +157,11 @@ app.post("/api/messages", async (req, res) => {
   let message = {
     content,
     time,
-    /* usersConversationsId, */
     conversationId,
     senderUserId,
     userName,
     senderUserRole
   };
-  console.log("message", message);
   await broadcast("new-message", message);
   sql =
     "INSERT INTO messages (content, time, userId, conversationId) VALUES (?,?,?,?)";
@@ -178,7 +172,7 @@ app.post("/api/messages", async (req, res) => {
 
 restApi(db, app);
 
-//app.use(express.static(__dirname + '/dist')); kolla upp sökvägen.
+//app.use(express.static(__dirname + '/dist'));
 
 app.listen(port, () => {
   console.log("Server listening on port " + port);
@@ -186,6 +180,6 @@ app.listen(port, () => {
 
 app.all("*", (req, res) => {
   res.status(404).json({ error: "Endpoint not found" });
-  /*res.set("Content-Type", "text/html");
-  res.sendFile(path.join(__dirname, "../src/views", "NotFound.jsx"));*/
+  res.set("Content-Type", "text/html");
+  res.sendFile(path.join(__dirname, "../src/views", "NotFound.jsx"));
 });

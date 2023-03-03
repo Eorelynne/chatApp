@@ -35,9 +35,7 @@ function ConversationPit() {
   const [messageDeleted, setMessageDeleted] = useState(false);
   const navigate = useNavigate();
 
-  //console.log(state);
   let l = useStates("appState");
-  /* let m = useStates("newMessage"); */
 
   useEffect(() => {
     if (l.loggedIn.id === 0 || !l.loggedIn.id) {
@@ -107,17 +105,13 @@ function ConversationPit() {
     sse.addEventListener("connect", message => {
       let data = JSON.parse(message.data);
       setConnectionMessage(data.message);
-
-      console.log("[connect]", data);
     });
     sse.addEventListener("disconnect", message => {
       let data = JSON.parse(message.data);
       setConnectionMessage(data.message);
-      console.log("[disconnect]", data);
     });
     sse.addEventListener("new-message", message => {
       let data = JSON.parse(message.data);
-      console.log("[new-message]", data);
       l.loggedIn.message = data;
       setMessageList(messageList => [...messageList, l.loggedIn.message]);
     });
@@ -144,11 +138,11 @@ function ConversationPit() {
             creatorId: state.conversation.creatorId,
             banReason: banInput,
             bannedUserRole: activeUser.role,
-            conversationId: activeUser.conversationId
+            conversationId: activeUser.conversationId,
+            userId: activeUser.userId
           })
         })
       ).json();
-      console.log(result);
       setShowInputModal(false);
       setBanInput("");
       if (!result.error) {
@@ -185,17 +179,17 @@ function ConversationPit() {
           </Col>
         </Row>
         <Row className='ms-1 me-1'>
-          <Col className='col-lg-2 col-12 me-1 mb-2'>
+          <Col className='col-md-2 col-12 me-1 mb-2'>
             <h5 className='custom-label'>Members</h5>
-            <Dropdown>
+            <ul>
               {userList.length !== 0 &&
                 userList.map((user, index) => (
-                  <Dropdown.Item key={index}>
-                    <Dropdown size='sm' sm={3} as={ButtonGroup}>
+                  <li key={index}>
+                    <Dropdown size='sm' as={ButtonGroup}>
+                      <Dropdown.Toggle className='userNameDropdown-toggle custom-toggle'></Dropdown.Toggle>
                       <Button className='userNameDropdown-btn custom-text'>
                         {user.userName}
                       </Button>
-                      <Dropdown.Toggle className='userNameDropdown-toggle custom-toggle'></Dropdown.Toggle>
                       <Dropdown.Menu>
                         <Dropdown.Item
                           onClick={() => {
@@ -207,9 +201,9 @@ function ConversationPit() {
                         </Dropdown.Item>
                       </Dropdown.Menu>
                     </Dropdown>
-                  </Dropdown.Item>
+                  </li>
                 ))}
-            </Dropdown>
+            </ul>
           </Col>
           {/* <Col className='messageFormContainer mt-4 col-lg-12 col-sm-12 col-12 d-flex justify-content-center'> */}
           {/*  <Col className='messageFormContainer mt-4 col-12 col-lg-10   d-flex justify-content-center'>
@@ -217,7 +211,7 @@ function ConversationPit() {
           </Col> */}
           <Col
             xs={12}
-            lg={8}
+            md={8}
             className='messageListContainer mb-5 pt-2 pb-2 ps-0 pe-0 '
           >
             <Col className='pt-2'>
@@ -295,7 +289,7 @@ function DisplayConnected(props) {
   const { connectionMessage, setConnectionMessage } = props;
   return (
     <>
-      <p>{connectionMessage}</p>
+      <p className='custom-label text-center'>{connectionMessage}</p>
     </>
   );
 }

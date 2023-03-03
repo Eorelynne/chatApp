@@ -40,11 +40,13 @@ function MessageForm(props) {
                 placeholder=''
                 aria-label='message'
                 aria-describedby='button-message'
+                size='sm'
               />
               <Button
                 type='submit'
-                variant='outline-secondary'
+                className='send-btn'
                 id='button-message'
+                size='sm'
               >
                 Send
               </Button>

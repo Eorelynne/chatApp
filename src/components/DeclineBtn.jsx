@@ -7,7 +7,7 @@ function DeclineBtn(props) {
 
   async function declineConversation() {
     await updateInvitation();
-    setInvitationAnswer(true);
+    setInvitationAnswer(!invitationAnswer);
   }
 
   async function updateInvitation() {
@@ -25,7 +25,7 @@ function DeclineBtn(props) {
 
   return (
     <>
-      <Button onClick={declineConversation} className='decline-btn' size='lg'>
+      <Button onClick={declineConversation} className='decline-btn' size='sm'>
         Decline
       </Button>
     </>

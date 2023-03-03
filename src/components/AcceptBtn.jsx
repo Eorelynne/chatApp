@@ -21,11 +21,9 @@ function AcceptBtn(props) {
         body: JSON.stringify(conversationData)
       })
     ).json();
-    console.log("result", result);
     if (!result.error) {
       await updateInvitation();
-      setModalMessage("You joined the conversation");
-      setShowModal(true);
+      setInvitationAnswer(!invitationAnswer);
     } else if (result.error == "Record already exist in database") {
       setModalMessage(
         "You can't join a conversation you are already in or have been banned from. Please decline."
@@ -35,7 +33,6 @@ function AcceptBtn(props) {
       setModalMessage("Something went wrong");
       setShowModal(true);
     }
-    setInvitationAnswer(true);
   }
 
   async function updateInvitation() {

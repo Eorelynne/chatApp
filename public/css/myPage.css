@@ -9,27 +9,27 @@
   background-color: rgb(6, 46, 83) !important;
   border-radius: 5px;
   padding: 5px;
-  font-size: x-small;
+  font-size: 0.4rem !important;
 }
 .accept-btn:hover {
   background-color: rgba(6, 46, 83, 0.4) !important;
   border-radius: 5px;
   padding: 5px;
-  font-size: x-small;
+  font-size: 0.4rem !important;
 }
 
 .decline-btn {
   background-color: rgb(228, 117, 33) !important;
   border-radius: 5px;
   padding: 5px;
-  font-size: x-small;
+  font-size: 0.4rem !important;
 }
 
 .decline-btn:hover {
   background-color: rgba(228, 117, 33, 0.4) !important;
   border-radius: 5px;
   padding: 5px;
-  font-size: x-small;
+  font-size: 0.4rem !important;
 }
 
 .create-btn {
@@ -68,6 +68,10 @@
   height: 10vh;
 }
 
+.admin-conversation-list {
+  height: 20vh;
+}
+
 .banned-list {
   height: 10vh;
 }
@@ -101,10 +105,6 @@
 .custom-label,
 .invitation-item {
   text-align: left;
-}
-
-.li {
-  padding-left: 0;
 }
 
 .invitationsHeadline {

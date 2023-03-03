@@ -33,30 +33,7 @@ function App() {
     }
   });
 
-  /* let m = useStates("newMessage", {
-    content: "",
-    time: 0,
-    usersConversationsId: 0,
-    conversationId: 0,
-    senderUserId: 0,
-    userName: "",
-    senderUserRole: ""
-  }); */
-
   let a = useStates("activeUsers", []);
-  // temporary test from console
-  /*  window.sendMessage = async function (message) {
-    let result = await (
-      await fetch("/api/messages", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          content: message,
-          usersConversationsId: 2
-        })
-      })
-    ).json();
-  }; */
 
   return (
     <div className='app'>

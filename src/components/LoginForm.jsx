@@ -52,7 +52,6 @@ function loginForm(props) {
         (l.loggedIn.email = result.email),
         (l.loggedIn.role = result.role);
       resetForm();
-      console.log(l.loggedIn.role);
       if (l.loggedIn.role === "user") {
         navigate("/my-page");
       } else if (l.loggedIn.role === "admin") {
@@ -70,6 +69,7 @@ function loginForm(props) {
         <Form.Group className='mb-3' controlId='formBasicEmail'>
           <Form.Label>Email address</Form.Label>
           <Form.Control
+            size='sm'
             type='email'
             name='email'
             value={email}

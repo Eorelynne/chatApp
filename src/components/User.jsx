@@ -137,22 +137,3 @@ function User(props) {
 }
 
 export default User;
-/* 
-{loggedInConversationList.length !== 0 && (
-           
-              <Dropdown as={ButtonGroup} drop='end'>
-                <Button className='userNameDropdown-btn'>Invite</Button>
-                <Dropdown.Toggle className='userNameDropdown-toggle'></Dropdown.Toggle>
-                <Dropdown.Menu>
-                  {loggedInConversationList.map((conversation, index) => (
-                    <Dropdown.Item
-                      key={index}
-                      onClick={inviteUser(conversation)}
-                    >
-                      {conversation.name}
-                    </Dropdown.Item>
-                  ))} 
-                             </Dropdown.Menu>
-              </Dropdown>
-            
-          )}*/

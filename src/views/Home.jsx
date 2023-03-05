@@ -3,12 +3,10 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import useStates from "../utilities/useStates";
-
 import "../../public/css/home.css";
 
 function Home() {
   let l = useStates("appState");
-  const navigate = useNavigate();
 
   useEffect(() => {
     if (l.loggedIn.id === 0 || !l.loggedIn.id) {

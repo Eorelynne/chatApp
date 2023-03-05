@@ -1,5 +1,4 @@
 import React from "react";
-import { useState, useEffect } from "react";
 import { Routes, Route, BrowserRouter } from "react-router-dom";
 import useStates from "../src/utilities/useStates.js";
 import "bootstrap/dist/css/bootstrap.min.css";

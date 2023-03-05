@@ -1,3 +1,5 @@
+//Monkey patching fetch, borrowed from Thomas Frank
+
 let oldFetch = fetch;
 fetch = async function (...args) {
   let rawResult = await oldFetch(...args);

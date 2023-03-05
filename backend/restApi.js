@@ -1,7 +1,6 @@
 import { passwordEncryptor, emailValidator } from "./loginUtils.js";
 import { checkPassword } from "../src/utilities/inputCheck.js";
 import { acl } from "./acl.js";
-import { broadcast } from "./index.js";
 
 let promisePool;
 
@@ -9,14 +8,13 @@ export async function restApi(connection, app) {
   promisePool = connection;
 
   //USERS
-  //Can not reach if not admin
   app.get("/api/users", async (req, res) => {
     const sql =
       "SELECT id, firstName, lastName, userName, email, role FROM users";
     let result = await sqlQuery("users", req, res, sql, false);
     res.json(result);
   });
-  //Can not reach if not admin
+
   app.get("/api/users/:id", async (req, res) => {
     if (!req.params.id) {
       res.status(400).json({ error: "Bad request, id missing" });
@@ -29,7 +27,6 @@ export async function restApi(connection, app) {
     res.json(result);
   });
 
-  //USING
   app.post("/api/users", async (req, res) => {
     if (
       !req.body.firstName ||
@@ -68,7 +65,6 @@ export async function restApi(connection, app) {
     res.json(result);
   });
 
-  //Not reach if not admin
   app.put("/api/users/:id", async (req, res) => {
     if (!req.params.id) {
       res.status(400).json({ error: "Bad request, id missing" });
@@ -83,7 +79,7 @@ export async function restApi(connection, app) {
     let result = await sqlQuery("users", req, res, sql, true, parameters);
     res.json(result);
   });
-  //Can not reach if not admin
+
   app.delete("/api/users/:id", async (req, res) => {
     if (!req.params.id) {
       res.status(400).json({ error: "Bad request, id missing" });
@@ -95,8 +91,6 @@ export async function restApi(connection, app) {
     res.json(result);
   });
 
-  //USING
-  //secure
   app.get("/api/user-get-users", async (req, res) => {
     if (!req.session.user?.role) {
       res.json({ error: "Not allowed" });
@@ -115,8 +109,7 @@ export async function restApi(connection, app) {
     res.json(result);
   });
 
-  //Conversations
-  //Get all conversations cannot get if not admin
+  //CONVERSATIONS
   app.get("/api/conversations", async (req, res) => {
     const sql =
       "SELECT conversations.id AS conversationId, name, creatorId FROM conversations";
@@ -124,7 +117,6 @@ export async function restApi(connection, app) {
     res.json(result);
   });
 
-  //Get one conversation by id cannot get if not admin
   app.get("/api/conversations/:id", async (req, res) => {
     if (!req.params.id) {
       res.status(400).json({ error: "Bad request, conversationId missing" });
@@ -166,7 +158,7 @@ export async function restApi(connection, app) {
     res.json(result);
   });
 
-  //Create a conversation
+  //Create a conversation and creator joins at creation
   app.post("/api/conversations-create", async (req, res) => {
     if (!req.body.name || req.body.name === "") {
       res.status(400).json({ error: "Bad request, conversation name missing" });
@@ -209,8 +201,6 @@ export async function restApi(connection, app) {
     res.json(result);
   });
 
-  //update a conversation
-  //only admin can reach
   app.put("/api/conversations/:id", async (req, res) => {
     if (!req.params.id) {
       res.status(400).json({ error: "Bad request, conversationId missing" });
@@ -234,8 +224,6 @@ export async function restApi(connection, app) {
     res.json(result);
   });
 
-  //Delete conversation by id
-  //only admin can reach
   app.delete("/api/conversations/:id", async (req, res) => {
     if (!req.params.id) {
       res.status(400).json({ error: "Bad request, conversationId missing" });
@@ -254,17 +242,13 @@ export async function restApi(connection, app) {
     res.json(result);
   });
 
-  //Invitations
-  //Get all invitations
-  //only admin can reach
+  //INVITATIONS
   app.get("/api/invitations", async (req, res) => {
     const sql = `SELECT * FROM invitations`;
     let result = await sqlQuery("invitations", req, res, sql, false);
     res.json(result);
   });
 
-  //Get one invitation by id
-  //Only admin can reach
   app.get("/api/invitations/:id", async (req, res) => {
     if (!req.params.id) {
       res.status(400).json({ error: "Bad request, invitation id missing" });
@@ -276,8 +260,6 @@ export async function restApi(connection, app) {
     res.json(result);
   });
 
-  //USING
-  //Post invite
   app.post("/api/invitations", async (req, res) => {
     if (!req.session.user) {
       res.status(403).json({ error: "not allowed" });
@@ -334,8 +316,6 @@ export async function restApi(connection, app) {
     res.json(result);
   });
 
-  //Delete invitation
-  //Only admin can reach
   app.delete("/api/invitations/:id", async (req, res) => {
     if (!req.params.id) {
       res.status(400).json({ error: "Bad request, conversationId missing" });
@@ -347,7 +327,6 @@ export async function restApi(connection, app) {
     res.json(result);
   });
 
-  //Join conversation
   app.post("/api/conversations-join/:id", async (req, res) => {
     if (!req.session.user) {
       res.status(403).json({ error: "Not logged in" });
@@ -380,9 +359,7 @@ export async function restApi(connection, app) {
     res.json(result);
   });
 
-  //USING
-  //Invitation by user används för att hämta invitationlist
-  //kan bara hämta sina egna invitations
+  //Invitations by user
   app.get("/api/invitations-user", async (req, res) => {
     if (!req.session.user?.id) {
       res.status(403).json({ error: "Not logged in" });
@@ -401,9 +378,8 @@ export async function restApi(connection, app) {
     );
     res.json(result);
   });
-  //USING
+
   //Update invitation
-  //Can only find your own invitations
   app.put("/api/conversations-invite/:id", async (req, res) => {
     if (
       !req.params.id ||
@@ -436,9 +412,6 @@ export async function restApi(connection, app) {
     res.json(result);
   });
 
-  //USING
-  //Get conversations by user
-  //Can only reach your own
   app.get("/api/conversations-by-user/", async (req, res) => {
     if (!req.session.user) {
       res.status(403).json({ error: "Not logged in" });
@@ -458,8 +431,6 @@ export async function restApi(connection, app) {
     res.json(result);
   });
 
-  //USING
-  //Can only reach your own
   app.get("/api/conversations-banned/", async (req, res) => {
     if (!req.session.user) {
       res.status(403).json({ error: "Not logged in" });
@@ -478,8 +449,7 @@ export async function restApi(connection, app) {
     );
     res.json(result);
   });
-  //USING
-  //Get conversation by creator
+
   app.get(`/api/conversation-by-creator/:id`, async (req, res) => {
     if (!req.params.id) {
       res.status(400).json({ error: "Bad request, input missing" });
@@ -502,8 +472,6 @@ export async function restApi(connection, app) {
     res.json(result);
   });
 
-  //USING - can not reach other than your own
-  //Get users in one conversation
   app.get("/api/users-in-conversation/:id", async (req, res) => {
     if (!req.params.id) {
       res.status(400).json({ error: "Bad request, conversationId missing" });
@@ -539,15 +507,13 @@ export async function restApi(connection, app) {
     res.json(result);
   });
 
-  //Messages
-  //Only admin can reach
+  //MESSAGES
   app.get("/api/messages", async (req, res) => {
     const sql = "SELECT * FROM messages";
     let result = await sqlQuery("messages", req, res, sql, false);
     res.json(result);
   });
 
-  //only admin can reach
   app.get("/api/messages/:id", async (req, res) => {
     if (!req.params.id) {
       res.status(400).json({ error: "Bad request, message id missing" });
@@ -559,7 +525,6 @@ export async function restApi(connection, app) {
     res.json(result);
   });
 
-  //Only admin can reach
   app.put("/api/messages/:id", async (req, res) => {
     if (!req.params.id) {
       res.status(400).json({ error: "Bad request, conversationId missing" });
@@ -575,7 +540,6 @@ export async function restApi(connection, app) {
     res.json(result);
   });
 
-  //Only admin can reach
   app.delete("/api/messages/:id", async (req, res) => {
     if (!req.params.id) {
       res.status(400).json({ error: "Bad request, conversationId missing" });
@@ -587,8 +551,7 @@ export async function restApi(connection, app) {
     res.json(result);
   });
 
-  //USING
-  //Can only reach conversations you are in.
+  //Messages by conversation
   app.get("/api/conversation-messages/:id", async (req, res) => {
     if (!req.params.id) {
       res.status(400).json({ error: "Bad request, conversationId missing" });
@@ -623,8 +586,6 @@ export async function restApi(connection, app) {
     res.json(result);
   });
 
-  //USING
-  //Ban from chat
   app.put("/api/ban-from-chat/:id", async (req, res) => {
     if (!req.session.user) {
       res.status(403).json({ error: "Not logged in" });

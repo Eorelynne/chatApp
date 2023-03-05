@@ -1,10 +1,8 @@
 import React from "react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Container, Row, Col, Form, InputGroup } from "react-bootstrap";
 import ConversationListItem from "./ConversationListItem";
-import useStates from "../utilities/useStates.js";
 import { Filter } from "react-bootstrap-icons";
-
 import "../../public/css/myPage.css";
 
 function MyConversationPits(props) {

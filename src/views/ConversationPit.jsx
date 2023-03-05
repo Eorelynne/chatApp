@@ -6,7 +6,7 @@ import {
   Row,
   Col,
   Dropdown,
-  ListGroup,
+  //ListGroup,
   Button,
   ButtonGroup,
   Modal,
@@ -15,8 +15,6 @@ import {
 import MessageList from "../components/MessageList";
 import MessageForm from "../components/MessageForm";
 import Header from "../components/Header";
-import Message from "../components/Message";
-
 import "../../public/css/conversationPage.css";
 import "../../public/css/MyPage.css";
 import useStates from "../utilities/useStates.js";
@@ -205,10 +203,6 @@ function ConversationPit() {
                 ))}
             </ul>
           </Col>
-          {/* <Col className='messageFormContainer mt-4 col-lg-12 col-sm-12 col-12 d-flex justify-content-center'> */}
-          {/*  <Col className='messageFormContainer mt-4 col-12 col-lg-10   d-flex justify-content-center'>
-            <h3> {state.name}</h3>
-          </Col> */}
           <Col
             xs={12}
             md={8}
@@ -231,7 +225,6 @@ function ConversationPit() {
             </Col>
           </Col>
         </Row>
-        {/* </Col> */}
         <Row className='d-flex justify-content-center'>
           <Col className='col-xs-12 col-sm-12 col-md-10 col-lg-10'>
             <MessageForm state={state} />
@@ -274,9 +267,6 @@ function ConversationPit() {
               </Form.Group>
             </Form>
           </Modal.Body>
-          {/*  <Modal.Footer>
-          <Button className='custom-button' onClick={handleClose}></Button>
-        </Modal.Footer> */}
         </Modal>
       )}
     </>

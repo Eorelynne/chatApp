@@ -1,6 +1,5 @@
 import React from "react";
-import { useEffect, useState } from "react";
-import { Container, Row, Col } from "react-bootstrap";
+import { Row, Col } from "react-bootstrap";
 import AcceptBtn from "./AcceptBtn";
 import DeclineBtn from "./DeclineBtn";
 
@@ -14,20 +13,7 @@ function InvitedConversation(props) {
     setInvitationAnswer
   } = props;
 
-  /*  useEffect(() => {
-    console.log(invitationList);
-    console.log("invitationAnswer changed");
-    if (invitationAnswer) {
-       let filteredInvitationList = invitationList.filter(
-        x => +x.invitationId !== +invitation.invitationId
-      ); 
-      setInvitationList(filteredInvitationList);
-      console.log(invitationList);
-    }
-  }, [invitationAnswer]); */
-
   return (
-    /*  <Container fluid> */
     <Row>
       <Col className='custom-text col-4 invitation-item'>
         <p>{invitation.conversationName}</p>

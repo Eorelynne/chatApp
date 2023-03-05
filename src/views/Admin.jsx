@@ -7,18 +7,14 @@ import Header from "../components/Header";
 import InvitedToList from "./../components/InvitedToList";
 import AdminConversations from "../components/AdminConversations";
 import UserList from "./../components/UserList";
-
 import "../../public/css/myPage.css";
 
 function Admin() {
   const [conversationName, setConversationName] = useState("");
   const [userList, setUserList] = useState([]);
   const [conversationList, setConversationList] = useState([]);
-  /*  const [listIsSet, setListIsSet] = useState(false);
-   */
 
   let l = useStates("appState");
-  /* let m = useStates("newMessage", { message: null }); */
   const navigate = useNavigate();
   const location = useLocation();
   const { state } = location;
@@ -47,7 +43,6 @@ function Admin() {
         }
       })();
     }
-    /* setListIsSet(true) */
   }, []);
 
   return (

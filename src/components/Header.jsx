@@ -1,10 +1,8 @@
 import React from "react";
-import { useState, useEffect } from "react";
 import {
   Nav,
   Navbar,
   Dropdown,
-  DropdownButton,
   NavItem,
   Container,
   Row,
@@ -17,22 +15,6 @@ import "../../public/css/header.css";
 function Header() {
   const navigate = useNavigate();
   let l = useStates("appState");
-
-  /*  useEffect(() => {
-    if (l.loggedIn.id === 0 || !l.loggedIn.id) {
-      (async () => {
-        let data = await (await fetch("/api/login")).json();
-        if (!data.error) {
-          l.loggedIn.id = data.id;
-          l.loggedIn.firstName = data.firstName;
-          l.loggedIn.lastName = data.lastName;
-          l.loggedIn.userName = data.userName;
-          l.loggedIn.email = data.email;
-          l.loggedIn.role = data.role;
-        }
-      })();
-    }
-  }, []); */
 
   async function logout() {
     let result = await (await fetch("/api/login", { method: "DELETE" })).json();

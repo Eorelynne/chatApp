@@ -19,10 +19,10 @@ ul {
   font-size: 8px !important;
 }
 .custom-text {
-  font-size: 6px !important;
+  font-size: 7px !important;
 }
 .custom-small-text {
-  font-size: 4px !important;
+  font-size: 6px !important;
 }
 .logo-img {
   width: 2;
@@ -49,7 +49,7 @@ ul {
   }
 }
 
-@media screen and (min-width: 576px /*  max-width: 768px */) {
+@media screen and (min-width: 576px) {
   .custom-headline {
     font-weight: bold;
     font-size: 18px !important;
@@ -73,7 +73,7 @@ ul {
   }
 }
 
-@media screen and (min-width: 768px/* max-width: 992px */) {
+@media screen and (min-width: 768px) {
   .custom-headline {
     font-weight: bold;
     font-size: 22px !important;
@@ -93,7 +93,7 @@ ul {
   }
 }
 
-@media screen and (min-width: 992px/* max-width: 1200px */) {
+@media screen and (min-width: 992px) {
   .custom-headline {
     font-weight: bold;
     font-size: 24px !important;
@@ -113,7 +113,7 @@ ul {
   }
 }
 
-@media screen and (min-width: 1200px/* max-width: 1200px */) {
+@media screen and (min-width: 1200px) {
   .custom-headline {
     font-weight: bold;
     font-size: 22px !important;

@@ -7,10 +7,11 @@ import Header from "../components/Header";
 import RegisterForm from "../components/RegisterForm";
 
 function Register() {
-  /*  const navigate = useNavigate();
+  const navigate = useNavigate();
   let l = useStates("appState");
 
-   if (l.loggedIn.id === 0 || !l.loggedIn.id) {
+  useEffect(() => {
+    if (l.loggedIn.id === 0 || !l.loggedIn.id) {
       (async () => {
         let data = await (await fetch("/api/login")).json();
         if (!data.error) {
@@ -20,12 +21,11 @@ function Register() {
           l.loggedIn.userName = data.userName;
           l.loggedIn.email = data.email;
           l.loggedIn.role = data.role;
-        } (data.error) {
-          navigate("/");
+          navigate("/my-page");
         }
       })();
     }
-  }, []); */
+  }, []);
 
   return (
     <div>

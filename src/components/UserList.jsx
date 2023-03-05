@@ -4,7 +4,6 @@ import { Container, Row, Col, Form, InputGroup } from "react-bootstrap";
 import useStates from "../utilities/useStates";
 import User from "../components/User";
 import { Search } from "react-bootstrap-icons";
-
 import "../../public/css/myPage.css";
 
 function UserList(props) {
@@ -13,18 +12,6 @@ function UserList(props) {
   const [isInvitationSent, setIsInvitationSent] = useState(false);
   let l = useStates("appState");
   const [filter, setFilter] = useState("");
-
-  /*  useEffect(() => {
-    if (l.id === 0 || !l.id) {
-      (async () => {
-        let data = await (await fetch("/api/login")).json();
-        if (!data.error) {
-          Object.assign(l, data);
-          l.loggedIn = true;
-        }
-      })();
-    }
-  }, []); */
 
   useEffect(() => {
     if (l.loggedIn.id && l.loggedIn.id !== 0) {

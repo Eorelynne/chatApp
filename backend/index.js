@@ -64,7 +64,6 @@ app.get("/api/sse/:conversationId", (req, res) => {
 
   req.on("close", () => {
     connections = connections.filter(x => x.res != res);
-    console.log("Disconnected!!!!");
     broadcast("disconnect", {
       conversationId: req.params.conversationId,
       message: req.session.user.userName + " disconnected"
@@ -118,16 +117,11 @@ export async function broadcast(event, data) {
       continue;
     }
 
-    // syntax for a SSE message: 'event: message \ndata: "the-message" \n\n'
     connection.res.write(
       "event:" + event + "\ndata:" + JSON.stringify(data) + "\n\n"
     );
   }
 }
-/* 
-setInterval(() => {
-  broadcast("keep-alive", "");
-}, 25000); */
 
 app.post("/api/messages", async (req, res) => {
   if (!req.body.content || !req.body.conversationId) {
@@ -172,7 +166,7 @@ app.post("/api/messages", async (req, res) => {
 
 restApi(db, app);
 
-//app.use(express.static(__dirname + '/dist'));
+app.use(express.static(__dirname + "/dist"));
 
 app.listen(port, () => {
   console.log("Server listening on port " + port);

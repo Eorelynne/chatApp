@@ -27,21 +27,15 @@ function MessageList(props) {
   }
 
   function scrollToNewMessage() {
-    let element = document.querySelector("#new-message:nth-last-child(1)");
+    let element = document.querySelector(".new-message:nth-last-child(1)");
     if (element !== null) {
-      element.scrollIntoView("false", {
-        behavior: "smooth"
-      });
+      element.scrollIntoView();
     }
   }
 
   useEffect(() => {
-    /* if (messageList && messageList.length !== 0) { */
-    setTimeout(() => {
-      scrollToNewMessage();
-    }, 500);
-    /*  } */
-  });
+    scrollToNewMessage();
+  }, [messageList]);
 
   return (
     <>

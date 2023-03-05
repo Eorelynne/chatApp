@@ -15,13 +15,10 @@ function Message(props) {
   const { message, newMessage, messageDeleted, setMessageDeleted } = props;
   let l = useStates("appState");
 
-  /*  {!!l.id && !!message.senderUserId && ( */
   return (
     <Container className='new-message'>
       {!!message && (
         <Col
-          /*  xs={8}
-            sm={4} */
           className={
             l.loggedIn.id === message.senderUserId
               ? "sent-message message pt-1 mt-3 col-5  col-sm-5 col-lg-5 ms-auto message-scroll-container"
@@ -29,7 +26,7 @@ function Message(props) {
           }
         >
           <Row className='pe-0 ps-0'>
-            <Col xs={{ span: 1, offset: 6 }}>
+            <Col className='d-flex justify-content-end pe-3'>
               {l.loggedIn.role && l.loggedIn.role === "admin" && (
                 <ToggleDropdown
                   message={message}
@@ -107,18 +104,19 @@ function ToggleDropdown(props) {
   return (
     <Dropdown>
       <Dropdown.Toggle
-        variant='success'
-        id='dropdown-basic-message'
+        id={message.messageId}
+        size='sm'
         className={
           l.loggedIn.id === message.senderUserId
-            ? "sent-message-btn "
+            ? "sent-message-btn"
             : "recieved-message-btn"
         }
       >
         <h3>...</h3>
       </Dropdown.Toggle>
-      <Dropdown.Menu>
+      <Dropdown.Menu className='p-0 delete-dropdown-menu'>
         <Dropdown.Item
+          className='custom-text'
           onClick={() => {
             deleteMessage();
           }}

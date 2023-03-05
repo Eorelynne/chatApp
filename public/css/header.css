@@ -3,23 +3,15 @@
   justify-content: center !important;
 }
 
-/* .hamburger-img {
-  width: 4vw;
-  height: 8vh;
-} */
 .dropdown-custom {
   justify-content: end;
 }
 .btn-custom {
-  /*  background-color: #e47521 !important; */
   color: #e47521 !important;
-  /* border-color: rgb(6, 46, 83) !important; */
   border: none;
 }
 .btn-custom:hover {
-  /*  background-color: rgb(228, 117, 33, 0.4) !important; */
   color: rgb(228, 117, 33, 0.4) !important;
-  /*  border-color: rgb(6, 46, 83, 0.4) !important; */
   border: none;
 }
 
@@ -34,9 +26,6 @@
   display: none;
 }
 
-/* .header-btn-txt {
-  font-size: 48px;
-} */
 .btn-custom:active,
 .open,
 .btn-custom {

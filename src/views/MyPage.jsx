@@ -2,7 +2,7 @@ import React from "react";
 import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import useStates from "../utilities/useStates.js";
-import { Container, Row, Col, Modal } from "react-bootstrap";
+import { Container, Row, Col /*Modal*/ } from "react-bootstrap";
 import Header from "../components/Header";
 import InvitedToList from "./../components/InvitedToList";
 import MyConversationPits from "../components/MyConversationPitList";
@@ -22,7 +22,6 @@ function MyPage() {
   const [isNewConversation, setIsNewConversation] = useState(false);
 
   let l = useStates("appState");
-  //let m = useStates("newMessage", { message: null });
   const navigate = useNavigate();
   const location = useLocation();
   const { state } = location;
@@ -78,7 +77,6 @@ function MyPage() {
         }
       })();
     }
-    /* setListIsSet(true); */
   }, [invitationAnswer, isNewConversation, l.loggedIn.id]);
 
   useEffect(() => {
@@ -124,17 +122,12 @@ function MyPage() {
             />
           </Col>
           <Col className='listContainer col-lg-4 col-sm-5 col-12 mb-3'>
-            {/*  {!!conversationList && conversationList.length === 0 && (
-              <p className='mt-3'>No active conversations</p>
-            )} */}
-            {/* {!!conversationList && conversationList.length !== 0 && ( */}
             <MyConversationPits
               conversationList={conversationList}
               setConversationList={setConversationList}
               bannedFromList={bannedFromList}
               setBannedFromList={setBannedFromList}
             />
-            {/* )} */}
           </Col>
           <Col className='listContainer col-lg-4 col-xs-12 mb-3'>
             <CreateConversation

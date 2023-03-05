@@ -51,10 +51,6 @@
   padding-left: 0vw;
 }
 
-/* .conversationUserListRow {
-  height: 20vh;
-} */
-
 .scroll-container {
   overflow-y: auto;
 }
@@ -81,6 +77,12 @@
 }
 
 .userNameDropdown-btn {
+  background-color: white;
+  color: black;
+  border: none;
+}
+
+.userNameDropdown-btn:hover {
   background-color: white;
   color: black;
   border: none;

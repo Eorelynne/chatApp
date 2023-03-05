@@ -1,5 +1,4 @@
 .messageInputRow {
-  /*  position: fixed; */
   bottom: 10px;
   justify-items: center;
 }
@@ -19,7 +18,6 @@
   border: 2px solid rgb(6, 46, 83);
   border-radius: 5px;
   text-align: center;
-  /*  overflow-y: scroll; */
 }
 
 .sent-message {
@@ -32,9 +30,6 @@
   align-items: start;
   background-color: rgb(6, 46, 83, 0.3);
 }
-/* .admin-message {
-  background-color: rgb(228, 117, 33, 0.4) !important;
-} */
 
 .message {
   border: 2px solid rgb(6, 46, 83);
@@ -64,29 +59,22 @@
   overflow-x: hidden;
 }
 
-#dropdown-basic-message {
-  background-color: none;
-}
-.sent-message-btn {
+.sent-message-btn,
+.sent-message-btn:active,
+.sent-message-btn:focus,
+.open {
   background-color: rgb(6, 46, 83, 0);
   border: none;
-  padding: 0px;
+  padding: 0px !important;
 }
-.recieved-message-btn {
+.recieved-message-btn,
+.recieved-message-btn:active,
+.recieved-message-btn:hover,
+.recieved-message-btn:focus,
+.open {
   background-color: rgb(228, 117, 33, 0);
   border: none;
-  padding-top: 0px;
-}
-
-.sent-message-btn:active {
-  background-color: rgb(6, 46, 83, 0);
-  border: none;
-  padding: 0px;
-}
-.recieved-message-btn:active {
-  background-color: rgb(228, 117, 33, 0);
-  border: none;
-  padding-top: 0px;
+  padding: 0px !important;
 }
 
 .send-btn {
@@ -96,10 +84,14 @@
   font-size: x-small;
 }
 
-#dropdown-basic-message::after {
-  display: none;
+.recieved-message-btn::after,
+.sent-message-btn::after {
+  display: none !important;
 }
 
+.delete-dropdown-menu.dropdown-menu.show {
+  min-width: 5rem;
+}
 /* width */
 .message-scroll-container::-webkit-scrollbar {
   width: 5px;
@@ -137,52 +129,3 @@
   border: 5px, solid, transparent;
   background-clip: content-box;
 }
-/* 
-@media screen and (min-width: 576px) {
-  .body {
-    font-size: 10px;
-  }
-  .custom-headline {
-    font-weight: bold;
-    font-size: 18px;
-  }
-  .custom-label {
-    font-weight: bold;
-    font-size: 16px !important;
-  }
-  .custom-text {
-    font-size: 12px !important;
-  }
-}
-
-@media screen and (min-width: 768px) {
-  .body {
-    font-size: 10px;
-  }
-  .custom-headline {
-    font-weight: bold;
-    font-size: 20px;
-  }
-  .custom-label {
-    font-weight: bold;
-    font-size: 18px !important;
-  }
-  .custom-text {
-    font-size: 14px !important;
-  }
-}
-
-.custom-headline {
-  font-weight: bold;
-  font-size: 16px;
-}
-
-.custom-label {
-  font-weight: bold;
-  font-size: 12px;
-}
-
-.custom-text {
-  font-size: 8px;
-}
- */

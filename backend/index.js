@@ -172,8 +172,6 @@ app.listen(port, () => {
   console.log("Server listening on port " + port);
 });
 
-app.all("*", (req, res) => {
-  res.status(404).json({ error: "Endpoint not found" });
-  res.set("Content-Type", "text/html");
-  res.sendFile(path.join(__dirname, "../src/views", "NotFound.jsx"));
+app.all("/*", (req, res) => {
+  res.status(404).json({ error: "Path not found" });
 });
